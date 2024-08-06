@@ -1,0 +1,14 @@
+{
+  "root": true,
+  "env": {
+    "node": true
+  },
+  "extends": ["eslint:recommended", "plugin:vue/vue3-essential", "prettier"],
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": "error"
+  },
+  "parserOptions": {
+    "parser": "@babel/eslint-parser"
+  }
+}
