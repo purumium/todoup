@@ -6,9 +6,12 @@
   "extends": ["eslint:recommended", "plugin:vue/vue3-essential", "prettier"],
   "plugins": ["prettier"],
   "rules": {
-    "prettier/prettier": "error"
+    "prettier/prettier": ["error",{
+       "endOfLine": "auto"
+    }]
   },
   "parserOptions": {
-    "parser": "@babel/eslint-parser"
+    "parser": "@babel/eslint-parser",
+    "requireConfigFile": false
   }
 }
