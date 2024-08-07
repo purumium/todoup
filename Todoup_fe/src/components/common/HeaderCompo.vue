@@ -1,6 +1,6 @@
 <template>
   <div>
-    <font-awesome-icon icon="home" style="font-size: 30px" />
+    <img src="../../assets/logo.png" width="300" />
   </div>
 </template>
 
