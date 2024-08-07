@@ -10,7 +10,7 @@
           <div>todolist@gmail.com</div>
         </div>
         <div class="my-follow-btn">
-          <div>팔로잉</div>
+          <div @click="toggleModal">팔로잉</div>
           <div>팔로워</div>
           <div>친구찾기</div>
         </div>
@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'AsideCompo',
   data() {
@@ -46,6 +48,9 @@ export default {
         { text: '로그아웃', checked: false },
       ],
     };
+  },
+  methods: {
+    ...mapActions(['toggleModal']),
   },
 };
 </script>
