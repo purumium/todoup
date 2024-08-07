@@ -1,6 +1,10 @@
 <template>
   <div class="d-flex w-100" style="height: 100vh">
-    <aside-compo></aside-compo>
+    <!-- <aside-compo></aside-compo> -->
+    <aside>
+      <profile-compo />
+      <today-todo />
+    </aside>
     <modal-compo></modal-compo>
     <div class="view-wrapper">
       <router-view></router-view>
@@ -10,12 +14,19 @@
 </template>
 
 <script>
-import AsideCompo from './common/AsideCompo.vue';
+// import AsideCompo from './common/AsideCompo.vue';
+import ProfileCompo from './common/ProfileCompo.vue';
+import TodayTodo from './common/TodayTodo.vue';
 import ModalCompo from './modal/ModalCompo.vue';
 import { mapActions } from 'vuex';
 
 export default {
-  components: { AsideCompo, ModalCompo },
+  components: {
+    // AsideCompo,
+    ModalCompo,
+    ProfileCompo,
+    TodayTodo,
+  },
   methods: {
     ...mapActions(['toggleModal']),
   },
