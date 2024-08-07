@@ -1,6 +1,7 @@
 import MainWrapperCompo from '@/components/MainWrapperCompo.vue';
 import MainCompo from '@/components/MainCompo.vue';
 import ViewCompo from '@/components/ViewCompo.vue';
+import CalendarCompo from '@/components/CalendarCompo.vue';
 import TodoCalendar from '@/components/TodoCalendar.vue';
 import DiaryCalendar from '@/components/DiaryCalendar.vue';
 
@@ -19,12 +20,19 @@ export default [
             children: [
               {
                 path: '',
-                component: TodoCalendar,
-                alias: 'todo',
-              },
-              {
-                path: 'diary',
-                component: DiaryCalendar,
+                component: CalendarCompo,
+                alias: 'calendar',
+                children: [
+                  {
+                    path: '',
+                    component: TodoCalendar,
+                    alias: 'todo',
+                  },
+                  {
+                    path: 'diary',
+                    component: DiaryCalendar,
+                  },
+                ],
               },
             ],
           },
