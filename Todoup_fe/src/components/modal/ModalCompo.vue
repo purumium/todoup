@@ -1,6 +1,6 @@
 <template>
-  <div class="modal-overlay">
-    <div>
+  <div v-if="isModalVisible" class="modal-overlay" @click="closeModal">
+    <div class="modal-content" @click.stop>
       <div class="input-group flex-nowrap">
         <input
           type="text"
@@ -11,7 +11,7 @@
           v-model="username"
         />
       </div>
-      <div class="modal-content">
+      <div class="modal-body">
         <find-modal-compo
           v-for="(user, idx) in filteredUsers"
           :key="idx"
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
 import FindModalCompo from './FindModalCompo.vue';
 
 export default {
@@ -42,16 +43,21 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['isModalVisible']),
     filteredUsers() {
       return this.users.filter((user) => user.nickname.includes(this.username));
     },
   },
   methods: {
+    ...mapActions(['setModalVisible']),
     getOriginalIndex(user) {
       return this.users.findIndex((u) => u.id === user.id);
     },
     updateChecked(index, checked) {
       this.users[index].checked = checked;
+    },
+    closeModal() {
+      this.setModalVisible(false);
     },
   },
 };
@@ -64,22 +70,25 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* 반투명 검은색 배경 */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* 다른 요소 위에 표시되도록 z-index 설정 */
+  z-index: 1000;
 }
 
 .modal-content {
-  width: 600px;
-  height: 370px;
   background-color: white;
-  display: flex;
-  flex-direction: column;
-  border-radius: 8px; /* 둥근 모서리 */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
-  padding: 20px; /* 내부 여백 추가 */
+  padding: 20px;
+  width: 600px;
+  height: 380px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.modal-body {
+  max-height: 300px;
+  overflow-y: auto;
 }
 </style>
