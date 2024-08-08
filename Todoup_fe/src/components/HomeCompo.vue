@@ -20,8 +20,17 @@ export default {};
 <style scoped>
 .calendar-btn-group {
   display: flex;
-  justify-content: flex-start;
-  gap: 10px;
+  justify-content: end;
+  gap: 18px;
   margin-bottom: 20px;
+}
+div button {
+  width: 90px;
+  height: 35px;
+  background-color: #e5e5e552;
+  color: #544545;
+  border: 1.5px solid #544545;
+  font-weight: 600;
+  font-size: 15px;
 }
 </style>

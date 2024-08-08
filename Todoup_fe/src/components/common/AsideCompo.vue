@@ -57,8 +57,9 @@ export default {
   padding: 22px 13px;
   border-radius: 11px;
   display: flex;
-  /* flex-direction: column; */
-  /* text-align: center; */
+  flex-direction: column;
+  text-align: center;
+  width: 260px;
 }
 
 .profile-section img {
