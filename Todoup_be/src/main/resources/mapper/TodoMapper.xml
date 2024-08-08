@@ -5,13 +5,14 @@
 <mapper namespace="com.kosa.todoup.dao.TodoDAO">
     <!-- 할일 생성 -->
     <insert id="insertTodo" parameterType="com.kosa.todoup.dto.TodoDTO">
-        insert into TODO_LIST (USER_ID, TITLE
+        insert into TODO_LIST (USER_ID, TITLE, CATEGORY
         <if test="memo != null">
             , MEMO
         </if>)
-        values (#{userId}, #{title}
+        values (#{userId}, #{title}, #{category}
         <if test="memo != null">
             , #{memo}
         </if>)
     </insert>
+
 </mapper>
