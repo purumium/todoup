@@ -11,3 +11,7 @@ module.exports = defineConfig({
     },
   },
 });
+/* 
+백엔드 서버에 localhost:8080/api에 요청을 보냄
+pathRewrite : {'^/api :''} : 요청주소의 /api를 지워줌 
+*/
