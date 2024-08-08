@@ -18,23 +18,33 @@
           </option>
         </select>
       </div>
+      <div>
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" v-model="todo.startDate" required />
+      </div>
+      <div>
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" v-model="todo.endDate" />
+      </div>
       <button type="submit">Create</button>
     </form>
   </div>
 </template>
 
 <script>
-import axios from '@/plugins/axios';
+import axios from 'axios';
 import categories from '@/assets/categories.json';
 
 export default {
   data() {
     return {
       todo: {
-        userId: '1',
+        userId: 6,
         title: '',
         memo: '',
         category: '',
+        startDate: '',
+        endDate: '',
       },
       categories: categories,
     };
@@ -58,10 +68,13 @@ export default {
     },
     async submitTodo() {
       try {
-        console.log(this.todo.title, this.todo.memo, this.todo.category);
-        await axios.post('/api/todo', this.todo);
+        if (!this.todo.endDate) {
+          this.todo.endDate = this.todo.startDate;
+        }
+        console.log(this.todo.title, this.todo.memo, this.todo.category, this.todo.startDate, this.todo.endDate);
+        await axios.post('/api/todo/insert', this.todo);
         alert('Todo created successfully!');
-        this.todo = { userId: '1', title: '', memo: '', category: '' }; // form 초기화
+        this.todo = { userId: 6, title: '', memo: '', category: '', startDate: '', endDate: '' };
       } catch (error) {
         console.error('Error creating todo:', error);
         alert('There was an error creating the todo.');
