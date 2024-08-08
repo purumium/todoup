@@ -6,6 +6,9 @@ import HomeCompo from '@/components/HomeCompo.vue';
 import TodoCalendar from '@/components/TodoCalendar.vue';
 import DiaryCalendar from '@/components/DiaryCalendar.vue';
 import DiaryEntry from '@/components/DiaryEntry.vue';
+import RoomCompo from '@/components/room/RoomCompo.vue';
+import AvatarRoom from '@/components/room/avatar/AvatarRoom.vue';
+import MyReport from '@/components/room/report/MyReport.vue';
 
 export default [
   {
@@ -35,6 +38,21 @@ export default [
                 path: 'diary/:date',
                 component: DiaryEntry,
                 props: true,
+              },
+            ],
+          },
+          {
+            path: '/room',
+            component: RoomCompo,
+            children: [
+              {
+                path: '/room',
+                component: AvatarRoom,
+                alias: '/room/avatarroom',
+              },
+              {
+                path: '/room/report',
+                component: MyReport,
               },
             ],
           },
