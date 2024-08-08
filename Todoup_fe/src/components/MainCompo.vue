@@ -1,6 +1,5 @@
 <template>
   <div class="d-flex w-100" style="height: 100vh">
-    <!-- <aside-compo></aside-compo> -->
     <aside>
       <profile-compo />
       <today-todo />
@@ -14,7 +13,6 @@
 </template>
 
 <script>
-// import AsideCompo from './common/AsideCompo.vue';
 import ProfileCompo from './common/ProfileCompo.vue';
 import TodayTodo from './common/TodayTodo.vue';
 import ModalCompo from './modal/ModalCompo.vue';
@@ -22,7 +20,6 @@ import { mapActions } from 'vuex';
 
 export default {
   components: {
-    // AsideCompo,
     ModalCompo,
     ProfileCompo,
     TodayTodo,
