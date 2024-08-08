@@ -14,27 +14,43 @@
         <tr>
           <th colspan="1">오늘의 날씨</th>
           <td colspan="4">
-            <input type="checkbox" id="sunny" v-model="weather.sunny" />
-            <label for="sunny">맑음</label>
-            <input type="checkbox" id="cloudy" v-model="weather.cloudy" />
-            <label for="cloudy">흐림</label>
-            <input type="checkbox" id="rainy" v-model="weather.rainy" />
-            <label for="rainy">비</label>
-            <input type="checkbox" id="snowy" v-model="weather.snowy" />
-            <label for="snowy">눈</label>
+            <label for="sunny">
+              <input type="radio" id="sunny" value="sunny" v-model="weather" />
+              <font-awesome-icon :icon="['fas', 'sun']" class="fontBox" />
+            </label>
+            <label for="cloudy">
+              <input type="radio" id="cloudy" value="cloudy" v-model="weather" />
+              <font-awesome-icon :icon="['fas', 'cloud']" class="fontBox" />
+            </label>
+            <label for="rainy">
+              <input type="radio" id="rainy" value="rainy" v-model="weather" />
+              <font-awesome-icon :icon="['fas', 'cloud-showers-heavy']" class="fontBox" />
+            </label>
+            <label for="snowy">
+              <input type="radio" id="snowy" value="snowy" v-model="weather" />
+              <font-awesome-icon :icon="['fas', 'snowflake']" class="fontBox" />
+            </label>
           </td>
         </tr>
         <tr>
           <th colspan="1">오늘의 기분</th>
           <td colspan="4">
-            <input type="checkbox" id="happy" v-model="mood.happy" />
-            <label for="happy">기쁨</label>
-            <input type="checkbox" id="sad" v-model="mood.sad" />
-            <label for="sad">슬픔</label>
-            <input type="checkbox" id="angry" v-model="mood.angry" />
-            <label for="angry">화남</label>
-            <input type="checkbox" id="neutral" v-model="mood.neutral" />
-            <label for="neutral">평범</label>
+            <label for="happy">
+              <input type="radio" id="happy" value="happy" v-model="mood" />
+              <font-awesome-icon :icon="['fas', 'smile']" class="fontBox" />
+            </label>
+            <label for="sad">
+              <input type="radio" id="sad" value="sad" v-model="mood" />
+              <font-awesome-icon :icon="['fas', 'frown']" class="fontBox" />
+            </label>
+            <label for="angry">
+              <input type="radio" id="angry" value="angry" v-model="mood" />
+              <font-awesome-icon :icon="['fas', 'angry']" class="fontBox" />
+            </label>
+            <label for="neutral">
+              <input type="radio" id="neutral" value="neutral" v-model="mood" />
+              <font-awesome-icon :icon="['fas', 'meh']" class="fontBox" />
+            </label>
           </td>
         </tr>
         <tr>
@@ -75,21 +91,9 @@ export default {
   data() {
     return {
       diaryContext: '', // 다이어리 작성 내용
+      weather: '',
+      mood: '',
       imgData: null, // 추가한 사진
-      mood: {
-        // 오늘 기분
-        happy: false,
-        sad: false,
-        angry: false,
-        neutral: false,
-      },
-      weather: {
-        // 날씨
-        sunny: false,
-        cloudy: false,
-        rainy: false,
-        snowy: false,
-      },
     };
   },
   computed: {
@@ -115,6 +119,7 @@ export default {
         // 3. 파일이 성공적으로 읽혀지면, onload 이벤트 핸들러 발생해 읽은 데이터 처리
         reader.onload = (e) => {
           this.imgData = e.target.result; // 읽은 파일의 데이터 URL이 포함된 속성
+          this.file = file; // 실제 파일 객체 저장
         };
 
         // 2. 파일을 데이터 URL 형식으로 읽기 시작(사진 미리보기를 위해 url로 변경)
@@ -122,15 +127,24 @@ export default {
       }
     },
     submitDiary() {
-      const diaryData = {
-        date: this.date,
-        mood: this.mood,
-        weather: this.weather,
-        diaryContext: this.diaryContext,
-      };
+      // FormData: 이미지 파일을 포함해서 전송시 사용
+      const diaryData = new FormData();
+      diaryData.append('date', this.date);
+      diaryData.append('mood', this.mood);
+      diaryData.append('weather', this.weather);
+      diaryData.append('diaryContext', this.diaryContext);
+
+      // 파일이 선택된 경우에만 데이터 추가
+      if (this.file) {
+        diaryData.append('image', this.file);
+      }
 
       axios
-        .post('/api/diary', diaryData)
+        .post('/api/diary', diaryData, {
+          header: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
         .then((response) => {
           console.log('Diary saved successfully:', response.data);
           // 일기를 저장한 후, 각 날짜별 mood 데이터를 가져옴
@@ -190,14 +204,15 @@ export default {
   font-size: 14px !important;
 }
 
+label {
+  margin-right: 10px;
+}
+
 .photo-upload {
-  width: 100%;
-  height: 100px;
-  border: 0px solid #000;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
+  height: 100px;
 }
 
 .uploaded-photo {
@@ -209,6 +224,13 @@ export default {
   width: 180px; /* 이미지 크기를 적절하게 조정 */
   height: auto;
   margin-left: 20px;
+}
+
+.fontBox {
+  margin-left: 5px;
+  width: 13px;
+  height: auto;
+  transition: color 0.25s ease-in-out;
 }
 
 .diary-btn {

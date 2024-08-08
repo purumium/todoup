@@ -33,6 +33,7 @@ export default [
                 path: 'diary',
                 name: 'DiaryCalendar',
                 component: DiaryCalendar,
+                props: true, // props를 통해 params(mood값)를 전달받기 위해 설정
               },
               {
                 path: 'diary/:date',
