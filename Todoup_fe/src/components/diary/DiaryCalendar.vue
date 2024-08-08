@@ -16,7 +16,6 @@ import interactionPlugin from '@fullcalendar/interaction'; // 메서드 사용
 import koLocale from '@fullcalendar/core/locales/ko'; // 한글 로케일 데이터 가져오기
 
 export default {
-  // props: ['moods'], // 라우터에서 전달받은 moods 데이터를 props로 설정
   components: {
     'full-calendar': FullCalendar,
   },
