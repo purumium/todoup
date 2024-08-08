@@ -1,6 +1,6 @@
 <!-- Background.vue -->
 <template>
-  <div>
+  <div class="background">
     <h2>Background</h2>
     <!-- 배경 내용 -->
   </div>
@@ -13,5 +13,10 @@ export default {
 </script>
 
 <style scoped>
-/* 스타일 정의 */
+.background {
+  width: 100%;
+  height: 100vh;
+  background-color: lightblue;
+  position: relative;
+}
 </style>
