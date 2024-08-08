@@ -1,7 +1,7 @@
 <template>
   <div class="profile-section">
     <div>
-      <img src="@/assets/profile.png" alt="Profile" />
+      <img src="@/assets/profile.png" alt="Profile" @click="goToRoom" />
     </div>
     <div class="profile-bottom">
       <div class="my-name">
@@ -24,6 +24,9 @@ export default {
   name: 'ProfileCompo',
   methods: {
     ...mapActions(['toggleModal']),
+    goToRoom() {
+      this.$router.push('/room');
+    },
   },
 };
 </script>
