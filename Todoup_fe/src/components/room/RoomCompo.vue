@@ -1,10 +1,10 @@
 <template>
   <div class="">
     <div class="room-btn-group">
-      <router-link to="/avatarroom">
+      <router-link to="/room/avatarroom">
         <button>AVATARROOM</button>
       </router-link>
-      <router-link to="/report">
+      <router-link to="/room/report">
         <button>REPORT</button>
       </router-link>
     </div>
