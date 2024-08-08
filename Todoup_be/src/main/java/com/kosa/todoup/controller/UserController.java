@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@NoArgsConstructor
 public class UserController {
 
     @Autowired
@@ -23,6 +22,7 @@ public class UserController {
 
         try {
             userService.insertUser(signUpUserDto);
+            System.out.println(ResponseEntity.ok("회원가입이 완료되었습니다."));
             return ResponseEntity.ok("회원가입이 완료되었습니다.");
 
         } catch (IllegalArgumentException e) {

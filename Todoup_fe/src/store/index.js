@@ -1,4 +1,10 @@
 import { createStore } from 'vuex';
+import Vue from 'vue';
+import Vuex from 'vuex';
+
+Vue.use(Vuex);
+
+import UserStore from '@/store/user-store';
 
 export default createStore({
   state: {
@@ -22,5 +28,8 @@ export default createStore({
   },
   getters: {
     isModalVisible: (state) => state.isModalVisible,
+  },
+  modules: {
+    user: UserStore,
   },
 });
