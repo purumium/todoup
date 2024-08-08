@@ -1,7 +1,7 @@
 package com.kosa.todoup.service;
 
-import com.kosa.todoup.dao.TodoDAO;
 import com.kosa.todoup.dto.TodoDTO;
+import com.kosa.todoup.mapper.TodoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +11,9 @@ import java.sql.SQLException;
 public class TodoService {
 
     @Autowired
-    private TodoDAO todoDAO;
+    private TodoMapper todoMapper;
 
     public void insertTodo(TodoDTO todoDTO) throws SQLException {
-        todoDAO.insertTodo(todoDTO);
+        todoMapper.insertTodo(todoDTO);
     }
 }
