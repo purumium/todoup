@@ -6,8 +6,7 @@
     </aside>
     <modal-compo></modal-compo>
     <div class="view-wrapper">
-      <router-view></router-view>
-      <!-- 자식 라우트를 렌더링 : 현재 라우트에 따라 다른 컴포넌트를 렌더링 -->
+      <view-compo />
     </div>
   </div>
 </template>
@@ -17,12 +16,14 @@ import ProfileCompo from './common/ProfileCompo.vue';
 import TodayTodo from './common/TodayTodo.vue';
 import ModalCompo from './modal/ModalCompo.vue';
 import { mapActions } from 'vuex';
+import ViewCompo from './ViewCompo.vue';
 
 export default {
   components: {
     ModalCompo,
     ProfileCompo,
     TodayTodo,
+    ViewCompo,
   },
   methods: {
     ...mapActions(['toggleModal']),
