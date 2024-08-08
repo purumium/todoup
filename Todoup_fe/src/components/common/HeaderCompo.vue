@@ -32,6 +32,7 @@ export default {
   width: 100%;
   display: flex;
   justify-content: space-between;
+  margin: 40px auto;
 }
 .header-rightBox {
   display: flex;

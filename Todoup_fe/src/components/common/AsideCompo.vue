@@ -10,7 +10,7 @@
           <div>todolist@gmail.com</div>
         </div>
         <div class="my-follow-btn">
-          <div>팔로잉</div>
+          <div @click="toggleModal">팔로잉</div>
           <div>팔로워</div>
           <div>친구찾기</div>
         </div>
@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'AsideCompo',
   data() {
@@ -47,6 +49,9 @@ export default {
       ],
     };
   },
+  methods: {
+    ...mapActions(['toggleModal']),
+  },
 };
 </script>
 
@@ -57,8 +62,9 @@ export default {
   padding: 22px 13px;
   border-radius: 11px;
   display: flex;
-  /* flex-direction: column; */
-  /* text-align: center; */
+  flex-direction: column;
+  text-align: center;
+  width: 260px;
 }
 
 .profile-section img {
