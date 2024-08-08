@@ -1,32 +1,34 @@
 <template>
-  <div>
-    <h2>Create Todo</h2>
-    <form @submit.prevent="submitTodo">
-      <div>
-        <label for="title">Title:</label>
-        <input type="text" id="title" v-model="todo.title" required />
+  <div class="container mt-5">
+    <h4 class="mb-4">Todo 추가</h4>
+    <form @submit.prevent="submitTodo" class="w-100">
+      <div class="form-group mb-3">
+        <label for="title">제목</label>
+        <input type="text" id="title" v-model="todo.title" class="form-control" required />
       </div>
-      <div>
-        <label for="memo">Memo:</label>
-        <textarea id="memo" v-model="todo.memo"></textarea>
+      <div class="form-group mb-3">
+        <label for="memo">메모</label>
+        <textarea id="memo" v-model="todo.memo" class="form-control"></textarea>
       </div>
-      <div>
-        <label for="category">Category:</label>
-        <select id="category" v-model="todo.category" required>
+      <div class="form-group mb-3">
+        <label for="category">카테고리</label>
+        <select id="category" v-model="todo.category" class="form-select" required>
           <option v-for="category in categories" :key="category.id" :value="category.name">
             {{ category.name }}
           </option>
         </select>
       </div>
-      <div>
-        <label for="startDate">Start Date:</label>
-        <input type="date" id="startDate" v-model="todo.startDate" required />
+      <div class="form-group mb-3">
+        <label for="startDate">시작 날짜</label>
+        <input type="date" id="startDate" v-model="todo.startDate" class="form-control" required />
       </div>
-      <div>
-        <label for="endDate">End Date:</label>
-        <input type="date" id="endDate" v-model="todo.endDate" />
+      <div class="form-group mb-3">
+        <label for="endDate">종료 날짜</label>
+        <input type="date" id="endDate" v-model="todo.endDate" class="form-control" />
       </div>
-      <button type="submit">Create</button>
+      <div class="d-flex justify-content-end">
+        <button type="submit" class="px-3 py-2">Create</button>
+      </div>
     </form>
   </div>
 </template>
@@ -60,7 +62,7 @@ export default {
         this.categories = response;
         // 카테고리 데이터가 로드된 후 기본값 설정
         if (!this.categories.find((cat) => cat.name === this.todo.category)) {
-          this.todo.category = this.categories.length > 0 ? this.categories[3].name : '';
+          this.todo.category = this.categories.length > 0 ? this.categories[0].name : '';
         }
       } catch (error) {
         console.error('Error loading categories:', error);

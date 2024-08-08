@@ -4,12 +4,11 @@ import lombok.Data;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Getter
 public class TodoDTO {
-    @NotNull
     private long todoId;
     @NotNull
     private long userId;
@@ -19,10 +18,10 @@ public class TodoDTO {
     private boolean completed;
     private String category;
     @NotNull
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
-    public TodoDTO(@NotNull long userId, @NotNull String title, String memo, String category, @NotNull LocalDateTime startDate, LocalDateTime endDate) {
+    public TodoDTO(@NotNull long userId, @NotNull String title, String memo, String category, @NotNull LocalDate startDate, LocalDate endDate) {
         this.userId = userId;
         this.title = title;
         this.memo = memo;
