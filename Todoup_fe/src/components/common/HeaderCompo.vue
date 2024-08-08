@@ -1,6 +1,6 @@
 <template>
   <div class="header-header">
-    <img src="../../assets/logo.png" width="300" />
+    <img src="../../assets/logo.png" width="300" @click="goToHome" />
     <div class="header-rightBox">
       <div class="header-InBox" @click="goToLogin">
         <font-awesome-icon icon="fa-solid fa-right-to-bracket" class="fontBox" />
@@ -17,11 +17,14 @@
 <script>
 export default {
   methods: {
+    goToHome() {
+      this.$router.push('/');
+    },
     goToLogin() {
       this.$router.push('/login');
     },
     goToSignup() {
-      this.$router.push('signup');
+      this.$router.push('/signup');
     },
   },
 };
@@ -32,6 +35,7 @@ export default {
   width: 100%;
   display: flex;
   justify-content: space-between;
+  margin: 40px auto;
 }
 .header-rightBox {
   display: flex;
