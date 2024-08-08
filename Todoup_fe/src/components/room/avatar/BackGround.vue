@@ -19,8 +19,10 @@ export default {
 .background {
   position: relative;
   width: 100%;
-  height: 100vh;
-  background-color: #f0f0f0; /* 실제 배경 스타일 */
+  /* height: 100vh; */
+  background-image: url('@/assets/supermario_background.jpg');
+  background-size: cover;
+  background-position: center;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
