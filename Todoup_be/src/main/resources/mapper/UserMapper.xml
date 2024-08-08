@@ -7,4 +7,29 @@
         insert into users(email,nickname,password)
         values (#{email}, #{nickName}, #{password})
     </insert>
+
+    <select id="findUser" parameterType="com.kosa.todoup.dto.UserDTO">
+        select
+            user_id as userId,
+            email,
+            nickname as nickName,
+            avatar_type as avatarType,
+            password,
+            lv,
+            points,
+            created_at as createdAt
+        from users
+        where user_id > 0
+        <if test='email != null'>
+            <if test='password != null'>
+                and email=#{email} and password=#{password}
+            </if>
+            <if test='password == null'>
+                and email=#{email}
+            </if>
+        </if>
+        <if test='nickName != null'>
+            and nickname = #{nickName}
+        </if>
+    </select>
 </mapper>
