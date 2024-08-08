@@ -14,7 +14,7 @@ public class TodoController {
     @Autowired
     private TodoService todoService;
 
-    @PostMapping
+    @PostMapping("/insert")
     public ResponseEntity<?> createTodo(@RequestBody TodoDTO todoDTO) {
         try {
             todoService.insertTodo(todoDTO);
