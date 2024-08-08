@@ -1,27 +1,54 @@
 <template>
   <div class="w-100">
-    <div class="calendar-container">
-      <h4>나의 성장일기</h4>
-      <full-calendar :options="calendarOptions"></full-calendar>
+    <div>
+      <h6>나의 성장일기</h6>
+      <full-calendar v-if="calendarOptions" :options="calendarOptions"></full-calendar>
       <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
 import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction'; // 메서드 사용
 import koLocale from '@fullcalendar/core/locales/ko'; // 한글 로케일 데이터 가져오기
 
 export default {
-  props: ['mood'], // params를 받기 위해서 props 설정이 필요
   components: {
     'full-calendar': FullCalendar,
   },
   data() {
     return {
-      calendarOptions: {
+      moods: [], // 초기상태
+      calendarOptions: null,
+    };
+  },
+  created() {
+    // 컴포넌트가 생성될 때, moods 데이터를 가지고 옴
+    this.fetchMoods();
+  },
+
+  methods: {
+    fetchMoods() {
+      axios
+        .get('/api/diary/moods')
+        .then((response) => {
+          // mood 데이터가 없더라도 빈 배열로 설정 => 데이터 없이도 캘린더는 떠야함
+          this.moods = response.data || [];
+          this.setupCalendarOptions();
+        })
+        .catch((error) => {
+          // 오류가 발생해도 setupCalendarOptions를 호출하여 빈 배열로 설정된 moods를 처리
+          console.error('There was an error fetching the moods:', error);
+          this.setupCalendarOptions();
+        });
+    },
+
+    // 캘린더 생성시 필요한 데이터 설정
+    setupCalendarOptions() {
+      this.calendarOptions = {
         plugins: [dayGridPlugin, interactionPlugin],
         initialView: 'dayGridMonth',
         headerToolbar: {
@@ -29,17 +56,51 @@ export default {
           center: '',
           right: 'prev today next',
         },
-        events: [{ title: '성공의 어머니', date: '2024-08-16' }],
+        events: this.moods.map((thismood) => ({
+          title: '',
+          start: thismood.date,
+          display: 'background', // 배경 이벤트
+          extendedProps: {
+            mood: thismood.mood,
+          },
+        })),
+        eventContent: this.renderMoodImgContent, // 커스텀한 이벤트 콘텐츠(셀에 이미지 추가)
         dateClick: this.handleMoveToDiary, // dateClick 이벤트 핸들러를 추가
         height: 550,
         locale: koLocale, // 한글 설정
         dayCellContent: (args) => ({ html: args.dayNumberText.replace('일', '') }), // 날짜 텍스트에서 '일'을 제거
-      },
-    };
-  },
-  methods: {
-    handleMoveToDiary(info) {
-      this.$router.push(`/diary/${info.dateStr}`);
+      };
+    },
+
+    // 날짜 셀에 출력할 이벤트 : 이미지 출력
+    renderMoodImgContent(eventInfo) {
+      const mood = eventInfo.event.extendedProps.mood;
+      var imgSrc = '';
+
+      // img 폴더를 public에 추가
+      if (mood === 'happy') {
+        imgSrc = '/diary/happy.png';
+      } else if (mood === 'sad') {
+        imgSrc = '/diary/sad.png';
+      } else if (mood === 'angry') {
+        imgSrc = '/diary/angry.png';
+      } else if (mood === 'exhaust') {
+        imgSrc = '/diary/exhaust.png';
+      }
+
+      console.log(imgSrc);
+
+      if (imgSrc) {
+        return {
+          html: `<img src="${imgSrc}" class="calendar-img"/>`,
+        };
+      }
+      return {};
+    },
+
+    // 날짜 셀 눌러서, 다이어리로 이동
+    handleMoveToDiary(eventInfo) {
+      this.$router.push(`/diary/${eventInfo.dateStr}`);
     },
   },
 };
@@ -48,6 +109,14 @@ export default {
 <style>
 @import url('https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.15/main.min.css');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.15/daygrid.min.css');
+
+.calendar-img {
+  width: 65px;
+  height: 65px;
+  position: relative;
+  top: 10px;
+  left: 8px;
+}
 
 .calendar-container {
   width: 700px !important; /* 원하는 너비로 설정 */
@@ -146,5 +215,10 @@ export default {
   text-align: center !important;
   top: 4px !important;
   left: -3px !important;
+}
+
+.fc .fc-bg-event {
+  background: var(--fc-bg-event-color) important;
+  opacity: var(--fc-bg-event-opacity) important;
 }
 </style>
