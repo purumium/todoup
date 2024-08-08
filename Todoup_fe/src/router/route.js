@@ -3,12 +3,13 @@ import SignupCompo from '@/components/login/SignupCompo.vue';
 import MainWrapperCompo from '@/components/MainWrapperCompo.vue';
 import MainCompo from '@/components/MainCompo.vue';
 import HomeCompo from '@/components/HomeCompo.vue';
-import TodoCalendar from '@/components/TodoCalendar.vue';
+import TodoCalendar from '@/components/todo/TodoCalendar.vue';
 import DiaryCalendar from '@/components/diary/DiaryCalendar.vue';
-import DiaryEntry from '@/components/diary/DiaryRoom.vue';
+import DiaryRoom from '@/components/diary/DiaryRoom.vue';
 import RoomCompo from '@/components/room/RoomCompo.vue';
 import AvatarRoom from '@/components/room/avatar/AvatarRoom.vue';
 import MyReport from '@/components/room/report/MyReport.vue';
+import CreateTodo from '@/components/todo/CreateTodo.vue';
 
 export default [
   {
@@ -30,14 +31,19 @@ export default [
                 alias: 'todo',
               },
               {
+                path: 'todo/:date',
+                component: CreateTodo,
+                props: true,
+              },
+              {
                 path: 'diary',
                 name: 'DiaryCalendar',
                 component: DiaryCalendar,
-                props: true, // props를 통해 params(mood값)를 전달받기 위해 설정
+                //props: true, // props를 통해 params(mood값)를 전달받기 위해 설정
               },
               {
                 path: 'diary/:date',
-                component: DiaryEntry,
+                component: DiaryRoom,
                 props: true,
               },
             ],

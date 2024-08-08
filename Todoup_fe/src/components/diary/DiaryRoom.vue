@@ -147,16 +147,8 @@ export default {
         })
         .then((response) => {
           console.log('Diary saved successfully:', response.data);
-          // 일기를 저장한 후, 각 날짜별 mood 데이터를 가져옴
-          return axios.get('/api/moods');
-        })
-        .then((response) => {
-          const moods = response.data;
-          // 가져온 mood 데이터를 diarycalendar로 전달
-          this.$router.push({
-            name: 'DiaryCalendar',
-            params: { moods },
-          });
+          // 일기를 저장한 후, diarycalendar로 이동
+          this.$router.push('/diary');
         })
         .catch((error) => {
           console.error('There was an error saving the diary:', error);
