@@ -3,8 +3,10 @@ import SignupCompo from '@/components/login/SignupCompo.vue';
 import MainWrapperCompo from '@/components/MainWrapperCompo.vue';
 import MainCompo from '@/components/MainCompo.vue';
 import ViewCompo from '@/components/ViewCompo.vue';
+import HomeCompo from '@/components/HomeCompo.vue';
 import TodoCalendar from '@/components/TodoCalendar.vue';
 import DiaryCalendar from '@/components/DiaryCalendar.vue';
+import DiaryEntry from '@/components/DiaryEntry.vue';
 
 export default [
   {
@@ -21,12 +23,25 @@ export default [
             children: [
               {
                 path: '',
-                component: TodoCalendar,
-                alias: 'todo',
-              },
-              {
-                path: 'diary',
-                component: DiaryCalendar,
+                component: HomeCompo,
+                alias: 'calendar',
+                children: [
+                  {
+                    path: '',
+                    component: TodoCalendar,
+                    alias: 'todo',
+                  },
+                  {
+                    path: 'diary',
+                    name: 'DiaryCalendar',
+                    component: DiaryCalendar,
+                  },
+                  {
+                    path: 'diary/:date',
+                    component: DiaryEntry,
+                    props: true,
+                  },
+                ],
               },
             ],
           },
