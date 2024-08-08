@@ -18,14 +18,18 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'ProfileCompo',
+  computed: {
+    ...mapState(['loginId']),
+  },
   methods: {
     ...mapActions(['toggleModal']),
     goToRoom() {
-      this.$router.push('/room');
+      // this.$router.push(`/room/${this.loginId}/avatarroom`);
+      this.$router.push('/room/temporaryUserId/avatarroom');
     },
   },
 };
