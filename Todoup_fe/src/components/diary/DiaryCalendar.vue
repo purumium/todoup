@@ -1,6 +1,6 @@
 <template>
   <div class="w-100">
-    <div class="calendar-container">
+    <div>
       <h4>나의 성장일기</h4>
       <full-calendar :options="calendarOptions"></full-calendar>
       <router-view></router-view>
@@ -15,7 +15,7 @@ import interactionPlugin from '@fullcalendar/interaction'; // 메서드 사용
 import koLocale from '@fullcalendar/core/locales/ko'; // 한글 로케일 데이터 가져오기
 
 export default {
-  props: ['mood'], // params를 받기 위해서 props 설정이 필요
+  props: ['mood'], // 경로 내의 params를 받기 위해서 props 설정이 필요
   components: {
     'full-calendar': FullCalendar,
   },

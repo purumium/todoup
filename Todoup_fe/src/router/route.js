@@ -5,8 +5,8 @@ import MainCompo from '@/components/MainCompo.vue';
 import ViewCompo from '@/components/ViewCompo.vue';
 import HomeCompo from '@/components/HomeCompo.vue';
 import TodoCalendar from '@/components/TodoCalendar.vue';
-import DiaryCalendar from '@/components/DiaryCalendar.vue';
-import DiaryEntry from '@/components/DiaryEntry.vue';
+import DiaryCalendar from '@/components/diary/DiaryCalendar.vue';
+import DiaryEntry from '@/components/diary/DiaryRoom.vue';
 
 export default [
   {
