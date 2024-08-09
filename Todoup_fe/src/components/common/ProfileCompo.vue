@@ -21,7 +21,7 @@
 import { mapActions } from 'vuex';
 
 export default {
-  name: 'ModalCompo',
+  name: 'ProfileCompo',
   methods: {
     ...mapActions(['fetchFollowedUsers']),
     goToRoom() {
