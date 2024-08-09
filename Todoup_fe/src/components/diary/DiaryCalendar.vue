@@ -11,9 +11,9 @@
 <script>
 import axios from 'axios';
 import FullCalendar from '@fullcalendar/vue3';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction'; // 메서드 사용
-import koLocale from '@fullcalendar/core/locales/ko'; // 한글 로케일 데이터 가져오기
+import dayGridPlugin from '@fullcalendar/daygrid'; // 연,월,주 별로 캘린더 사용
+import interactionPlugin from '@fullcalendar/interaction'; // 풀캘린더 메서드 사용
+import koLocale from '@fullcalendar/core/locales/ko'; // 풀캘린더 한글 설정
 
 export default {
   components: {
@@ -21,28 +21,26 @@ export default {
   },
   data() {
     return {
-      moods: [], // 초기상태
+      emotions: [], // 초기상태
       calendarOptions: null,
     };
   },
   created() {
-    // 컴포넌트가 생성될 때, moods 데이터를 가지고 옴
-    this.fetchMoods();
+    // 컴포넌트가 생성될 때, emotions 데이터를 가지고 옴
+    this.fetchEmotions();
   },
 
   methods: {
-    fetchMoods() {
+    fetchEmotions() {
       axios
-        .get('/api/diary/moods')
+        .get('/api/diary/emotion')
         .then((response) => {
           // mood 데이터가 없더라도 빈 배열로 설정 => 데이터 없이도 캘린더는 떠야함
-          this.moods = response.data || [];
+          this.emotions = response.data || [];
           this.setupCalendarOptions();
         })
         .catch((error) => {
-          // 오류가 발생해도 setupCalendarOptions를 호출하여 빈 배열로 설정된 moods를 처리
           console.error('There was an error fetching the moods:', error);
-          this.setupCalendarOptions();
         });
     },
 
@@ -56,16 +54,16 @@ export default {
           center: '',
           right: 'prev today next',
         },
-        events: this.moods.map((thismood) => ({
+        events: this.emotions.map((emotion) => ({
           title: '',
-          start: thismood.date,
-          display: 'background', // 배경 이벤트
+          start: emotion.date,
+          display: 'background', // 배경 이벤트를 보여주는 설정
           extendedProps: {
-            mood: thismood.mood,
+            mood: emotion.mood,
           },
         })),
-        eventContent: this.renderMoodImgContent, // 커스텀한 이벤트 콘텐츠(셀에 이미지 추가)
-        dateClick: this.handleMoveToDiary, // dateClick 이벤트 핸들러를 추가
+        eventContent: this.renderEmotionImgContent, // 커스텀한 이벤트(셀에 이미지 추가하는 이벤트) 콘텐츠
+        dateClick: this.handleMoveToDateDiary, // date를 클릭했을 때의 이벤트 핸들러를 추가
         height: 550,
         locale: koLocale, // 한글 설정
         dayCellContent: (args) => ({ html: args.dayNumberText.replace('일', '') }), // 날짜 텍스트에서 '일'을 제거
@@ -73,11 +71,11 @@ export default {
     },
 
     // 날짜 셀에 출력할 이벤트 : 이미지 출력
-    renderMoodImgContent(eventInfo) {
+    renderEmotionImgContent(eventInfo) {
       const mood = eventInfo.event.extendedProps.mood;
       var imgSrc = '';
 
-      // img 폴더를 public에 추가
+      // img는 public/diary 폴더에 추가함
       if (mood === 'happy') {
         imgSrc = '/diary/happy.png';
       } else if (mood === 'sad') {
@@ -88,8 +86,7 @@ export default {
         imgSrc = '/diary/exhaust.png';
       }
 
-      console.log(imgSrc);
-
+      // imgSrc가 있는 경우에만, 날짜 셀에 표시
       if (imgSrc) {
         return {
           html: `<img src="${imgSrc}" class="calendar-img"/>`,
@@ -98,8 +95,8 @@ export default {
       return {};
     },
 
-    // 날짜 셀 눌러서, 다이어리로 이동
-    handleMoveToDiary(eventInfo) {
+    // 날짜 셀 눌르면, 해당 날짜에 다이어리 작성 컴포넌트로 이동
+    handleMoveToDateDiary(eventInfo) {
       this.$router.push(`/diary/${eventInfo.dateStr}`);
     },
   },

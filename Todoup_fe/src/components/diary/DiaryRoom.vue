@@ -1,7 +1,7 @@
 <template>
   <div class="w-100">
     <div class="diary-wrapper">
-      <button @click="submitDiary" class="diary-btn">일기 끝!</button>
+      <button @submit="submitDiary" class="diary-btn">일기 끝!</button>
       <table class="diary-table">
         <tr>
           <td colspan="5">
@@ -75,7 +75,7 @@
         </tr>
         <tr>
           <td colspan="5">
-            <textarea v-model="diaryContext" class="textarea-diary"></textarea>
+            <textarea v-model="diaryContent" class="textarea-diary"></textarea>
           </td>
         </tr>
       </table>
@@ -90,7 +90,7 @@ export default {
   props: ['date'], // 경로에서 일기를 작성하는 date를 전달
   data() {
     return {
-      diaryContext: '', // 다이어리 작성 내용
+      diaryContent: '', // 다이어리 작성 내용
       weather: '',
       mood: '',
       imgData: null, // 추가한 사진
@@ -104,10 +104,11 @@ export default {
     },
   },
   methods: {
+    // 숨겨진 파일 입력 요소를 클릭하여 + 버튼 눌렀을 때 파일 선택 대화 상자를 표시
     triggerBtnFileUpload() {
-      // 숨겨진 파일 입력 요소를 클릭하여 + 버튼 눌렀을 때 파일 선택 대화 상자를 표시
       this.$refs.fileInput.click(); // + 버튼을 누르면, ref=fileInput이 클릭됨
     },
+    // 이미지 미리보기 설정: 파일을 읽어서 img url로 생성
     onFileChange(e) {
       // 파일을 선택(파일 입력 요소의 변화가 발생)하면 호출
       const file = e.target.files[0]; // 선택한 파일 가져오기
@@ -119,7 +120,7 @@ export default {
         // 3. 파일이 성공적으로 읽혀지면, onload 이벤트 핸들러 발생해 읽은 데이터 처리
         reader.onload = (e) => {
           this.imgData = e.target.result; // 읽은 파일의 데이터 URL이 포함된 속성
-          this.file = file; // 실제 파일 객체 저장
+          this.file = file; // 실제 파일 객체 저장(DB저장시 사용)
         };
 
         // 2. 파일을 데이터 URL 형식으로 읽기 시작(사진 미리보기를 위해 url로 변경)
@@ -129,18 +130,18 @@ export default {
     submitDiary() {
       // FormData: 이미지 파일을 포함해서 전송시 사용
       const diaryData = new FormData();
-      diaryData.append('date', this.date);
-      diaryData.append('mood', this.mood);
+      diaryData.append('diaryDate', this.date);
+      diaryData.append('emotion', this.mood);
       diaryData.append('weather', this.weather);
-      diaryData.append('diaryContext', this.diaryContext);
+      diaryData.append('content', this.diaryContent);
 
       // 파일이 선택된 경우에만 데이터 추가
       if (this.file) {
-        diaryData.append('image', this.file);
+        diaryData.append('imgUrl', this.file);
       }
 
       axios
-        .post('/api/diary', diaryData, {
+        .post('/api/diary/insert', diaryData, {
           header: {
             'Content-Type': 'multipart/form-data',
           },
