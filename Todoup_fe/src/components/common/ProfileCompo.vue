@@ -9,8 +9,8 @@
         <div>todolist@gmail.com</div>
       </div>
       <div class="my-follow-btn">
-        <div @click="toggleModal">팔로잉</div>
-        <div>팔로워</div>
+        <div @click="fetchFollowedUsers">팔로잉</div>
+        <div @click="showUserId">팔로워</div>
         <div>친구찾기</div>
       </div>
     </div>
@@ -18,18 +18,28 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
-  name: 'ProfileCompo',
-  computed: {
-    ...mapState(['loginId']),
-  },
+  name: 'ModalCompo',
   methods: {
-    ...mapActions(['toggleModal']),
+    ...mapActions(['fetchFollowedUsers']),
     goToRoom() {
       // this.$router.push(`/room/${this.loginId}/avatarroom`);
       this.$router.push('/room/temporaryUserId/avatarroom');
+    },
+    showUserId() {
+      const storedUserInfo = localStorage.getItem('user_info');
+      if (storedUserInfo) {
+        const userInfo = JSON.parse(storedUserInfo);
+        if (userInfo.userId) {
+          console.log('userInfo:', userInfo);
+        } else {
+          console.log('userInfo가 정의되지 않았습니다.');
+        }
+      } else {
+        console.log('userInfo가 로컬 스토리지에 없습니다.');
+      }
     },
   },
 };

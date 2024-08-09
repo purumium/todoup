@@ -10,6 +10,7 @@ import RoomCompo from '@/components/room/RoomCompo.vue';
 import AvatarRoom from '@/components/room/avatar/AvatarRoom.vue';
 import MyReport from '@/components/room/report/MyReport.vue';
 import CreateTodo from '@/components/todo/CreateTodo.vue';
+import TodoList from '@/components/todo/TodoList.vue';
 
 export default [
   {
@@ -31,8 +32,13 @@ export default [
                 alias: 'todo',
               },
               {
-                path: 'todo/:date',
+                path: 'todo/create',
                 component: CreateTodo,
+                props: true,
+              },
+              {
+                path: 'todo/:date',
+                component: TodoList,
                 props: true,
               },
               {
