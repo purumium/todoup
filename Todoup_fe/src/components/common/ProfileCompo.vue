@@ -39,7 +39,6 @@ export default {
       }
     },
     goToRoom() {
-      console.log(this.userInfo.userId);
       if (this.userInfo && this.userInfo.userId) {
         this.$router.push(`/room/${this.userInfo.userId}/avatarroom`);
       } else {
