@@ -10,7 +10,7 @@ import java.util.List;
 public interface TodoMapper {
     void insertTodo(TodoDTO todoDTO);
 
-    List<TodoDTO> selectTodosByDate(@Param("date") String date);
+    List<TodoDTO> selectTodosByDate(long userId, @Param("date") String date);
 
     TodoDTO selectTodoById(@Param("todoId") long todoId);
 }

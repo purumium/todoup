@@ -13,8 +13,8 @@ public class TodoService {
     @Autowired
     private TodoMapper todoMapper;
 
-    public List<TodoDTO> getTodosByDate(String date) {
-        return todoMapper.selectTodosByDate(date);
+    public List<TodoDTO> getTodosByDate(long userid, String date) {
+        return todoMapper.selectTodosByDate(userid, date);
     }
 
     public TodoDTO getTodoById(long todoId) {

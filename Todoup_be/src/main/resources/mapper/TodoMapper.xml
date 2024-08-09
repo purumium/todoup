@@ -21,8 +21,10 @@
     <![CDATA[
         SELECT TODO_ID, USER_ID, TITLE, COMPLETED, CATEGORY, START_DATE, END_DATE
         FROM TODO_LIST
-        WHERE START_DATE <= #{date}
-          AND END_DATE >= #{date}
+        WHERE TO_CHAR(START_DATE, 'YYYY-MM-DD') <= #{date}
+          AND TO_CHAR(END_DATE, 'YYYY-MM-DD') >= #{date}
+          AND USER_ID = #{userId}
+
         ]]>
     </select>
 
