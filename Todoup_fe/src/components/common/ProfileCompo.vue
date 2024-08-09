@@ -21,11 +21,12 @@
 import { mapActions } from 'vuex';
 
 export default {
-  name: 'ModalCompo',
+  name: 'ProfileCompo',
   methods: {
     ...mapActions(['fetchFollowedUsers']),
     goToRoom() {
-      this.$router.push('/room');
+      // this.$router.push(`/room/${this.loginId}/avatarroom`);
+      this.$router.push('/room/temporaryUserId/avatarroom');
     },
     showUserId() {
       const storedUserInfo = localStorage.getItem('user_info');
