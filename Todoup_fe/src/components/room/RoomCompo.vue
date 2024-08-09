@@ -8,11 +8,13 @@
         <button>REPORT</button>
       </router-link>
     </div>
-    <router-view></router-view>
+    <router-view :login-id="loginId" :owner-id="ownerId"></router-view>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'RoomCompo',
   props: {
@@ -21,12 +23,10 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      loginId: 'temporaryUserId', // 임시 로그인 ID
-    };
-  },
   computed: {
+    ...mapState('user', {
+      loginId: (state) => String(state.user_info.userId), // 화살표 함수: Vuex의 user_info.userId를 loginId로 매핑 // ownerId와 맞춰서 String
+    }),
     isMyRoom() {
       return this.loginId === this.ownerId;
     },
