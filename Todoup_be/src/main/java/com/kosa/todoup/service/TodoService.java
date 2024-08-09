@@ -5,7 +5,7 @@ import com.kosa.todoup.mapper.TodoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
+import java.util.List;
 
 @Service
 public class TodoService {
@@ -13,7 +13,15 @@ public class TodoService {
     @Autowired
     private TodoMapper todoMapper;
 
-    public void insertTodo(TodoDTO todoDTO) throws SQLException {
+    public List<TodoDTO> getTodosByDate(long userid, String date) {
+        return todoMapper.selectTodosByDate(userid, date);
+    }
+
+    public TodoDTO getTodoById(long todoId) {
+        return todoMapper.selectTodoById(todoId);
+    }
+
+    public void insertTodo(TodoDTO todoDTO) {
         todoMapper.insertTodo(todoDTO);
     }
 }
