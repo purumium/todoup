@@ -22,6 +22,7 @@ public class DiaryController {
             @ModelAttribute DiaryDTO diary,
             @RequestParam(value="imgUrl", required = false)MultipartFile imgUrl
     ) {
+        System.out.println(diary.toString());
         // user 연결되면 바꿔서 사용
         int userId = 1;
         diary.setUserId(userId);
