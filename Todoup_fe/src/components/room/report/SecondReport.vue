@@ -1,14 +1,19 @@
-<!-- Report2.vue -->
 <template>
   <div>
-    <h2>Report 2</h2>
-    <!-- 리포트 2 내용 -->
+    <p>SecondReport for {{ loginId }}</p>
+    <!-- 리포트 내용 -->
   </div>
 </template>
 
 <script>
 export default {
   name: 'SecondReport',
+  props: {
+    loginId: {
+      type: String,
+      required: true,
+    },
+  },
 };
 </script>
 

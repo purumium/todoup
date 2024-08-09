@@ -5,11 +5,11 @@
     </div>
     <div class="profile-bottom">
       <div class="my-name">
-        <div>김투두</div>
-        <div>todolist@gmail.com</div>
+        <div>{{ userInfo?.nickName || '김투두' }}</div>
+        <div>{{ userInfo?.email || 'todolist@gmail.com' }}</div>
       </div>
       <div class="my-follow-btn">
-        <div @click="fetchFollowedUsers">팔로잉</div>
+        <div @click="fetchFollowedUsers(userInfo.userId)">팔로잉</div>
         <div @click="showUserId">팔로워</div>
         <div>친구찾기</div>
       </div>
@@ -18,27 +18,40 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 export default {
-  name: 'ModalCompo',
+  name: 'ProfileCompo',
   computed: {
-    ...mapGetters({
-      userInfo: 'user/getUserInfo', // Vuex의 getUserInfo getter를 userInfo로 매핑
+    ...mapState('user', {
+      userInfo: 'user_info', // Vuex의 user_info 상태를 userInfo로 매핑
     }),
   },
   methods: {
-    ...mapActions(['fetchFollowedUsers']),
-    goToRoom() {
-      this.$router.push('/room');
-    },
-    showUserId() {
-      if (this.userInfo && this.userInfo.userId) {
-        console.log('userInfo-vuex:', this.userInfo);
+    ...mapActions({
+      loadFollowedUsers: 'fetchFollowedUsers',
+    }),
+    fetchFollowedUsers(userId) {
+      if (userId) {
+        this.loadFollowedUsers(userId); // 변경된 메서드 이름 사용
       } else {
-        console.log('userInfo가 정의되지 않았습니다.');
+        console.error('User ID가 유효하지 않습니다.');
       }
     },
+  },
+  goToRoom() {
+    if (this.userInfo && this.userInfo.userId) {
+      this.$router.push(`/room/${this.userInfo.userId}/avatarroom`);
+    } else {
+      console.error('User ID is not available.');
+    }
+  },
+  showUserId() {
+    if (this.userInfo && this.userInfo.userId) {
+      console.log('userInfo-vuex:', this.userInfo);
+    } else {
+      console.log('userInfo가 정의되지 않았습니다.');
+    }
   },
 };
 </script>

@@ -24,15 +24,14 @@ export default {
   name: 'AvataRoom',
   components: { BackGround, AvatarCharacter, GuestBook },
   props: {
+    loginId: {
+      type: String,
+      required: true,
+    },
     ownerId: {
       type: String,
       required: true,
     },
-  },
-  data() {
-    return {
-      loginId: 'temporaryUserId', // 임시 로그인 ID
-    };
   },
   computed: {
     isMyRoom() {
