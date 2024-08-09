@@ -35,11 +35,7 @@ export default {
   data() {
     return {
       username: '',
-      users: [
-        { id: 1, nickname: '홍길동', level: 1, checked: true },
-        { id: 2, nickname: '김찬희', level: 10, checked: false },
-        { id: 3, nickname: '최유환', level: 5, checked: true },
-      ],
+      users: [],
     };
   },
   computed: {
