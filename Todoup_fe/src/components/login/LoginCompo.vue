@@ -45,18 +45,15 @@ const checkUser = async (email, password) => {
     withCredentials: true,
   });
 
-  const data = response.data[0];
-  if (data.email === email && data.password === password) {
-    return true;
-  } else {
-    return false;
-  }
+  return response.data[0]; // 사용자 정보를 반환
 };
+
 export default {
   data() {
     return {
       email: '',
       password: '',
+      userId: null,
     };
   },
   computed: {
@@ -67,14 +64,17 @@ export default {
       this.$router.push('signup');
     },
     doLogin() {
-      checkUser(this.email, this.password).then((result) => {
-        if (result) {
+      checkUser(this.email, this.password).then((userData) => {
+        if (userData) {
           alert('로그인 되었습니다.');
-          this.login({ email: this.email, check: true });
+          this.login(userData); // userData에는 userId 포함
+          this.userId = userData; // userId를 data()에 저장
+          console.log('로그인', this.userId);
           this.$router.push('/');
         } else {
           alert('아이디 혹은 비밀번호를 확인해주세요.');
           this.login({ email: null, check: false });
+          this.userId = null; // 로그인 실패 시 userId를 null로 설정
         }
       });
     },
