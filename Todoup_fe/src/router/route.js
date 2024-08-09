@@ -9,7 +9,7 @@ import DiaryRoom from '@/components/diary/DiaryRoom.vue';
 import RoomCompo from '@/components/room/RoomCompo.vue';
 import AvatarRoom from '@/components/room/avatar/AvatarRoom.vue';
 import MyReport from '@/components/room/report/MyReport.vue';
-import CreateTodo from '@/components/todo/CreateTodo.vue';
+import CreateTodo from '@/components/todo/TodoCreate.vue';
 import TodoList from '@/components/todo/TodoList.vue';
 
 export default [

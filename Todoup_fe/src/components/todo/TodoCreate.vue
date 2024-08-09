@@ -20,11 +20,11 @@
       </div>
       <div class="form-group mb-3">
         <label for="startDate">시작 날짜</label>
-        <input type="date" id="startDate" v-model="todo.startDate" class="form-control" required />
+        <input type="date" id="startDate" v-model="todo.start_date" class="form-control" required />
       </div>
       <div class="form-group mb-3">
         <label for="endDate">종료 날짜</label>
-        <input type="date" id="endDate" v-model="todo.endDate" class="form-control" />
+        <input type="date" id="endDate" v-model="todo.end_date" class="form-control" />
       </div>
       <div class="d-flex justify-content-end">
         <button type="submit" class="px-3 py-2">Create</button>
@@ -41,12 +41,12 @@ export default {
   data() {
     return {
       todo: {
-        userId: 6,
+        user_id: 6,
         title: '',
         memo: '',
         category: '',
-        startDate: '',
-        endDate: '',
+        start_date: '',
+        end_date: '',
       },
       categories: categories,
     };
@@ -70,13 +70,14 @@ export default {
     },
     async submitTodo() {
       try {
-        if (!this.todo.endDate) {
-          this.todo.endDate = this.todo.startDate;
+        if (!this.todo.end_date) {
+          this.todo.end_date = this.todo.start_date;
         }
-        console.log(this.todo.title, this.todo.memo, this.todo.category, this.todo.startDate, this.todo.endDate);
+        console.log(this.todo.title, this.todo.memo, this.todo.category, this.todo.start_date, this.todo.end_date);
+
         await axios.post('/api/todo/insert', this.todo);
         alert('Todo created successfully!');
-        this.todo = { userId: 6, title: '', memo: '', category: '', startDate: '', endDate: '' };
+        this.todo = { user_id: 6, title: '', memo: '', category: '', start_date: '', end_date: '' };
         this.$router.push('/');
       } catch (error) {
         console.error('Error creating todo:', error);
