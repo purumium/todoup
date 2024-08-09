@@ -9,7 +9,7 @@
         <div>{{ userInfo?.email || 'todolist@gmail.com' }}</div>
       </div>
       <div class="my-follow-btn">
-        <div @click="fetchFollowedUsers">팔로잉</div>
+        <div @click="fetchFollowedUsers(userInfo.userId)">팔로잉</div>
         <div @click="showUserId">팔로워</div>
         <div>친구찾기</div>
       </div>
@@ -28,21 +28,30 @@ export default {
     }),
   },
   methods: {
-    ...mapActions(['fetchFollowedUsers']),
-    goToRoom() {
-      if (this.userInfo && this.userInfo.userId) {
-        this.$router.push(`/room/${this.userInfo.userId}/avatarroom`);
+    ...mapActions({
+      loadFollowedUsers: 'fetchFollowedUsers',
+    }),
+    fetchFollowedUsers(userId) {
+      if (userId) {
+        this.loadFollowedUsers(userId); // 변경된 메서드 이름 사용
       } else {
-        console.error('User ID is not available.');
+        console.error('User ID가 유효하지 않습니다.');
       }
     },
-    showUserId() {
-      if (this.userInfo && this.userInfo.userId) {
-        console.log('userInfo-vuex:', this.userInfo);
-      } else {
-        console.log('userInfo가 정의되지 않았습니다.');
-      }
-    },
+  },
+  goToRoom() {
+    if (this.userInfo && this.userInfo.userId) {
+      this.$router.push(`/room/${this.userInfo.userId}/avatarroom`);
+    } else {
+      console.error('User ID is not available.');
+    }
+  },
+  showUserId() {
+    if (this.userInfo && this.userInfo.userId) {
+      console.log('userInfo-vuex:', this.userInfo);
+    } else {
+      console.log('userInfo가 정의되지 않았습니다.');
+    }
   },
 };
 </script>
