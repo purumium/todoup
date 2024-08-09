@@ -8,14 +8,17 @@ const store = {
   mutations: {
     login(state, payload) {
       state.user_info = payload;
+      localStorage.setItem('user_info', JSON.stringify(payload));
     },
     logout(state, payload) {
       state.user_info = payload;
+      localStorage.removeItem('user_info');
     },
     logfail(state, payload) {
       state.user_info = payload;
     },
   },
+
   actions: {
     login(context, payload) {
       context.commit('login', payload);
