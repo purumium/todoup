@@ -36,9 +36,10 @@ public class TodoController {
         return new ResponseEntity<>(todos, HttpStatus.OK);
     }
 
-    @GetMapping("/{todoId}")
-    public ResponseEntity<TodoDTO> getTodoById(@PathVariable long todoId) throws SQLException {
-        TodoDTO todo = todoService.getTodoById(todoId);
-        return new ResponseEntity<>(todo, HttpStatus.OK);
+    @GetMapping("month/{date}")
+    public ResponseEntity<List<TodoDTO>> getTodosByMonth(@PathVariable String date) throws SQLException {
+        long userId = 6;
+        List<TodoDTO> todos = todoService.getTodosByMonth(userId, date);
+        return new ResponseEntity<>(todos, HttpStatus.OK);
     }
 }

@@ -9,8 +9,6 @@ import java.util.List;
 @Mapper
 public interface TodoMapper {
     void insertTodo(TodoDTO todoDTO);
-
     List<TodoDTO> selectTodosByDate(long userId, @Param("date") String date);
-
-    TodoDTO selectTodoById(@Param("todoId") long todoId);
+    List<TodoDTO> selectTodosByMonth(long userId, @Param("date") String date);
 }

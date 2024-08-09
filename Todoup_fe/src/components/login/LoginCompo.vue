@@ -69,7 +69,7 @@ export default {
           alert('로그인 되었습니다.');
           this.login(userData); // userData에는 userId 포함
           this.userId = userData; // userId를 data()에 저장
-          console.log('로그인', this.userId);
+          console.log('로그인-vuex', this.userId);
           this.$router.push('/');
         } else {
           alert('아이디 혹은 비밀번호를 확인해주세요.');
