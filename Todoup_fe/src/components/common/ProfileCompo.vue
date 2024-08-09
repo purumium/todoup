@@ -18,27 +18,25 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
-  name: 'ProfileCompo',
+  name: 'ModalCompo',
+  computed: {
+    ...mapGetters({
+      userInfo: 'user/getUserInfo', // Vuex의 getUserInfo getter를 userInfo로 매핑
+    }),
+  },
   methods: {
     ...mapActions(['fetchFollowedUsers']),
     goToRoom() {
-      // this.$router.push(`/room/${this.loginId}/avatarroom`);
-      this.$router.push('/room/temporaryUserId/avatarroom');
+      this.$router.push('/room');
     },
     showUserId() {
-      const storedUserInfo = localStorage.getItem('user_info');
-      if (storedUserInfo) {
-        const userInfo = JSON.parse(storedUserInfo);
-        if (userInfo.userId) {
-          console.log('userInfo:', userInfo);
-        } else {
-          console.log('userInfo가 정의되지 않았습니다.');
-        }
+      if (this.userInfo && this.userInfo.userId) {
+        console.log('userInfo-vuex:', this.userInfo);
       } else {
-        console.log('userInfo가 로컬 스토리지에 없습니다.');
+        console.log('userInfo가 정의되지 않았습니다.');
       }
     },
   },
