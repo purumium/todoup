@@ -77,6 +77,7 @@ export default {
         await axios.post('/api/todo/insert', this.todo);
         alert('Todo created successfully!');
         this.todo = { userId: 6, title: '', memo: '', category: '', startDate: '', endDate: '' };
+        this.$router.push('/');
       } catch (error) {
         console.error('Error creating todo:', error);
         alert('There was an error creating the todo.');

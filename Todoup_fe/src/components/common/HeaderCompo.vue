@@ -15,7 +15,12 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
+  computed: {
+    ...mapGetters({ user_info: 'user/getuserInfo' }),
+  },
   methods: {
     goToHome() {
       this.$router.push('/');

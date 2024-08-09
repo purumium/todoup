@@ -1,7 +1,7 @@
 <template>
   <div class="signupform">
     <h3>회원가입</h3>
-    <form @submit="doSignUp">
+    <form @submit.prevent="doSignUp">
       <div class="form-floating mb-3">
         <input
           type="email"
@@ -72,12 +72,13 @@ export default {
   methods: {
     async doSignUp() {
       try {
-        await axios.post('/api/signup', {
+        const response = await axios.post('/api/signup', {
           email: this.email,
           nickName: this.nickname,
           password: this.password,
         });
-        alert('회원가입 되었습니다.');
+        alert(response.data);
+        this.$router.push('/');
       } catch (error) {
         alert('회원가입에 실패 : ' + error.response.data);
       }
