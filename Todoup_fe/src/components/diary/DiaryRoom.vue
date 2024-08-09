@@ -1,7 +1,7 @@
 <template>
   <div class="w-100">
     <div class="diary-wrapper">
-      <button @submit="submitDiary" class="diary-btn">일기 끝!</button>
+      <button @click="submitDiary" class="diary-btn">일기 끝!</button>
       <table class="diary-table">
         <tr>
           <td colspan="5">
@@ -94,6 +94,7 @@ export default {
       weather: '',
       mood: '',
       imgData: null, // 추가한 사진
+      file: null,
     };
   },
   computed: {
@@ -111,20 +112,20 @@ export default {
     // 이미지 미리보기 설정: 파일을 읽어서 img url로 생성
     onFileChange(e) {
       // 파일을 선택(파일 입력 요소의 변화가 발생)하면 호출
-      const file = e.target.files[0]; // 선택한 파일 가져오기
+      this.file = e.target.files[0]; // 선택한 파일 가져오기
 
       // onload 이벤트 핸들러: 파일이 성공적으로 읽혀지면 호출
-      if (file) {
+      if (this.file) {
         const reader = new FileReader(); // 1. 파일을 읽기 위한 객체
 
         // 3. 파일이 성공적으로 읽혀지면, onload 이벤트 핸들러 발생해 읽은 데이터 처리
         reader.onload = (e) => {
           this.imgData = e.target.result; // 읽은 파일의 데이터 URL이 포함된 속성
-          this.file = file; // 실제 파일 객체 저장(DB저장시 사용)
+          //this.file = file; // 실제 파일 객체 저장(DB저장시 사용)
         };
 
         // 2. 파일을 데이터 URL 형식으로 읽기 시작(사진 미리보기를 위해 url로 변경)
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(this.file);
       }
     },
     submitDiary() {
@@ -137,17 +138,15 @@ export default {
 
       // 파일이 선택된 경우에만 데이터 추가
       if (this.file) {
-        diaryData.append('imgUrl', this.file);
+        diaryData.append('imgFile', this.file);
+        console.log(`파일 이름 : ${this.file}`);
       }
 
       axios
-        .post('/api/diary/insert', diaryData, {
-          header: {
-            'Content-Type': 'multipart/form-data',
-          },
-        })
+        .post('/api/diary/insert', diaryData)
         .then((response) => {
           console.log('Diary saved successfully:', response.data);
+
           // 일기를 저장한 후, diarycalendar로 이동
           this.$router.push('/diary');
         })
