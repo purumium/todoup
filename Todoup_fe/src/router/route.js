@@ -55,17 +55,23 @@ export default [
             ],
           },
           {
-            path: '/room',
+            path: '/room/:ownerId',
             component: RoomCompo,
+            props: true,
             children: [
               {
-                path: '/room',
-                component: AvatarRoom,
-                alias: '/room/avatarroom',
+                path: '',
+                redirect: 'avatarroom', // 기본 경로를 avatarroom으로 리다이렉트
               },
               {
-                path: '/room/report',
+                path: 'avatarroom',
+                component: AvatarRoom,
+                props: true, // URL 파라미터를 props로 전달
+              },
+              {
+                path: 'report',
                 component: MyReport,
+                props: true,
               },
             ],
           },
