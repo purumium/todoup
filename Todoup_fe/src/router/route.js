@@ -57,7 +57,7 @@ export default [
           {
             path: '/room/:ownerId',
             component: RoomCompo,
-            props: true,
+            props: true, // URL 파라미터를 props로 전달
             children: [
               {
                 path: '',
@@ -66,12 +66,12 @@ export default [
               {
                 path: 'avatarroom',
                 component: AvatarRoom,
-                props: true, // URL 파라미터를 props로 전달
+                // props: true,
               },
               {
                 path: 'report',
                 component: MyReport,
-                props: true,
+                // props: true,
               },
             ],
           },
