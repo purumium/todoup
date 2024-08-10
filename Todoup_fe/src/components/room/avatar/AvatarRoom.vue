@@ -4,12 +4,12 @@
     <back-ground>
       <template #avatar>
         <div class="avatar-wrapper" :class="{ 'is-friend-room': !isMyRoom }">
-          <avatar-character class="avatar" />
-          <avatar-character v-if="!isMyRoom" class="avatar friend-avatar" />
+          <avatar-character :character-id="loginId" class="avatar" />
+          <avatar-character v-if="!isMyRoom" :character-id="ownerId" class="avatar friend-avatar" />
         </div>
       </template>
       <template #guestbook>
-        <guest-book />
+        <guest-book :login-id="loginId" :owner-id="ownerId" />
       </template>
     </back-ground>
   </div>
