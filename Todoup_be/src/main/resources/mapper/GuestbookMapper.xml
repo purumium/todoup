@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kosa.todoup.mapper.GuestbookMapper">
+    <!-- ownerId와 날짜 범위로 방명록을 조회 -->
+    <select id="findRecentByOwner" parameterType="map" resultType="com.kosa.todoup.dto.GuestbookDTO">
+        SELECT GUESTBOOK_ID, USER_ID, WRITER_ID, CONTENT, REGDATE_AT
+        FROM GUESTBOOK
+        WHERE USER_ID = #{ownerId}
+          AND REGDATE_AT >= SYSDATE - #{daysAgo}
+        ORDER BY REGDATE_AT DESC
+    </select>
+
+    <!-- 특정 사용자의 친구 아바타방 방문 시 방명록 조회 (ownerId와 writerId 기준) -->
+    <select id="findByOwnerAndWriter" parameterType="map" resultType="com.kosa.todoup.dto.GuestbookDTO">
+        SELECT GUESTBOOK_ID, USER_ID, WRITER_ID, CONTENT, REGDATE_AT
+        FROM GUESTBOOK
+        WHERE USER_ID = #{ownerId}
+          AND WRITER_ID = #{writerId}
+        ORDER BY REGDATE_AT DESC
+    </select>
+
+    <!-- 새로운 방명록 항목 추가 (writerId 기준) -->
+    <insert id="insertGuestbook" parameterType="com.kosa.todoup.dto.GuestbookDTO" useGeneratedKeys="true" keyProperty="guestbookId">
+        INSERT INTO GUESTBOOK (USER_ID, WRITER_ID, CONTENT, REGDATE_AT)
+        VALUES (#{userId}, #{writerId}, #{content}, SYSDATE)
+    </insert>
+
+    <!-- 방명록 항목 수정 (writerId 기준) -->
+    <update id="updateGuestbook" parameterType="com.kosa.todoup.dto.GuestbookDTO">
+        UPDATE GUESTBOOK
+        SET CONTENT = #{content}
+        WHERE GUESTBOOK_ID = #{guestbookId}
+          AND WRITER_ID = #{writerId}
+    </update>
+
+    <!-- 방명록 항목 삭제 (userId 또는 writerId 기준) -->
+    <delete id="deleteGuestbookByUserId" parameterType="map">
+        DELETE FROM GUESTBOOK
+        WHERE GUESTBOOK_ID = #{guestbookId}
+          AND USER_ID = #{userId}
+    </delete>
+
+    <delete id="deleteGuestbookByWriterId" parameterType="map">
+        DELETE FROM GUESTBOOK
+        WHERE GUESTBOOK_ID = #{guestbookId}
+          AND WRITER_ID = #{writerId}
+    </delete>
+
+</mapper>
