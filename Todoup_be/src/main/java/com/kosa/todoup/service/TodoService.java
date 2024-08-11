@@ -24,4 +24,8 @@ public class TodoService {
     public void insertTodo(TodoDTO todoDTO) {
         todoMapper.insertTodo(todoDTO);
     }
+
+    public void toggleTodoCompletion(long todoId, int completed) {
+        todoMapper.toggleTodoCompletion(todoId, completed);
+    }
 }

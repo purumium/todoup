@@ -10,7 +10,7 @@
         </form>
         <ul>
           <li v-for="todo in todos" :key="todo.todoId" class="d-flex align-items-center">
-            <input type="checkbox" :checked="todo.completed" />
+            <input type="checkbox" :checked="todo.completed" @change="toggleCompletion(todo)" />
             <p class="align-middle" @click="selectTodo(todo)">{{ todo.title }}</p>
           </li>
         </ul>
@@ -61,9 +61,25 @@ export default {
       try {
         const response = await axios.get(`/api/todo/date/${this.date}`);
         this.todos = response.data; // 응답 데이터를 todos 배열에 저장
-        console.log(this.todos);
       } catch (error) {
         console.error('Error getting todos:', error);
+      }
+    },
+    async toggleCompletion(todo) {
+      try {
+        const newCompletionStatus = todo.completed === 1 ? 0 : 1;
+
+        await axios.post(`/api/todo/completion/${todo.todo_id}`, null, {
+          params: {
+            completed: newCompletionStatus,
+          },
+        });
+
+        todo.completed = newCompletionStatus;
+        alert('할일 상태 변경');
+      } catch (error) {
+        console.error('Error toggling completion status:', error);
+        alert('할일 상태를 업데이트하는 중 오류가 발생했습니다.');
       }
     },
     selectTodo(todo) {
@@ -74,21 +90,13 @@ export default {
         this.newTodo.start_date = this.date;
         this.newTodo.end_date = this.date;
 
-        console.log(
-          this.newTodo.title,
-          this.newTodo.memo,
-          this.newTodo.category,
-          this.newTodo.start_date,
-          this.newTodo.end_date
-        );
-
         await axios.post('/api/todo/insert', this.newTodo);
         alert('Todo created successfully!');
         this.getTodos(); // 새로 추가된 할일 포함하여 리스트 갱신
         this.newTodo.title = '';
       } catch (error) {
         console.error('Error creating todo:', error);
-        alert('There was an error creating the todo.');
+        alert('할일을 생성하는 중 오류가 발생했습니다.');
       }
     },
   },

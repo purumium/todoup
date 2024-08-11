@@ -52,9 +52,15 @@ export default {
     };
   },
   created() {
+    this.setDefaultDates();
     this.loadCategories();
   },
   methods: {
+    setDefaultDates() {
+      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 현재 날짜 가져오기
+      this.todo.start_date = today;
+      this.todo.end_date = today;
+    },
     async loadCategories() {
       try {
         // JSON 파일로부터 카테고리 데이터를 가져옴
@@ -78,6 +84,7 @@ export default {
         await axios.post('/api/todo/insert', this.todo);
         alert('Todo created successfully!');
         this.todo = { user_id: 6, title: '', memo: '', category: '', start_date: '', end_date: '' };
+        this.setDefaultDates(); // 새로운 TODO를 생성한 후에도 디폴트 날짜를 설정
         this.$router.push('/');
       } catch (error) {
         console.error('Error creating todo:', error);

@@ -37,6 +37,14 @@
           AND TO_CHAR(END_DATE, 'YYYY-MM') >= #{date}
           AND USER_ID = #{userId}
         ]]>
-</select>
+    </select>
+
+    <!-- 할일 완료 상태 업데이트 -->
+    <update id="toggleTodoCompletion" parameterType="map">
+        UPDATE TODO_LIST
+        SET COMPLETED = #{completed}
+        WHERE TODO_ID = #{todoId}
+    </update>
+
 
 </mapper>
