@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kosa.todoup.mapper.FollowMapper">
+
+    <!-- 내가 팔로우한 사람들 / 팔로잉 -->
+    <select id="findFollowing" parameterType="long" resultType="com.kosa.todoup.dto.FollowDTO">
+        SELECT f.user_id,
+               f.follow_id,
+               u1.nickname AS userNickname,
+               u2.nickname AS followNickname,
+               u2.lv,
+               u2.points,
+               a.img_url
+        FROM follow f
+                 JOIN users u1 ON f.user_id = u1.user_id
+                 JOIN users u2 ON f.follow_id = u2.user_id
+                 JOIN avatar_list a ON u2.avatar_type = a.avatar_type AND u2.lv = a.lv
+        WHERE f.user_id = #{userId}
+    </select>
+    <!--  팔로잉 하기  -->
+    <insert id="insertFollow" parameterType="map">
+        INSERT INTO follow (user_id, follow_id)
+        VALUES (#{userId}, #{followId})
+    </insert>
+
+    <!-- 팔로잉 취소  -->
+    <delete id="deleteFollow" parameterType="map">
+        DELETE FROM follow
+        WHERE user_id = #{userId}
+          AND follow_id = #{followId}
+    </delete>
+
+    <!-- 나를 팔로우한 사람들 / 팔로워 -->
+    <select id="findFollowers" parameterType="long" resultType="com.kosa.todoup.dto.FollowDTO">
+        SELECT u.user_id, u.email, u.nickname, u.lv, u.points, a.img_url
+        FROM follow f
+                 JOIN users u ON f.user_id = u.user_id
+                 JOIN avatar_list a ON u.avatar_type = a.avatar_type AND u.lv = a.lv
+        WHERE f.follow_id = #{userId}
+    </select>
+
+</mapper>
