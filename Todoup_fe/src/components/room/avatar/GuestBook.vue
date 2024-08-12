@@ -1,6 +1,12 @@
 <template>
   <div class="guestbook-container">
     <h2>{{ ownerId }}'s GuestBook</h2>
+    <!-- 방명록 입력창: 친구의 방일 경우에만 표시 -->
+    <div v-if="!isMyRoom" class="new-message-form">
+      <textarea v-model="newMessageContent" placeholder="친구에게 응원의 한마디!" rows="3"></textarea>
+      <button @click="submitMessage">남기기</button>
+    </div>
+
     <div v-for="(message, index) in messages" :key="index" class="bubble">
       <p>{{ message.content }}</p>
       <small>Written by: {{ message.writerId }}</small>
@@ -27,12 +33,8 @@ export default {
   },
   data() {
     return {
-      messages: [
-        // 예시
-        // '오 레벨 높은데~오 레벨 높은데~오 레벨 높은데~오 레벨 높은데~오 레벨 높은데~',
-        // '좋튀',
-        // '멋진 방이네요!',
-      ],
+      messages: [],
+      newMessageContent: '',
     };
   },
   computed: {
@@ -54,7 +56,37 @@ export default {
           this.messages = response.data;
         }
       } catch (e) {
-        console.error('Failed to load guestbook messages:', e);
+        console.error('방명록을 제대로 불러오지 못 했습니다.', e);
+      }
+    },
+    async submitMessage() {
+      if (this.newMessageContent.trim() === '') {
+        alert('내용을 채워주세요.');
+        return;
+      }
+
+      try {
+        const newMessage = {
+          userId: this.ownerId,
+          writerId: this.loginId,
+          content: this.newMessageContent,
+        };
+        console.log('등록1: 세팅');
+
+        const response = await axios.post(`/api/guestbooks/users/${this.ownerId}/writers/${this.loginId}`, newMessage);
+        console.log('등록2: db 갖다옴');
+        console.log('Response status:', response.status);
+
+        if (response.status === 201) {
+          // 전체 리스트를 다시 로드
+          await this.fetchGuestbookMessages();
+          // 입력 필드 초기화
+          this.newMessageContent = '';
+        } else {
+          console.error('방명록 남기기가 제대로 완료되지 못 했습니다.', response.status, response.statusText);
+        }
+      } catch (e) {
+        console.error('방명록 남기기가 제대로 완료되지 못 했습니다.', e);
       }
     },
     formatRelativeDate(date) {

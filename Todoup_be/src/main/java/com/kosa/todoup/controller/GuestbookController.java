@@ -3,6 +3,8 @@ package com.kosa.todoup.controller;
 import com.kosa.todoup.dto.GuestbookDTO;
 import com.kosa.todoup.service.GuestbookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -35,11 +37,12 @@ public class GuestbookController {
 
     // 방명록 작성
     @PostMapping("/users/{ownerId}/writers/{writerId}")
-    public void createGuestbook(
+    public ResponseEntity<Void> createGuestbook(
             @PathVariable Long ownerId,
             @PathVariable Long writerId,
             @RequestBody GuestbookDTO guestbookDTO) {
         guestbookService.createGuestbook(guestbookDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();  // 성공 시 201 Created 반환
     }
 
     // 방명록 수정

@@ -14,7 +14,6 @@ public interface GuestbookMapper {
     List<GuestbookDTO> findByOwnerAndWriter(@Param("ownerId") Long ownerId, @Param("writerId") Long writerId);
 
     // 새로운 방명록 항목 추가 (writerId 기준)
-    @Options(useGeneratedKeys = true, keyProperty = "guestbookId")
     int insertGuestbook(GuestbookDTO guestbookDTO);
 
     // 방명록 항목 수정 (writerId 기준)

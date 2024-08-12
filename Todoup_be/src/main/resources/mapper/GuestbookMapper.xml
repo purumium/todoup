@@ -31,7 +31,7 @@
     </select>
 
     <!-- 새로운 방명록 항목 추가 (writerId 기준) -->
-    <insert id="insertGuestbook" parameterType="com.kosa.todoup.dto.GuestbookDTO" useGeneratedKeys="true" keyProperty="guestbookId">
+    <insert id="insertGuestbook" parameterType="com.kosa.todoup.dto.GuestbookDTO">
         INSERT INTO GUESTBOOK (USER_ID, WRITER_ID, CONTENT, REGDATE_AT)
         VALUES (#{userId}, #{writerId}, #{content}, SYSDATE)
     </insert>
