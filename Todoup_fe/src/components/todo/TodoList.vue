@@ -67,14 +67,12 @@ export default {
     },
     async toggleCompletion(todo) {
       try {
-        const newCompletionStatus = todo.completed === 1 ? 0 : 1;
-
+        const newCompletionStatus = todo.completed ? 0 : 1;
         await axios.post(`/api/todo/completion/${todo.todo_id}`, null, {
           params: {
             completed: newCompletionStatus,
           },
         });
-
         todo.completed = newCompletionStatus;
         alert('할일 상태 변경');
       } catch (error) {

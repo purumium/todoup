@@ -32,4 +32,31 @@
             and nickname = #{nickName}
         </if>
     </select>
+
+    <!-- 포인트 업데이트 -->
+    <update id="updateUserPoints">
+        UPDATE Users
+        SET points = points + #{points}
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 레벨 업데이트 -->
+    <update id="updateUserLevel">
+    <![CDATA[
+    UPDATE Users
+    SET
+        lv = CASE
+             WHEN points >= 1000 THEN lv + 1
+             WHEN points < 0 AND lv > 0 THEN lv - 1
+             ELSE lv
+        END,
+        points = CASE
+             WHEN points >= 1000 THEN points - 1000
+             WHEN points < 0 AND lv > 0 THEN points + 1000
+             ELSE points
+        END
+    WHERE user_id = #{userId}
+    ]]>
+</update>
+
 </mapper>
