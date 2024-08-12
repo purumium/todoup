@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -39,6 +41,15 @@ public class TodoController {
     public ResponseEntity<List<TodoDTO>> getTodosByMonth(@RequestParam("userId") long userId, @PathVariable String date) throws SQLException {
         List<TodoDTO> todos = todoService.getTodosByMonth(userId, date);
         return new ResponseEntity<>(todos, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/today")
+    public List<TodoDTO> getTodayList(@RequestParam long userId) throws SQLException {
+        System.err.println("controller : "+userId);
+        Date date = Date.valueOf(LocalDate.now());
+        System.err.println(todoService.getTodayList(userId, date));
+        return todoService.getTodayList(userId, date);
     }
 
     @PostMapping("/completion/{todoId}")
