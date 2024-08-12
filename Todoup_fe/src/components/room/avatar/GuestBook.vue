@@ -8,9 +8,17 @@
     </div>
 
     <div v-for="(message, index) in messages" :key="index" class="bubble">
-      <p>{{ message.content }}</p>
-      <small>Written by: {{ message.writerId }}</small>
-      <small class="date">&emsp; {{ formatRelativeDate(message.regDateAt) }}</small>
+      <div v-if="!message.isEditing">
+        <p>{{ message.content }}</p>
+        <small>Written by: {{ message.writerId }}</small>
+        <small class="date">&emsp; {{ formatRelativeDate(message.regDateAt) }}</small>
+        <button v-if="isAuthor(message.writerId)" @click="editMessage(index)">수정</button>
+      </div>
+      <div v-else>
+        <textarea v-model="message.content"></textarea>
+        <button @click="submitEdit(index, message.guestbookId)">저장</button>
+        <button @click="cancelEdit(index)">취소</button>
+      </div>
     </div>
   </div>
 </template>
@@ -35,6 +43,7 @@ export default {
     return {
       messages: [],
       newMessageContent: '',
+      originalMessageContent: '', // 수정 전 메시지를 저장하는 변수
     };
   },
   computed: {
@@ -50,10 +59,16 @@ export default {
       try {
         if (this.isMyRoom) {
           const response = await axios.get(`/api/guestbooks/users/${this.ownerId}/recent`);
-          this.messages = response.data;
+          this.messages = response.data.map((message) => ({
+            ...message,
+            isEditing: false,
+          }));
         } else {
           const response = await axios.get(`/api/guestbooks/users/${this.ownerId}/writers/${this.loginId}`);
-          this.messages = response.data;
+          this.messages = response.data.map((message) => ({
+            ...message,
+            isEditing: false,
+          }));
         }
       } catch (e) {
         console.error('방명록을 제대로 불러오지 못 했습니다.', e);
@@ -84,6 +99,34 @@ export default {
         }
       } catch (e) {
         console.error('방명록 남기기가 제대로 완료되지 못 했습니다.', e);
+      }
+    },
+    isAuthor(writerId) {
+      return this.loginId === String(writerId);
+    },
+    editMessage(index) {
+      this.originalMessageContent = this.messages[index].content; // 현재 메시지 내용을 저장
+      this.messages[index].isEditing = true;
+    },
+    cancelEdit(index) {
+      this.messages[index].content = this.originalMessageContent; // 원래 메시지 내용으로 복원
+      this.messages[index].isEditing = false;
+    },
+    async submitEdit(index, guestbookId) {
+      const message = this.messages[index];
+      try {
+        const response = await axios.put(`/api/guestbooks/${guestbookId}/writers/${this.loginId}`, {
+          guestbookId: guestbookId,
+          writerId: this.loginId,
+          content: message.content,
+        });
+        if (response.status === 200) {
+          await this.fetchGuestbookMessages();
+        } else {
+          console.error('방명록 수정이 제대로 완료되지 못 했습니다.', response.status, response.statusText);
+        }
+      } catch (e) {
+        console.error('방명록 수정이 제대로 완료되지 못 했습니다.', e);
       }
     },
     formatRelativeDate(date) {

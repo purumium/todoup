@@ -12,10 +12,10 @@ public interface GuestbookService {
     List<GuestbookDTO> findByOwnerAndWriter(Long ownerId, Long writerId);
 
     // 새로운 방명록 항목 추가 (writerId 기준)
-    void createGuestbook(GuestbookDTO guestbookDTO);
+    int createGuestbook(GuestbookDTO guestbookDTO);
 
     // 방명록 항목 수정 (writerId 기준)
-    void updateGuestbook(GuestbookDTO guestbookDTO);
+    int updateGuestbook(GuestbookDTO guestbookDTO);
 
     // 방명록 항목 삭제 (userId 기준)
     void deleteGuestbookByUserId(Long guestbookId, Long userId);

@@ -41,17 +41,26 @@ public class GuestbookController {
             @PathVariable Long ownerId,
             @PathVariable Long writerId,
             @RequestBody GuestbookDTO guestbookDTO) {
-        guestbookService.createGuestbook(guestbookDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).build();  // 성공 시 201 Created 반환
+        int insertedRows = guestbookService.createGuestbook(guestbookDTO);
+        if (insertedRows > 0) {
+            return ResponseEntity.status(HttpStatus.CREATED).build();  // 201 Created 반환
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();  // 500 Internal Server Error 반환
+        }
     }
 
     // 방명록 수정
     @PutMapping("/{guestbookId}/writers/{writerId}")
-    public void updateGuestbook(
+    public ResponseEntity<Void> updateGuestbook(
             @PathVariable Long guestbookId,
             @PathVariable Long writerId,
             @RequestBody GuestbookDTO guestbookDTO) {
-        guestbookService.updateGuestbook(guestbookDTO);
+        int updatedRows = guestbookService.updateGuestbook(guestbookDTO);
+        if (updatedRows > 0) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     // 방명록 삭제 (userId 기준)

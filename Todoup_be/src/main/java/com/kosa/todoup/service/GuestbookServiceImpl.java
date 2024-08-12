@@ -23,13 +23,13 @@ public class GuestbookServiceImpl implements GuestbookService {
     }
 
     @Override
-    public void createGuestbook(GuestbookDTO guestbookDTO) {
-        guestbookMapper.insertGuestbook(guestbookDTO);
+    public int createGuestbook(GuestbookDTO guestbookDTO) {
+        return guestbookMapper.insertGuestbook(guestbookDTO);
     }
 
     @Override
-    public void updateGuestbook(GuestbookDTO guestbookDTO) {
-        guestbookMapper.updateGuestbook(guestbookDTO);
+    public int updateGuestbook(GuestbookDTO guestbookDTO) {
+        return guestbookMapper.updateGuestbook(guestbookDTO);
     }
 
     @Override
