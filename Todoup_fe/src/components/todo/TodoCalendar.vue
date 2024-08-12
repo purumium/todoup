@@ -60,7 +60,8 @@ export default {
       const date = new Date(info.event.start); // Date 객체 생성
       date.setDate(date.getDate() + 1); // 1일 추가
       const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
-      this.$router.push(`/todo/${dateStr}`);
+      const todoId = info.event.extendedProps.todoId;
+      this.$router.push(`/todo/${dateStr}?selectedTodoId=${todoId}`);
     },
     async fetchTodos() {
       try {
@@ -73,6 +74,7 @@ export default {
             title: todo.title,
             date: todo.start_date, // start_date를 사용하여 이벤트 날짜 설정
             completed: todo.completed, // 완료 여부 추가
+            todoId: todo.todo_id,
           };
         });
       } catch (error) {

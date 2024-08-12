@@ -61,6 +61,12 @@ export default {
       try {
         const response = await axios.get(`/api/todo/date/${this.date}`);
         this.todos = response.data; // 응답 데이터를 todos 배열에 저장
+
+        // todos를 가져온 후 selectedTodoId를 처리
+        const selectedTodoId = this.$route.query.selectedTodoId;
+        if (selectedTodoId) {
+          this.selectedTodo = this.todos.find((todo) => todo.todo_id === parseInt(selectedTodoId));
+        }
       } catch (error) {
         console.error('Error getting todos:', error);
       }
