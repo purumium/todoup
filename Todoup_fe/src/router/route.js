@@ -5,7 +5,8 @@ import MainCompo from '@/components/MainCompo.vue';
 import HomeCompo from '@/components/HomeCompo.vue';
 import TodoCalendar from '@/components/todo/TodoCalendar.vue';
 import DiaryCalendar from '@/components/diary/DiaryCalendar.vue';
-import DiaryRoom from '@/components/diary/DiaryRoom.vue';
+import DiaryCreate from '@/components/diary/DiaryCreate.vue';
+import DiaryDetail from '@/components/diary/DiaryDetail.vue';
 import RoomCompo from '@/components/room/RoomCompo.vue';
 import AvatarRoom from '@/components/room/avatar/AvatarRoom.vue';
 import MyReport from '@/components/room/report/MyReport.vue';
@@ -45,12 +46,24 @@ export default [
                 path: 'diary',
                 name: 'DiaryCalendar',
                 component: DiaryCalendar,
-                //props: true, // props를 통해 params(mood값)를 전달받기 위해 설정
               },
               {
-                path: 'diary/:date',
-                component: DiaryRoom,
+                path: 'diary/create/:date',
+                component: DiaryCreate,
                 props: true,
+              },
+              {
+                path: 'diary/detail/:date',
+                component: DiaryDetail,
+                props: true,
+              },
+              {
+                path: 'diary/edit/:date',
+                component: DiaryCreate, // create 컴포넌트를 재사용
+                props: (route) => ({
+                  ...route.params,
+                  isEditMode: true, // 추가적으로 편집 모드를 나타내는 플래그를 전달
+                }),
               },
             ],
           },

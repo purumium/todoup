@@ -24,11 +24,26 @@ const modalStore = {
       try {
         console.log('Fetching users for userId:', userId); // userId 값을 확인
         const response = await axios.get(`/api/following`, { params: { userId } });
-        console.log(response);
         commit('SET_FOLLOWED_USERS', response.data);
         commit('TOGGLE_MODAL');
       } catch (e) {
         console.error('Error fetching followed users:', e);
+      }
+    },
+    async followUser({ dispatch }, { userId, followId }) {
+      try {
+        await axios.post(`/api/add/following`, null, { params: { userId, followId } });
+        await dispatch('fetchFollowedUsers', userId); // 팔로우 후 팔로우 사용자 목록 갱신
+      } catch (e) {
+        console.error('Error following user:', e);
+      }
+    },
+    async unfollowUser({ dispatch }, { userId, followId }) {
+      try {
+        await axios.delete(`/api/remove/following`, { params: { userId, followId } });
+        await dispatch('fetchFollowedUsers', userId); // 언팔로우 후 팔로우 사용자 목록 갱신
+      } catch (e) {
+        console.error('Error unfollowing user:', e);
       }
     },
     setModalVisible({ commit }, visible) {
