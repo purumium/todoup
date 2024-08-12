@@ -46,4 +46,20 @@ public class TodoService {
         userMapper.updateUserPoints(userId, pointsChange); // 포인트 업데이트
         userMapper.updateUserLevel(userId); // 포인트와 레벨을 확인하여 레벨 업데이트
     }
+
+    @Transactional
+    public void deleteTodo(long userId, long todoId, int completed) {
+        // 유저가 존재하는지 확인
+        if (!userMapper.findUserById(userId)) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        // 투두 항목 삭제
+        todoMapper.deleteTodoById(userId, todoId);
+
+        // 만약 완료된 투두를 삭제했다면 포인트와 레벨 업데이트
+        if (completed == 1) {
+            userMapper.updateUserPointsOnTodoDelete(userId);
+        }
+    }
 }
