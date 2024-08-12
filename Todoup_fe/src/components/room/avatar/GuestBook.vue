@@ -1,6 +1,6 @@
 <template>
   <div class="guestbook-container">
-    <h2>GuestBook</h2>
+    <h2>{{ ownerId }}'s GuestBook</h2>
     <div v-for="(message, index) in messages" :key="index" class="bubble">
       <p>{{ message }}</p>
     </div>
@@ -10,6 +10,16 @@
 <script>
 export default {
   name: 'GuestBook',
+  props: {
+    loginId: {
+      type: String,
+      required: true,
+    },
+    ownerId: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       messages: [
