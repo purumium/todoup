@@ -66,15 +66,14 @@
         SET
             weather = #{weather},
             emotion = #{emotion},
-            content = #{content},
+            content = #{content}
             <if test="imageUrl != null">
-                image_url = #{imageUrl}
+                ,image_url = #{imageUrl}
             </if>
         WHERE
             user_id = #{userId}
         AND
             TO_CHAR(diary_date, 'YYYY-MM-DD') = #{diaryDate}
-
     </update>
 
 </mapper>
