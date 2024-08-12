@@ -39,6 +39,7 @@ export default {
         dayCellContent: (args) => ({ html: args.dayNumberText.replace('일', '') }),
         datesSet: this.handleDatesSet, // 캘린더 날짜가 변경될 때 호출
         eventContent: this.renderEventContent, // 이벤트 콘텐츠 커스텀
+        dayMaxEvents: 2,
       },
       currentMonth: '', // 현재 월과 연도 저장
     };
