@@ -20,7 +20,20 @@ public class FollowController {
     public ResponseEntity<List<FollowDTO>> findFollowing(@RequestParam long userId) {
         List<FollowDTO> following = followService.findFollowing(userId);
         return new ResponseEntity<>(following, HttpStatus.OK);
-
+    }
+    // 팔로우 추가
+    @PostMapping("/add/following")
+    public ResponseEntity<Void> addFollow(@RequestParam long userId, @RequestParam long followId) {
+        followService.insertFollow(userId, followId);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+    // 팔로우 삭제
+    @DeleteMapping("/remove/following")
+    public ResponseEntity<Void> removeFollow(@RequestParam long userId, @RequestParam long followId) {
+        System.out.println(userId);
+        System.out.println(followId);
+        followService.deleteFollow(userId, followId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/followers")
@@ -28,4 +41,5 @@ public class FollowController {
         List<FollowDTO> followers = followService.findFollowers(userId);
         return new ResponseEntity<>(followers, HttpStatus.OK);
     }
+
 }
