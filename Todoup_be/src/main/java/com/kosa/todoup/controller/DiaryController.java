@@ -20,30 +20,37 @@ public class DiaryController {
     @PostMapping("/insert")
     public String diaryDataInsert(
             @ModelAttribute DiaryDTO diary,
-            @RequestParam(value="imgUrl", required = false)MultipartFile imgUrl
+            @RequestParam(value="imgFile", required = false) MultipartFile imgFile
     ) {
+
         System.out.println(diary.toString());
+        System.out.println(imgFile);
+
         // user 연결되면 바꿔서 사용
         int userId = 1;
         diary.setUserId(userId);
 
         try {
-            if( imgUrl == null || imgUrl.isEmpty() ){
-                diary.setImgUrl(null);  // imgUrl이 없으면 null로 설정
-            }
-            diaryService.insertDiary(diary);
+            diaryService.insertDiary(diary, imgFile);
 
-            return "diary insert success";
+            return "오늘의 일기 추가 성공!";
         } catch (Exception e) {
             return "diary insert error";
         }
     }
 
+    // 8월에 있는 모든 mood를 가지고 와야 함
+    @GetMapping("/mood")
+    public String getEmotionsByMonth() {
+        // 필요한 정보 : userid, month 정보 => 날짜 데이터, emotion 가져오기
+        return "";
+    }
+
     @GetMapping("/emotion")
-    public List<Mood> getMoods() {
+    public List<Mood> getmood() {
         List<Mood> moods = new ArrayList<>();
 
-        // 예시 데이터, 실제로는 DB에서 데이터를 가져오도록 구현
+        // 예시 데이터, 실제로는 DB에서 데이터를 가져오도록
         moods.add(new Mood("2024-08-15", "happy"));
         moods.add(new Mood("2024-08-13", "sad"));
         moods.add(new Mood("2024-08-23", "exhaust"));

@@ -5,5 +5,6 @@ import com.kosa.todoup.dto.DiaryDTO;
 
 @Mapper
 public interface DiaryMapper {
-    void insertDiary(DiaryDTO diary);
+    public int insertDiary(DiaryDTO diary);
 }
+
