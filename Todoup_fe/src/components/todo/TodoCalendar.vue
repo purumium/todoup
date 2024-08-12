@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -42,6 +43,11 @@ export default {
       currentMonth: '', // 현재 월과 연도 저장
     };
   },
+  computed: {
+    ...mapState('user', {
+      userId: (state) => state.user_info.userId,
+    }),
+  },
   created() {
     this.setInitialMonth(); // 초기 월과 연도 설정
     this.fetchTodos(); // 초기 데이터를 가져옴
@@ -60,11 +66,15 @@ export default {
       const date = new Date(info.event.start); // Date 객체 생성
       date.setDate(date.getDate() + 1); // 1일 추가
       const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
-      this.$router.push(`/todo/${dateStr}`);
+      const todoId = info.event.extendedProps.todoId;
+      this.$router.push(`/todo/${dateStr}?selectedTodoId=${todoId}`);
     },
     async fetchTodos() {
       try {
-        const response = await axios.get(`/api/todo/month/${this.currentMonth}`);
+        const userId = this.userId;
+        const response = await axios.get(`/api/todo/month/${this.currentMonth}`, {
+          params: { userId },
+        });
         const todos = response.data;
 
         // todos 배열을 FullCalendar의 events 배열 형식에 맞게 변환
@@ -73,6 +83,7 @@ export default {
             title: todo.title,
             date: todo.start_date, // start_date를 사용하여 이벤트 날짜 설정
             completed: todo.completed, // 완료 여부 추가
+            todoId: todo.todo_id,
           };
         });
       } catch (error) {

@@ -9,8 +9,8 @@ const store = {
     login(state, payload) {
       state.user_info = payload;
     },
-    logout(state, payload) {
-      state.user_info = payload;
+    logout(state) {
+      state.user_info = {};
     },
     logfail(state, payload) {
       state.user_info = payload;
@@ -21,8 +21,9 @@ const store = {
     login(context, payload) {
       context.commit('login', payload);
     },
-    logout(context, payload) {
-      context.commit('logout', payload);
+    logout(context) {
+      localStorage.removeItem('user_info');
+      context.commit('logout');
     },
     logfail(context, payload) {
       context.commit('logfail', payload);

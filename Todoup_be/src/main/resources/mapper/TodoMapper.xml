@@ -6,7 +6,7 @@
 
 
     <!-- 할일 생성 -->
-    <insert id="insertTodo" parameterType="com.kosa.todoup.dto.TodoDTO">
+    <insert id="insertTodo" parameterType="com.kosa.todoup.dto.TodoDTO" useGeneratedKeys="true" keyProperty="todo_id" keyColumn="todo_id">
         insert into TODO_LIST (USER_ID, TITLE, CATEGORY, START_DATE, END_DATE
         <if test="memo != null">
             , MEMO
@@ -47,5 +47,8 @@
         WHERE TODO_ID = #{todoId}
     </update>
 
-
+    <!-- 투두 항목 삭제 -->
+    <delete id="deleteTodoById" parameterType="map">
+        DELETE FROM TODO_LIST WHERE TODO_ID = #{todoId} AND USER_ID = #{userId}
+    </delete>
 </mapper>

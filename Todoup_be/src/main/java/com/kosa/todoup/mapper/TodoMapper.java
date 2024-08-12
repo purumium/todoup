@@ -12,4 +12,5 @@ public interface TodoMapper {
     List<TodoDTO> selectTodosByDate(long userId, @Param("date") String date);
     List<TodoDTO> selectTodosByMonth(long userId, @Param("date") String date);
     void toggleTodoCompletion(@Param("todoId") long todoId, @Param("completed") int completed);
+    void deleteTodoById(long userId, @Param("todoId") long todoId);
 }
