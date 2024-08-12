@@ -1,7 +1,7 @@
 <template>
   <div class="header-header">
     <img src="../../assets/logo.png" width="300" @click="goToHome" />
-    <div class="header-rightBox">
+    <div class="header-rightBox" v-if="!userInfo.userId">
       <div class="header-InBox" @click="goToLogin">
         <font-awesome-icon icon="fa-solid fa-right-to-bracket" class="fontBox" />
         <span class="fontBox-Text">로그인</span>
@@ -11,15 +11,30 @@
         <span class="fontBox-Text">회원가입</span>
       </div>
     </div>
+    <div class="header-rightBox" v-if="userInfo.userId">
+      <div class="header-InBox" @click="doLogout">
+        <font-awesome-icon icon="fa-solid fa-right-to-bracket" class="fontBox" />
+        <span class="fontBox-Text">로그아웃</span>
+      </div>
+      <div class="header-InBox" @click="goToSignup">
+        <font-awesome-icon icon="fa-solid fa-user-plus" class="fontBox" />
+        <span class="fontBox-Text">회원정보</span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 export default {
   computed: {
-    ...mapGetters({ user_info: 'user/getuserInfo' }),
+    ...mapState('user', {
+      userInfo: 'user_info', // Vuex의 user_info 상태를 userInfo로 매핑
+    }),
+  },
+  created() {
+    console.log('userinfo:', this.userInfo.userId);
   },
   methods: {
     goToHome() {
@@ -31,6 +46,11 @@ export default {
     goToSignup() {
       this.$router.push('/signup');
     },
+    doLogout() {
+      this.logout();
+      alert('로그아웃 되었습니다.');
+    },
+    ...mapActions('user', ['logout']),
   },
 };
 </script>
