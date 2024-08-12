@@ -36,12 +36,13 @@
 <script>
 import axios from 'axios';
 import categories from '@/assets/categories.json';
+import { mapState } from 'vuex';
 
 export default {
   data() {
     return {
       todo: {
-        user_id: 6,
+        user_id: '',
         title: '',
         memo: '',
         category: '',
@@ -50,6 +51,11 @@ export default {
       },
       categories: categories,
     };
+  },
+  computed: {
+    ...mapState('user', {
+      userId: (state) => state.user_info.userId,
+    }),
   },
   created() {
     this.setDefaultDates();
@@ -76,14 +82,13 @@ export default {
     },
     async submitTodo() {
       try {
+        this.todo.user_id = this.userId;
         if (!this.todo.end_date) {
           this.todo.end_date = this.todo.start_date;
         }
-        console.log(this.todo.title, this.todo.memo, this.todo.category, this.todo.start_date, this.todo.end_date);
-
         await axios.post('/api/todo/insert', this.todo);
         alert('Todo created successfully!');
-        this.todo = { user_id: 6, title: '', memo: '', category: '', start_date: '', end_date: '' };
+        this.todo = { user_id: this.userId, title: '', memo: '', category: '', start_date: '', end_date: '' };
         this.setDefaultDates(); // 새로운 TODO를 생성한 후에도 디폴트 날짜를 설정
         this.$router.push('/');
       } catch (error) {

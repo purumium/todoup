@@ -26,14 +26,15 @@ public class TodoService {
         return todoMapper.selectTodosByMonth(userId, date);
     }
 
-    public void insertTodo(TodoDTO todoDTO) {
+    public long insertTodo(TodoDTO todoDTO) {
         todoMapper.insertTodo(todoDTO);
+        return todoDTO.getTodo_id();
     }
 
+
     @Transactional
-    public void toggleTodoCompletion(long todoId, int completed) {
+    public void toggleTodoCompletion(long userId, long todoId, int completed) {
         todoMapper.toggleTodoCompletion(todoId, completed); // 할 일의 완료 상태를 업데이트
-        long userId = 6;
         int pointsChange = 0;
 
         if (completed == 1) {
