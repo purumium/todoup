@@ -22,7 +22,7 @@ export default {};
   display: flex;
   justify-content: end;
   gap: 18px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 div button {
   width: 90px;

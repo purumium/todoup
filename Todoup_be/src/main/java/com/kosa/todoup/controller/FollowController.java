@@ -20,6 +20,7 @@ public class FollowController {
     public ResponseEntity<List<FollowDTO>> findFollowing(@RequestParam long userId) {
         List<FollowDTO> following = followService.findFollowing(userId);
         return new ResponseEntity<>(following, HttpStatus.OK);
+
     }
 
     @GetMapping("/followers")

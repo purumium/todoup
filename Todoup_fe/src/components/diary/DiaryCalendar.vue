@@ -1,7 +1,7 @@
 <template>
   <div class="w-100">
     <div>
-      <h6>나의 성장일기</h6>
+      <div class="calendar-title">성장 일기 캘린더</div>
       <full-calendar v-if="calendarOptions" :options="calendarOptions"></full-calendar>
       <router-view></router-view>
     </div>
@@ -21,68 +21,93 @@ export default {
   },
   data() {
     return {
-      emotions: [], // 초기상태
-      calendarOptions: null,
-    };
-  },
-  created() {
-    // 컴포넌트가 생성될 때, emotions 데이터를 가지고 옴
-    this.fetchEmotions();
-  },
-
-  methods: {
-    fetchEmotions() {
-      axios
-        .get('/api/diary/emotion')
-        .then((response) => {
-          // mood 데이터가 없더라도 빈 배열로 설정 => 데이터 없이도 캘린더는 떠야함
-          this.emotions = response.data || [];
-          this.setupCalendarOptions();
-        })
-        .catch((error) => {
-          console.error('There was an error fetching the moods:', error);
-        });
-    },
-
-    // 캘린더 생성시 필요한 데이터 설정
-    setupCalendarOptions() {
-      this.calendarOptions = {
+      emotions: [], // 날짜별 emotion 데이터
+      calendarOptions: {
         plugins: [dayGridPlugin, interactionPlugin],
         initialView: 'dayGridMonth',
         headerToolbar: {
-          left: 'title',
-          center: '',
+          left: '',
+          center: 'title',
           right: 'prev today next',
         },
-        events: this.emotions.map((emotion) => ({
-          title: '',
-          start: emotion.date,
-          display: 'background', // 배경 이벤트를 보여주는 설정
-          extendedProps: {
-            mood: emotion.mood,
-          },
-        })),
-        eventContent: this.renderEmotionImgContent, // 커스텀한 이벤트(셀에 이미지 추가하는 이벤트) 콘텐츠
-        dateClick: this.handleMoveToDateDiary, // date를 클릭했을 때의 이벤트 핸들러를 추가
+        events: [], // 초기 상태에서는 비어있음, `fetchEmotionDataForMonth`에서 데이터 채워짐
+        eventContent: this.renderEmotionImgContent, // 셀에 이미지 추가(커스텀한 이벤트) 콘텐츠 -> fetch되고 자동 실행
+        dateClick: this.handleDateClick, // 날짜를 클릭했을 때의 이벤트 핸들러(일기 작성 페이지로 이동)
+        datesSet: this.handleChangeView, // 뷰가 변경될때마다 호출되는 이벤트 핸들러
         height: 550,
         locale: koLocale, // 한글 설정
         dayCellContent: (args) => ({ html: args.dayNumberText.replace('일', '') }), // 날짜 텍스트에서 '일'을 제거
-      };
+      },
+    };
+  },
+  created() {
+    this.initialLoad(); // 초기 로드를 위한 메서드 호출
+  },
+  methods: {
+    initialLoad() {
+      // 초기의 캘린더 로드를 위한 메서드
+      const currentDate = new Date();
+      const currentYear = currentDate.getFullYear();
+      const currentMonth = String(currentDate.getMonth() + 1).padStart(2, 0); // getMonth: 월을 0부터 시작, 1을 더함
+      //padStart(2자리 아니면, 0을 채움)
+
+      const yearMonth = `${currentYear}-${currentMonth}`;
+
+      console.log('캘린더가 처음 로드: ' + yearMonth);
+
+      this.fetchEmotionDataForMonth(yearMonth);
+    },
+
+    fetchEmotionDataForMonth(yearMonth) {
+      axios
+        .get('/api/diary/emotions', {
+          params: { yearMonth },
+        })
+        .then((response) => {
+          this.emotions = response.data;
+
+          this.calendarOptions.events = this.emotions.map((data) => ({
+            title: '',
+            start: data.diaryDate,
+            display: 'background', // 배경 이벤트
+            extendedProps: {
+              emotion: data.emotion,
+            },
+          }));
+        })
+        .catch((error) => {
+          console.log(`fullcalendar first fetch error : ${error}`);
+        });
+    },
+
+    // 일반적인 뷰 변화 이벤트를 처리하는 메서드
+    handleChangeView(info) {
+      // 현재 뷰의 시작 날짜 (연-월-일 형식)
+      const startDate = info.view.currentStart;
+
+      const year = startDate.getFullYear();
+      const month = String(startDate.getMonth() + 1).padStart(2, '0'); // 월을 2자리로 맞추기, padStart(2자리 아니면, 0채움)
+      const yearMonth = `${year}-${month}`;
+
+      console.log('바뀐 뷰의 연도- 월 : ' + yearMonth);
+
+      // 바뀐 뷰의 연도-월에 맞는 데이터를 가지고 옴
+      this.fetchEmotionDataForMonth(yearMonth);
     },
 
     // 날짜 셀에 출력할 이벤트 : 이미지 출력
-    renderEmotionImgContent(eventInfo) {
-      const mood = eventInfo.event.extendedProps.mood;
+    renderEmotionImgContent(info) {
+      const moods = info.event.extendedProps.emotion;
       var imgSrc = '';
 
       // img는 public/diary 폴더에 추가함
-      if (mood === 'happy') {
+      if (moods === 'happy') {
         imgSrc = '/diary/happy.png';
-      } else if (mood === 'sad') {
+      } else if (moods === 'sad') {
         imgSrc = '/diary/sad.png';
-      } else if (mood === 'angry') {
+      } else if (moods === 'angry') {
         imgSrc = '/diary/angry.png';
-      } else if (mood === 'exhaust') {
+      } else if (moods === 'exhaust') {
         imgSrc = '/diary/exhaust.png';
       }
 
@@ -95,9 +120,16 @@ export default {
       return {};
     },
 
-    // 날짜 셀 눌르면, 해당 날짜에 다이어리 작성 컴포넌트로 이동
-    handleMoveToDateDiary(eventInfo) {
-      this.$router.push(`/diary/${eventInfo.dateStr}`);
+    // 날짜 셀 누르면, diary detail or create
+    handleDateClick(info) {
+      const event = this.calendarOptions.events.find((event) => event.start === info.dateStr); // 선택한 날짜에 해당하는 이벤트
+
+      if (event && event.extendedProps && event.extendedProps.emotion) {
+        // event가 존재하고, event에 extendedProps가 있는지 확인
+        this.$router.push(`/diary/detail/${info.dateStr}`); // emotion 데이터가 있음(작성된 일기 보기)
+      } else {
+        this.$router.push(`/diary/create/${info.dateStr}`); // emotion 데이터가 없는 경우(일기 작성 페이지로 이동)
+      }
     },
   },
 };
@@ -115,6 +147,18 @@ export default {
   left: 8px;
 }
 
+.calendar-title {
+  position: absolute;
+  color: #2b2222;
+  font-weight: 600;
+  font-size: 22px;
+}
+.fc .fc-bg-event {
+  --fc-bg-event-opacity: 0.9 !important; /* 투명도를 0.8로 설정 */
+  background: none !important;
+  opacity: var(--fc-bg-event-opacity) !important;
+}
+
 .calendar-container {
   width: 700px !important; /* 원하는 너비로 설정 */
   margin: 0 auto !important; /* 가운데 정렬 */
@@ -124,10 +168,17 @@ export default {
   font-size: 1em !important;
 }
 
+.fc .fc-toolbar-title {
+  position: relative !important;
+  top: -1px !important;
+  left: 207px !important;
+  color: #544f4fe3 !important;
+}
+
 /* 버튼의 백그라운드 컬러를 화이트로 변경하고, 기호의 컬러를 블랙으로 변경 */
 .fc-button {
   background-color: white !important;
-  color: #b1aeae !important;
+  color: #534f4f !important;
   border: none !important;
   font-size: 0.8em !important;
 }
@@ -212,10 +263,5 @@ export default {
   text-align: center !important;
   top: 4px !important;
   left: -3px !important;
-}
-
-.fc .fc-bg-event {
-  background: var(--fc-bg-event-color) important;
-  opacity: var(--fc-bg-event-opacity) important;
 }
 </style>
