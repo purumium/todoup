@@ -23,6 +23,7 @@
 <script>
 import axios from 'axios';
 import TodoDetail from './TodoDetail.vue';
+import { mapState } from 'vuex';
 
 export default {
   components: { TodoDetail },
@@ -33,7 +34,6 @@ export default {
       selectedTodo: null, // 선택된 투두 항목을 저장할 객체
       newTodo: {
         user_id: 6,
-        // 새로 추가할 투두 항목
         title: '',
         memo: '',
         category: '기타',
@@ -43,6 +43,9 @@ export default {
     };
   },
   computed: {
+    ...mapState('user', {
+      userId: (state) => state.user_info.userId,
+    }),
     formattedDate() {
       // 날짜 포맷팅
       const date = new Date(this.date);
@@ -59,7 +62,10 @@ export default {
   methods: {
     async getTodos() {
       try {
-        const response = await axios.get(`/api/todo/date/${this.date}`);
+        const userId = this.userId;
+        const response = await axios.get(`/api/todo/date/${this.date}`, {
+          params: { userId },
+        });
         this.todos = response.data; // 응답 데이터를 todos 배열에 저장
 
         // todos를 가져온 후 selectedTodoId를 처리
@@ -73,10 +79,12 @@ export default {
     },
     async toggleCompletion(todo) {
       try {
+        const userId = this.userId;
         const newCompletionStatus = todo.completed ? 0 : 1;
         await axios.post(`/api/todo/completion/${todo.todo_id}`, null, {
           params: {
             completed: newCompletionStatus,
+            userId,
           },
         });
         todo.completed = newCompletionStatus;
@@ -91,13 +99,27 @@ export default {
     },
     async addTodo() {
       try {
+        this.newTodo.user_id = this.userId;
         this.newTodo.start_date = this.date;
         this.newTodo.end_date = this.date;
 
-        await axios.post('/api/todo/insert', this.newTodo);
+        // 서버에 새로운 투두를 생성하고, 생성된 투두의 ID를 응답받음
+        const response = await axios.post('/api/todo/insert', this.newTodo);
+        const createdTodoId = response.data; // 서버에서 새로 생성된 todoId를 응답받음
+
+        console.log(createdTodoId);
         alert('Todo created successfully!');
-        this.getTodos(); // 새로 추가된 할일 포함하여 리스트 갱신
+
+        // 투두 리스트를 다시 가져옴
+        await this.getTodos();
+
+        // 새로 추가된 투두를 todoId로 선택
+        const newlyAddedTodo = this.todos.find((todo) => todo.todo_id === createdTodoId);
+        this.selectTodo(newlyAddedTodo);
+
+        // input 필드 초기화
         this.newTodo.title = '';
+        this.newTodo.memo = '';
       } catch (error) {
         console.error('Error creating todo:', error);
         alert('할일을 생성하는 중 오류가 발생했습니다.');

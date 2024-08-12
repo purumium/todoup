@@ -20,8 +20,8 @@ public class TodoController {
     @PostMapping("/insert")
     public ResponseEntity<?> createTodo(@RequestBody TodoDTO todoDTO) {
         try {
-            todoService.insertTodo(todoDTO);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            long createdTodoId = todoService.insertTodo(todoDTO);
+            return new ResponseEntity<>(createdTodoId, HttpStatus.CREATED); // 생성된 todo_id 반환
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("Error creating todo", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -29,24 +29,22 @@ public class TodoController {
     }
 
     @GetMapping("/date/{date}")
-    public ResponseEntity<List<TodoDTO>> getTodosByDate(
+    public ResponseEntity<List<TodoDTO>> getTodosByDate(@RequestParam("userId") long userId,
             @PathVariable String date) throws SQLException {
-        long userId = 6;
         List<TodoDTO> todos = todoService.getTodosByDate(userId, date);
         return new ResponseEntity<>(todos, HttpStatus.OK);
     }
 
     @GetMapping("month/{date}")
-    public ResponseEntity<List<TodoDTO>> getTodosByMonth(@PathVariable String date) throws SQLException {
-        long userId = 6;
+    public ResponseEntity<List<TodoDTO>> getTodosByMonth(@RequestParam("userId") long userId, @PathVariable String date) throws SQLException {
         List<TodoDTO> todos = todoService.getTodosByMonth(userId, date);
         return new ResponseEntity<>(todos, HttpStatus.OK);
     }
 
     @PostMapping("/completion/{todoId}")
-    public ResponseEntity<?> toggleCompletion(@PathVariable long todoId, @RequestParam int completed) {
+    public ResponseEntity<?> toggleCompletion(@RequestParam("userId") long userId, @PathVariable long todoId, @RequestParam int completed) {
         try {
-            todoService.toggleTodoCompletion(todoId, completed);
+            todoService.toggleTodoCompletion(userId, todoId, completed);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
