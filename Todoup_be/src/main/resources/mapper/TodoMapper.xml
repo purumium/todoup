@@ -47,5 +47,8 @@
         WHERE TODO_ID = #{todoId}
     </update>
 
-
+    <!-- 투두 항목 삭제 -->
+    <delete id="deleteTodoById" parameterType="map">
+        DELETE FROM TODO_LIST WHERE TODO_ID = #{todoId} AND USER_ID = #{userId}
+    </delete>
 </mapper>

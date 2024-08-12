@@ -32,7 +32,7 @@ public class TodoController {
 
     @GetMapping("/date/{date}")
     public ResponseEntity<List<TodoDTO>> getTodosByDate(@RequestParam("userId") long userId,
-            @PathVariable String date) throws SQLException {
+                                                        @PathVariable String date) throws SQLException {
         List<TodoDTO> todos = todoService.getTodosByDate(userId, date);
         return new ResponseEntity<>(todos, HttpStatus.OK);
     }
@@ -60,6 +60,19 @@ public class TodoController {
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("Error toggling completion", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/delete/{todoId}")
+    public ResponseEntity<?> deleteTodo(@RequestParam("userId") long userId, @PathVariable long todoId, @RequestParam("completed") int completed) {
+        try {
+            todoService.deleteTodo(userId, todoId, completed);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Error deleting todo", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
