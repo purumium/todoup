@@ -33,7 +33,6 @@ public class GuestbookController {
         return guestbookService.findByOwnerAndWriter(ownerId, writerId);
     }
 
-
     // 방명록 작성
     @PostMapping("/users/{ownerId}/writers/{writerId}")
     public void createGuestbook(

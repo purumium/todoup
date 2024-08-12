@@ -2,12 +2,17 @@
   <div class="guestbook-container">
     <h2>{{ ownerId }}'s GuestBook</h2>
     <div v-for="(message, index) in messages" :key="index" class="bubble">
-      <p>{{ message }}</p>
+      <p>{{ message.content }}</p>
+      <small>Written by: {{ message.writerId }}</small>
+      <small class="date">&emsp; {{ formatRelativeDate(message.regDateAt) }}</small>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+import { formatDistanceToNow } from 'date-fns';
+
 export default {
   name: 'GuestBook',
   props: {
@@ -23,11 +28,38 @@ export default {
   data() {
     return {
       messages: [
-        '오 레벨 높은데~오 레벨 높은데~오 레벨 높은데~오 레벨 높은데~오 레벨 높은데~',
-        '좋튀',
-        '멋진 방이네요!',
-      ], // 예시 방명록 메시지
+        // 예시
+        // '오 레벨 높은데~오 레벨 높은데~오 레벨 높은데~오 레벨 높은데~오 레벨 높은데~',
+        // '좋튀',
+        // '멋진 방이네요!',
+      ],
     };
+  },
+  computed: {
+    isMyRoom() {
+      return this.loginId === this.ownerId;
+    },
+  },
+  created() {
+    this.fetchGuestbookMessages();
+  },
+  methods: {
+    async fetchGuestbookMessages() {
+      try {
+        if (this.isMyRoom) {
+          const response = await axios.get(`/api/guestbooks/users/${this.ownerId}/recent`);
+          this.messages = response.data;
+        } else {
+          const response = await axios.get(`/api/guestbooks/users/${this.ownerId}/writers/${this.loginId}`);
+          this.messages = response.data;
+        }
+      } catch (e) {
+        console.error('Failed to load guestbook messages:', e);
+      }
+    },
+    formatRelativeDate(date) {
+      return formatDistanceToNow(new Date(date), { addSuffix: true });
+    },
   },
 };
 </script>
@@ -65,5 +97,11 @@ export default {
   z-index: 1;
   left: -10px; /* 말풍선 꼬리를 왼쪽에 배치 */
   top: 10px; /* 말풍선의 상단에서 시작 */
+}
+
+.bubble small {
+  color: #888;
+  font-size: 0.85em;
+  margin-top: 10px;
 }
 </style>
