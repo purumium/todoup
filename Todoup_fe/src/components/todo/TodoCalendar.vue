@@ -66,7 +66,6 @@ export default {
       try {
         const response = await axios.get(`/api/todo/month/${this.currentMonth}`);
         const todos = response.data;
-        console.log(todos);
 
         // todos 배열을 FullCalendar의 events 배열 형식에 맞게 변환
         this.calendarOptions.events = todos.map((todo) => {
@@ -84,7 +83,6 @@ export default {
       const year = arg.view.currentStart.getFullYear();
       const month = String(arg.view.currentStart.getMonth() + 1).padStart(2, '0'); // getMonth() + 1으로 올바른 월 얻기
       this.currentMonth = `${year}-${month}`;
-      console.log(this.currentMonth);
       this.fetchTodos(); // 월 설정될 때마다 할일 목록 불러오기
     },
     renderEventContent(eventInfo) {

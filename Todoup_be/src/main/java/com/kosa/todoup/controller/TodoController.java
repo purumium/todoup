@@ -42,4 +42,16 @@ public class TodoController {
         List<TodoDTO> todos = todoService.getTodosByMonth(userId, date);
         return new ResponseEntity<>(todos, HttpStatus.OK);
     }
+
+    @PostMapping("/completion/{todoId}")
+    public ResponseEntity<?> toggleCompletion(@PathVariable long todoId, @RequestParam int completed) {
+        try {
+            todoService.toggleTodoCompletion(todoId, completed);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Error toggling completion", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
