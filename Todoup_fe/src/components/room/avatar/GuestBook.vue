@@ -71,11 +71,8 @@ export default {
           writerId: this.loginId,
           content: this.newMessageContent,
         };
-        console.log('등록1: 세팅');
 
         const response = await axios.post(`/api/guestbooks/users/${this.ownerId}/writers/${this.loginId}`, newMessage);
-        console.log('등록2: db 갖다옴');
-        console.log('Response status:', response.status);
 
         if (response.status === 201) {
           // 전체 리스트를 다시 로드
