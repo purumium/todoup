@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -26,7 +27,13 @@ public class TodoService {
         return todoMapper.selectTodosByMonth(userId, date);
     }
 
+    public List<TodoDTO> getTodayList(long userId, Date date) {
+        System.out.println("Service: "+todoMapper.selectTodosByDate(userId, String.valueOf(date)));
+        return todoMapper.selectTodosByDate(userId, String.valueOf(date));
+    }
+
     public long insertTodo(TodoDTO todoDTO) {
+
         todoMapper.insertTodo(todoDTO);
         return todoDTO.getTodo_id();
     }
