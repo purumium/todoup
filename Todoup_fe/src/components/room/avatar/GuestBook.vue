@@ -13,6 +13,10 @@
         <small>Written by: {{ message.writerId }}</small>
         <small class="date">&emsp; {{ formatRelativeDate(message.regDateAt) }}</small>
         <button v-if="isAuthor(message.writerId)" @click="editMessage(index)">수정</button>
+        <button v-if="isAuthor(message.writerId)" @click="confirmDeleteMessageAsWriter(message.guestbookId, index)">
+          삭제
+        </button>
+        <button v-if="isMyRoom" @click="confirmDeleteMessageAsOwner(message.guestbookId, index)">삭제</button>
       </div>
       <div v-else>
         <textarea v-model="message.content"></textarea>
@@ -103,6 +107,43 @@ export default {
     },
     isAuthor(writerId) {
       return this.loginId === String(writerId);
+    },
+    // 작성자가 삭제하기 전 확인창
+    confirmDeleteMessageAsWriter(guestbookId, index) {
+      if (confirm('이 방명록을 삭제하시겠습니까?')) {
+        this.deleteMessageAsWriter(guestbookId, index);
+      }
+    },
+
+    // 방 주인이 삭제하기 전 확인창
+    confirmDeleteMessageAsOwner(guestbookId, index) {
+      if (confirm('이 방명록을 삭제하시겠습니까?')) {
+        this.deleteMessageAsOwner(guestbookId, index);
+      }
+    },
+    async deleteMessageAsWriter(guestbookId, index) {
+      try {
+        const response = await axios.delete(`/api/guestbooks/${guestbookId}/writers/${this.loginId}`);
+        if (response.status === 204) {
+          this.messages.splice(index, 1);
+        } else {
+          console.error('방명록 삭제가 제대로 완료되지 못 했습니다.', response.status, response.statusText);
+        }
+      } catch (e) {
+        console.error('방명록 삭제가 제대로 완료되지 못 했습니다.', e);
+      }
+    },
+    async deleteMessageAsOwner(guestbookId, index) {
+      try {
+        const response = await axios.delete(`/api/guestbooks/${guestbookId}/users/${this.ownerId}`);
+        if (response.status === 204) {
+          this.messages.splice(index, 1);
+        } else {
+          console.error('방명록 삭제가 제대로 완료되지 못 했습니다.', response.status, response.statusText);
+        }
+      } catch (e) {
+        console.error('방명록 삭제가 제대로 완료되지 못 했습니다.', e);
+      }
     },
     editMessage(index) {
       this.originalMessageContent = this.messages[index].content; // 현재 메시지 내용을 저장

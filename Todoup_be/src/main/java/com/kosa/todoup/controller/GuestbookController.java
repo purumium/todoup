@@ -65,18 +65,28 @@ public class GuestbookController {
 
     // 방명록 삭제 (userId 기준)
     @DeleteMapping("/{guestbookId}/users/{userId}")
-    public void deleteGuestbookByUserId(
+    public ResponseEntity<Void> deleteGuestbookByUserId(
             @PathVariable Long guestbookId,
             @PathVariable Long userId) {
-        guestbookService.deleteGuestbookByUserId(guestbookId, userId);
+        int deletedRows = guestbookService.deleteGuestbookByUserId(guestbookId, userId);
+        if (deletedRows > 0) {
+            return ResponseEntity.noContent().build();  // 204 No Content
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  // 404 Not Found
+        }
     }
 
     // 방명록 삭제 (writerId 기준)
     @DeleteMapping("/{guestbookId}/writers/{writerId}")
-    public void deleteGuestbookByWriterId(
+    public ResponseEntity<Void> deleteGuestbookByWriterId(
             @PathVariable Long guestbookId,
             @PathVariable Long writerId) {
-        guestbookService.deleteGuestbookByWriterId(guestbookId, writerId);
+        int deletedRows = guestbookService.deleteGuestbookByWriterId(guestbookId, writerId);
+        if (deletedRows > 0) {
+            return ResponseEntity.noContent().build();  // 204 No Content
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  // 404 Not Found
+        }
     }
 }
 

@@ -9,8 +9,12 @@ import java.util.List;
 @Service
 public class GuestbookServiceImpl implements GuestbookService {
 
+    private final GuestbookMapper guestbookMapper;
+
     @Autowired
-    private GuestbookMapper guestbookMapper;
+    public GuestbookServiceImpl(GuestbookMapper guestbookMapper) {
+        this.guestbookMapper = guestbookMapper;
+    }
 
     @Override
     public List<GuestbookDTO> findRecentByOwner(Long ownerId, int daysAgo) {
@@ -33,12 +37,12 @@ public class GuestbookServiceImpl implements GuestbookService {
     }
 
     @Override
-    public void deleteGuestbookByUserId(Long guestbookId, Long userId) {
-        guestbookMapper.deleteGuestbookByUserId(guestbookId, userId);
+    public int deleteGuestbookByUserId(Long guestbookId, Long userId) {
+        return guestbookMapper.deleteGuestbookByUserId(guestbookId, userId);
     }
 
     @Override
-    public void deleteGuestbookByWriterId(Long guestbookId, Long writerId) {
-        guestbookMapper.deleteGuestbookByWriterId(guestbookId, writerId);
+    public int deleteGuestbookByWriterId(Long guestbookId, Long writerId) {
+        return guestbookMapper.deleteGuestbookByWriterId(guestbookId, writerId);
     }
 }

@@ -18,8 +18,8 @@ public interface GuestbookService {
     int updateGuestbook(GuestbookDTO guestbookDTO);
 
     // 방명록 항목 삭제 (userId 기준)
-    void deleteGuestbookByUserId(Long guestbookId, Long userId);
+    int deleteGuestbookByUserId(Long guestbookId, Long userId);
 
     // 방명록 항목 삭제 (writerId 기준)
-    void deleteGuestbookByWriterId(Long guestbookId, Long writerId);
+    int deleteGuestbookByWriterId(Long guestbookId, Long writerId);
 }
