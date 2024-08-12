@@ -13,10 +13,10 @@
       </div>
       <div class="modal-body">
         <find-modal-compo
-          v-for="(user, idx) in filteredUsers"
+          v-for="(user, idx) in followUsers"
           :key="idx"
-          :nickname="user.nickname"
-          :level="user.level"
+          :nickname="user.followNickname"
+          :level="user.lv"
           :checked="user.checked"
           :original-index="getOriginalIndex(user)"
           @update:checked="updateChecked"
@@ -35,26 +35,22 @@ export default {
   data() {
     return {
       username: '',
-      users: [
-        { id: 1, nickname: '홍길동', level: 1, checked: true },
-        { id: 2, nickname: '김찬희', level: 10, checked: false },
-        { id: 3, nickname: '최유환', level: 5, checked: true },
-      ],
+      users: [],
     };
   },
   computed: {
-    ...mapGetters(['isModalVisible']),
+    ...mapGetters(['isModalVisible', 'followUsers']),
     filteredUsers() {
-      return this.users.filter((user) => user.nickname.includes(this.username));
+      return (this.users || []).filter((user) => user.followNickname.includes(this.username));
     },
   },
   methods: {
     ...mapActions(['setModalVisible']),
     getOriginalIndex(user) {
-      return this.users.findIndex((u) => u.id === user.id);
+      return this.followUsers.findIndex((u) => u.id === user.id);
     },
     updateChecked(index, checked) {
-      this.users[index].checked = checked;
+      this.followUsers[index].checked = checked; // 상태 변경은 주의해서 사용
     },
     closeModal() {
       this.setModalVisible(false);

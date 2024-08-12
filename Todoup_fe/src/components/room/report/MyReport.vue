@@ -1,10 +1,14 @@
 <template>
   <div>
     <h3>MyReport</h3>
-    <first-report />
-    <second-report />
-
-    <!-- 추가 리포트 컴포넌트들 -->
+    <div v-if="!isMyRoom">
+      <p>본인의 Report만 확인 가능합니다.</p>
+    </div>
+    <div v-else>
+      <first-report :login-id="loginId" />
+      <second-report :login-id="loginId" />
+      <!-- 추가 리포트 컴포넌트들 -->
+    </div>
   </div>
 </template>
 
@@ -17,8 +21,22 @@ export default {
   components: {
     FirstReport,
     SecondReport,
-
     // 추가 리포트 컴포넌트들
+  },
+  props: {
+    loginId: {
+      type: String,
+      required: true,
+    },
+    ownerId: {
+      type: String,
+      required: true,
+    },
+  },
+  computed: {
+    isMyRoom() {
+      return this.loginId === this.ownerId;
+    },
   },
 };
 </script>
