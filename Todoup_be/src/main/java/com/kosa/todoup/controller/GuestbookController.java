@@ -9,47 +9,63 @@ import java.util.List;
 @RestController
 @RequestMapping("/guestbooks")
 public class GuestbookController {
+    private final GuestbookService guestbookService;
 
     @Autowired
-    private GuestbookService guestbookService;
-
-    // 친구 아바타 방에서 사용자가 남긴 방명록 조회
-    @GetMapping("/friend")
-    public List<GuestbookDTO> findByOwnerAndWriter(
-            @RequestParam Long ownerId,
-            @RequestParam Long writerId) {
-        return guestbookService.findByOwnerAndWriter(ownerId, writerId);
+    GuestbookController (GuestbookService guestbookService) {
+        this.guestbookService = guestbookService;
     }
 
-    // 사용자의 아바타 방에서 친구들이 남긴 방명록 조회 (최근 daysAgo일 동안)
-    @GetMapping("/recent")
+
+    // 특정 사용자의 방명록 중, 최근 작성된 방명록 조회
+    @GetMapping("/users/{ownerId}/recent")
     public List<GuestbookDTO> findRecentByOwner(
-            @RequestParam Long ownerId,
+            @PathVariable Long ownerId,
             @RequestParam(defaultValue = "30") int daysAgo) {
         return guestbookService.findRecentByOwner(ownerId, daysAgo);
     }
 
+    // 특정 사용자의 방명록 중, 특정 작성자가 남긴 방명록 조회
+    @GetMapping("/users/{ownerId}/writers/{writerId}")
+    public List<GuestbookDTO> findByOwnerAndWriter(
+            @PathVariable Long ownerId,
+            @PathVariable Long writerId) {
+        return guestbookService.findByOwnerAndWriter(ownerId, writerId);
+    }
+
+
     // 방명록 작성
-    @PostMapping("/create")
-    public void createGuestbook(@RequestBody GuestbookDTO guestbookDTO) {
+    @PostMapping("/users/{ownerId}/writers/{writerId}")
+    public void createGuestbook(
+            @PathVariable Long ownerId,
+            @PathVariable Long writerId,
+            @RequestBody GuestbookDTO guestbookDTO) {
         guestbookService.createGuestbook(guestbookDTO);
     }
 
     // 방명록 수정
-    @PutMapping("/update")
-    public void updateGuestbook(@RequestBody GuestbookDTO guestbookDTO) {
+    @PutMapping("/{guestbookId}/writers/{writerId}")
+    public void updateGuestbook(
+            @PathVariable Long guestbookId,
+            @PathVariable Long writerId,
+            @RequestBody GuestbookDTO guestbookDTO) {
         guestbookService.updateGuestbook(guestbookDTO);
     }
 
     // 방명록 삭제 (userId 기준)
-    @DeleteMapping("/deleteByUser")
-    public void deleteGuestbookByUserId(@RequestParam Long guestbookId, @RequestParam Long userId) {
+    @DeleteMapping("/{guestbookId}/users/{userId}")
+    public void deleteGuestbookByUserId(
+            @PathVariable Long guestbookId,
+            @PathVariable Long userId) {
         guestbookService.deleteGuestbookByUserId(guestbookId, userId);
     }
 
     // 방명록 삭제 (writerId 기준)
-    @DeleteMapping("/deleteByWriter")
-    public void deleteGuestbookByWriterId(@RequestParam Long guestbookId, @RequestParam Long writerId) {
+    @DeleteMapping("/{guestbookId}/writers/{writerId}")
+    public void deleteGuestbookByWriterId(
+            @PathVariable Long guestbookId,
+            @PathVariable Long writerId) {
         guestbookService.deleteGuestbookByWriterId(guestbookId, writerId);
     }
 }
+
