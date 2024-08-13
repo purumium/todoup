@@ -1,6 +1,9 @@
 <template>
   <div class="todo-section">
-    <div>Today's TODO</div>
+    <div class="d-flex align-items-center justify-content-between">
+      <span>Today's TODO</span>
+      <font-awesome-icon @click="goToTodayTodo" :icon="['fas', 'arrow-up-right-from-square']" />
+    </div>
     <ul class="todo-list" v-if="userInfo.userId && todoList.length > 0">
       <li v-for="(todo, idx) in todoList" :key="idx">
         <input type="checkbox" v-model="todo.checked" />
@@ -60,6 +63,17 @@ export default {
         console.log('에러');
       }
     },
+    getTodayDate() {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 1을 더해줍니다.
+      const day = String(today.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    },
+    goToTodayTodo() {
+      const todayDate = this.getTodayDate();
+      this.$router.push(`/todo/${todayDate}`);
+    },
   },
 };
 </script>
@@ -77,6 +91,10 @@ export default {
   font-size: 19px;
   font-weight: 600;
   color: #635a5a;
+}
+
+.todo-section:last-child {
+  cursor: pointer;
 }
 
 .todo-list {

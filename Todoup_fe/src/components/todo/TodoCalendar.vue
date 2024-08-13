@@ -38,7 +38,7 @@ export default {
         dateClick: this.handleMoveToTodo,
         eventClick: this.handleEventClick, // 이벤트 클릭 시 호출될 핸들러
         events: [], // 초기 events 배열
-        height: 550,
+        height: 525,
         locale: koLocale,
         dayCellContent: (args) => ({ html: args.dayNumberText.replace('일', '') }),
         datesSet: this.handleDatesSet, // 캘린더 날짜가 변경될 때 호출
@@ -157,7 +157,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 4px;
+  padding: 2px; /* 수정 */
   border-radius: 4px;
   background-color: #d4efdf;
   border: 1px solid #f1f2f3;
