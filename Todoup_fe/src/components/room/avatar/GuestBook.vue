@@ -74,6 +74,17 @@ export default {
   created() {
     this.fetchGuestbookMessages();
   },
+  watch: {
+    ownerId(newOwnerId, oldOwnerId) {
+      if (newOwnerId !== oldOwnerId) {
+        // ownerId가 변경되면 메시지 배열과 페이지 초기화
+        this.messages = [];
+        this.page = 0;
+        this.allDataLoaded = false;
+        this.fetchGuestbookMessages(); // 새로운 방의 방명록을 로드
+      }
+    },
+  },
   methods: {
     // 데이터 받아오기
     async fetchGuestbookMessages() {
