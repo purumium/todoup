@@ -8,26 +8,27 @@
           <div>{{ userInfo?.nickName || '김투두' }}</div>
           <div>{{ userInfo?.email || 'todolist@gmail.com' }}</div>
         </div>
-        <div class="my-follow-btn">
-          <div @click="fetchFollowedUsers(userInfo.userId)">팔로잉</div>
-          <div @click="showUserId">팔로워</div>
-          <div>친구찾기</div>
+        <!-- 레벨과 포인트 프로그레스바 컨테이너 -->
+        <div class="profile-level-progress">
+          <div class="level-container">
+            <span class="level-icon">🏆</span> LEVEL&nbsp;<span class="level-value">{{ userInfo.lv }}</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar">
+              <div class="progress" :style="{ width: progressWidth + '%' }"></div>
+            </div>
+            <p class="progress-text">
+              <b>{{ userInfo.points % 100 }}</b> / 100 points
+            </p>
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- 레벨과 포인트 프로그레스바 컨테이너 -->
-    <div class="profile-level-progress">
-      <div class="level-container">
-        <span class="level-icon">🏆</span> LEVEL&nbsp;<span class="level-value">{{ userInfo.lv }}</span>
-      </div>
-      <div class="progress-bar-container">
-        <div class="progress-bar">
-          <div class="progress" :style="{ width: progressWidth + '%' }"></div>
-        </div>
-        <p class="progress-text">
-          <b>{{ userInfo.points % 100 }}</b> / 100 points
-        </p>
+    <div class="profile-bottom">
+      <div class="my-follow-btn">
+        <div @click="fetchFollowedUsers(userInfo.userId)">팔로잉</div>
+        <div @click="showUserId">팔로워</div>
+        <div>친구찾기</div>
       </div>
     </div>
   </div>
@@ -78,22 +79,27 @@ export default {
 <style scoped>
 .profile-section {
   display: flex;
-  flex-direction: column; /* 세로 정렬 */
-  align-items: center;
+  flex-direction: column;
+  margin-bottom: 40px;
+  border: 2px solid #635e5e21;
+  padding: 26px 24px 24px 16px;
+  border-radius: 11px;
+  width: 360px;
+  height: 270px;
 }
 
 /* 프로필 이미지 및 팔로우 버튼들 */
 .profile-top {
   display: flex;
-  width: 100%;
   align-items: center;
-  margin-bottom: 20px; /* 레벨과 프로그레스바와의 여백 */
+  margin-left: 9px;
 }
 
 .profile-top img {
   border: 1px solid #8080803d;
   border-radius: 70%;
   width: 130px;
+  margin-right: 20px;
 }
 
 .profile-details {
@@ -103,6 +109,7 @@ export default {
 .my-name {
   font-size: 14px;
   color: #5b5b5b;
+  margin: 12px 0;
 }
 
 .my-name :nth-of-type(1) {
@@ -112,9 +119,8 @@ export default {
 
 .my-follow-btn {
   display: flex;
-  justify-content: space-between;
-  margin-top: 18px;
-  gap: 10px;
+  justify-content: space-around;
+  margin-top: 20px;
 }
 
 .my-follow-btn > div {
@@ -140,28 +146,27 @@ export default {
 .level-container {
   display: flex;
   align-items: center;
+  font-size: 12px;
   font-weight: 600;
   color: #5b5b5b;
+  margin-bottom: 2px;
 }
 
 .level-icon {
-  font-size: 20px;
   margin-right: 5px;
 }
 
 .level-value {
-  font-size: 20px;
   font-weight: bold;
   color: #5b5b5b;
 }
 
 .progress-bar-container {
-  margin-top: 10px;
   width: 100%;
 }
 
 .progress-bar {
-  height: 18px;
+  height: 12px;
   background-color: #e0e0e0;
   border-radius: 10px;
   overflow: hidden;
@@ -169,14 +174,15 @@ export default {
 
 .progress {
   height: 100%;
-  background-color: rgb(234, 178, 35);
+  background-color: rgb(66, 147, 66);
   transition: width 0.5s ease-in-out;
 }
 
 .progress-text {
   text-align: right;
-  font-size: 12px;
+  font-size: 11px;
   color: #555;
   margin-top: 5px;
+  margin-bottom: 0;
 }
 </style>

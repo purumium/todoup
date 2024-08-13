@@ -146,6 +146,7 @@ export default {
   font-weight: 600;
   font-size: 12px;
   border-radius: 20px;
+  z-index: 99;
 }
 
 .add-todo :hover {
@@ -158,7 +159,7 @@ export default {
   justify-content: space-between;
   padding: 4px;
   border-radius: 4px;
-  background-color: #d0e7ff;
+  background-color: #d4efdf;
   border: 1px solid #f1f2f3;
   width: 100%;
   white-space: nowrap;
