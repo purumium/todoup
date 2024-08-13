@@ -37,20 +37,20 @@ public class DiaryService {
         diaryMapper.insertDiaryByDate(diary);
     }
 
-    public List<DiaryDTO> getEmotionByMonth(String yearMonth, int userId) {
+    public List<DiaryDTO> getEmotionByMonth(String yearMonth, long userId) {
         List<DiaryDTO> list = diaryMapper.getEmotionByMonth(yearMonth, userId);
 
         return list;
     }
 
-    public DiaryDTO getDiaryByDate(String date, int userId) {
+    public DiaryDTO getDiaryByDate(String date, long userId) {
         DiaryDTO diaryData = diaryMapper.getDiaryByDate(date, userId);
 
         return diaryData;
     }
 
     @Transactional // 트랜잭션을 활성화
-    public void deleteDiaryByDate(String date, int userId) {
+    public void deleteDiaryByDate(String date, long userId) {
         diaryMapper.deleteDiaryByDate(date, userId);
     }
 
