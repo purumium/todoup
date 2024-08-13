@@ -46,7 +46,6 @@ const checkUser = async (email, password) => {
     },
     withCredentials: true,
   });
-
   return response.data[0]; // 사용자 정보를 반환
 };
 
@@ -65,20 +64,39 @@ export default {
     signUpPage() {
       this.$router.push('signup');
     },
-    doLogin() {
-      checkUser(this.email, this.password).then((userData) => {
+    async doLogin() {
+      try {
+        const userData = await checkUser(this.email, this.password);
         if (userData) {
-          alert('로그인 되었습니다.');
-          this.login(userData); // userData에는 userId 포함
-          this.userId = userData; // userId를 data()에 저장
-          console.log('로그인-vuex', this.userId);
+          this.$swal.fire({
+            text: '로그인되었습니다.',
+            icon: 'success',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#429f50',
+          });
+          this.login(userData); // userData를 user-store에 저장
+          this.userId = userData.userId; // userId를 data()에 저장
+          console.log('로그인-vuex 스토어에 있는 값입니다.', this.user_info);
           this.$router.push('/');
         } else {
-          alert('아이디 혹은 비밀번호를 확인해주세요.');
+          this.$swal.fire({
+            text: '아이디 혹은 비밀번호를 확인해주세요.',
+            icon: 'warning',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#f39c12',
+          });
           this.login({ email: null, check: false });
           this.userId = null; // 로그인 실패 시 userId를 null로 설정
         }
-      });
+      } catch (error) {
+        console.error('Login error:', error);
+        this.$swal.fire({
+          text: '로그인 중 오류가 발생했습니다.',
+          icon: 'error',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#429f50',
+        });
+      }
     },
     ...mapActions({ login: 'user/login', logout: 'user/logout', logfail: 'user/logfail' }),
   },

@@ -13,19 +13,44 @@ public class FollowService {
     private FollowMapper followMapper;
 
     public List<FollowDTO> findFollowing(long userId) {
+        System.out.println("올바르게 동작함?");
         return followMapper.findFollowing(userId);
     }
 
     public List<FollowDTO> findFollowers(long userId) {
         return followMapper.findFollowers(userId);
     }
-    // 팔로우 추가
+    public List<FollowDTO> findAllUsers(long userId) {
+        return followMapper.findAllUsers(userId);
+    }
+    // 팔로잉 추가
     public void insertFollow(long userId, long followId) {
         followMapper.insertFollow(userId, followId);
     }
 
-    // 팔로우 삭제
+    // 팔로잉 삭제
     public void deleteFollow(long userId, long followId) {
         followMapper.deleteFollow(userId, followId);
+    }
+
+    //팔로잉 확인
+    public boolean isFollowing(long userId, long followId) {
+        return followMapper.isFollowing(userId, followId);
+    }
+
+
+    //팔로우 추가
+    public  void insertReceivedFollow(long userId, long followId){
+        followMapper.insertReceivedFollow(userId, followId);
+    }
+
+    //팔로우 삭제
+    public void deleteReceivedFollow(long userId, long followId){
+        followMapper.deleteReceivedFollow(userId, followId);
+    }
+
+    //팔로우 받았는지 확인
+    public boolean isReceivedFollow(long userId, long followId){
+        return followMapper.isReceivedFollow(userId, followId);
     }
 }

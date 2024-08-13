@@ -133,11 +133,21 @@ export default {
           params: { userId },
         })
         .then((response) => {
-          alert(response.data); // 서버에서 반환된 메시지
+          this.$swal.fire({
+            text: response.data, // 서버에서 반환된 메시지
+            icon: 'info',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#429f50',
+          });
           this.$router.push('/diary'); // 다이어리 캘린더로 이동
         })
         .catch((error) => {
-          alert(error.response.data); // 서버에서 반환된 오류 메시지
+          this.$swal.fire({
+            text: error.response.data, // 서버에서 반환된 오류 메시지
+            icon: 'error',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#429f50',
+          });
           this.$router.push('/diary'); // 다이어리 캘린더로 이동
         });
     },

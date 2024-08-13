@@ -14,9 +14,27 @@ public interface FollowMapper {
     // 팔로우 리스트 불러오기
     List<FollowDTO> findFollowers(long userId);
 
-    // 팔로우 추가
+    List<FollowDTO> findAllUsers(long userId);
+
+    // 팔로잉 추가
     void insertFollow(long userId, long followId);
 
-    // 팔로우 삭제
+    // 팔로잉 삭제
     void deleteFollow(long userId, long followId);
+
+    //팔로잉 확인
+    boolean isFollowing(long userId, long followId);
+
+
+    //////-------------///////////
+    // 팔로우 추가
+    void insertReceivedFollow(long userId, long followId);
+
+    // 팔로우 삭제
+    void deleteReceivedFollow(long userId, long followId);
+
+    //팔로우 확인
+    boolean isReceivedFollow(long userId, long followId);
+
+
 }

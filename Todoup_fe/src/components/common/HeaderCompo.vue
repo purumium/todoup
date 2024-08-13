@@ -59,7 +59,12 @@ export default {
     },
     doLogout() {
       this.logout();
-      alert('로그아웃 되었습니다.');
+      this.$swal.fire({
+        text: '로그아웃 되었습니다.',
+        icon: 'success',
+        confirmButtonText: '확인',
+        confirmButtonColor: '#429f50',
+      });
     },
     ...mapActions('user', ['logout']),
   },
@@ -86,6 +91,10 @@ export default {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+}
+
+.header-InBox:hover {
+  transform: scale(1.1);
 }
 
 .fontBox {

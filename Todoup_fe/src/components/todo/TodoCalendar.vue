@@ -38,7 +38,7 @@ export default {
         dateClick: this.handleMoveToTodo,
         eventClick: this.handleEventClick, // 이벤트 클릭 시 호출될 핸들러
         events: [], // 초기 events 배열
-        height: 550,
+        height: 525,
         locale: koLocale,
         dayCellContent: (args) => ({ html: args.dayNumberText.replace('일', '') }),
         datesSet: this.handleDatesSet, // 캘린더 날짜가 변경될 때 호출
@@ -102,19 +102,25 @@ export default {
           console.log('calendar Vuex: ', todayTodos);
           console.log('After committing to Vuex - Vuex State:', this.$store.state.todo.todo_info);
 
-          // todos 배열을 FullCalendar의 events 배열 형식에 맞게 변환
-          this.calendarOptions.events = todos.map((todo) => {
-            return {
-              title: todo.title,
-              date: todo.start_date, // start_date를 사용하여 이벤트 날짜 설정
-              completed: todo.completed, // 완료 여부 추가
-              todoId: todo.todo_id,
-            };
-          });
-        } catch (error) {
-          console.error('Error fetching todos:', error);
-        }
+        // todos 배열을 FullCalendar의 events 배열 형식에 맞게 변환
+        this.calendarOptions.events = todos.map((todo) => {
+          return {
+            title: todo.title,
+            start: todo.start_date, // 시작 날짜 설정
+            end: this.formatEndDate(todo.end_date), // 종료 날짜 설정 (포함되지 않으므로 다음 날로 설정)
+            completed: todo.completed, // 완료 여부 추가
+            todoId: todo.todo_id,
+          };
+        });
+      } catch (error) {
+        console.error('Error fetching todos:', error);
       }
+    },
+    formatEndDate(endDate) {
+      // 종료 날짜를 다음 날로 설정하여 이벤트 범위에 포함되도록 함
+      const date = new Date(endDate);
+      date.setDate(date.getDate() + 2);
+      return date.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
     },
     handleDatesSet(arg) {
       const year = arg.view.currentStart.getFullYear();
@@ -178,7 +184,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 4px;
+  padding: 2px;
   border-radius: 4px;
   background-color: #d4efdf;
   border: 1px solid #f1f2f3;
@@ -211,5 +217,10 @@ export default {
   margin-top: 2px;
   font-size: 10px;
   font-weight: 500;
+}
+
+.fc-h-event {
+  background-color: #d4efdf !important;
+  border: none !important;
 }
 </style>
