@@ -65,6 +65,7 @@ public class FollowController {
         return new ResponseEntity<>(followers, HttpStatus.OK);
     }
 
+
     // 팔로우 추가
     @PostMapping("/add/followers")
     public ResponseEntity<Void> addFollowers(@RequestBody FollowDTO followDTO) {

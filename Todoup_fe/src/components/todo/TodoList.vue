@@ -81,6 +81,11 @@ export default {
           params: { userId },
         });
         this.todos = response.data;
+
+        const today = new Date().toISOString().split('T')[0];
+        const todayTodos = this.todos.filter((todo) => todo.start_date.split(' ')[0] === today);
+        this.$store.commit('todo/SET_TODOS', todayTodos);
+
         const selectedTodoId = this.$route.query.selectedTodoId;
         if (selectedTodoId) {
           this.selectedTodo = this.todos.find((todo) => todo.todo_id === parseInt(selectedTodoId));

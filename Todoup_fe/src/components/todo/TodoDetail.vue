@@ -149,10 +149,11 @@ export default {
             confirmButtonText: '확인',
             confirmButtonColor: '#429f50',
           });
-
+          this.$store.commit('todo/REMOVE_TODO', this.todo.todo_id);
           // 삭제 완료 후 이벤트 발생
           this.$emit('todo-deleted', this.todo.todo_id);
         }
+
       } catch (error) {
         console.error('Error deleting todo:', error);
         this.$swal.fire({

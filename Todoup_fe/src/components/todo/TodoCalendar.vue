@@ -52,6 +52,19 @@ export default {
     ...mapState('user', {
       userId: (state) => state.user_info.userId,
     }),
+    ...mapState('todo', {
+      todos: 'todo_info', // Vuex의 todo_info 상태를 todos로 매핑
+    }),
+  },
+  watch: {
+    userId: {
+      handler(newValue) {
+        if (!newValue) {
+          this.$router.push('/');
+        }
+      },
+      immediate: true, // 컴포넌트 생성 시에도 watcher를 즉시 호출
+    },
   },
   created() {
     this.setInitialMonth(); // 초기 월과 연도 설정
@@ -75,12 +88,19 @@ export default {
       this.$router.push(`/todo/${dateStr}?selectedTodoId=${todoId}`);
     },
     async fetchTodos() {
-      try {
-        const userId = this.userId;
-        const response = await axios.get(`/api/todo/month/${this.currentMonth}`, {
-          params: { userId },
-        });
-        const todos = response.data;
+      if (this.userId) {
+        try {
+          const userId = this.userId;
+          const response = await axios.get(`/api/todo/month/${this.currentMonth}`, {
+            params: { userId },
+          });
+          const todos = response.data;
+
+          const today = new Date().toISOString().split('T')[0];
+          const todayTodos = todos.filter((todo) => todo.start_date.split(' ')[0] === today);
+          this.$store.commit('todo/SET_TODOS', todayTodos);
+          console.log('calendar Vuex: ', todayTodos);
+          console.log('After committing to Vuex - Vuex State:', this.$store.state.todo.todo_info);
 
         // todos 배열을 FullCalendar의 events 배열 형식에 맞게 변환
         this.calendarOptions.events = todos.map((todo) => {
