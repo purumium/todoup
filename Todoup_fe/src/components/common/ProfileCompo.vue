@@ -27,7 +27,7 @@
     <div class="profile-bottom">
       <div class="my-follow-btn">
         <div @click="fetchFollowedUsers(userInfo.userId)">팔로잉</div>
-        <div @click="showUserId">팔로워</div>
+        <div @click="fetchFollowers(userInfo.userId)">팔로워</div>
         <div>친구찾기</div>
       </div>
     </div>
@@ -48,12 +48,24 @@ export default {
     },
   },
   methods: {
-    ...mapActions({
+    ...mapActions('modal', {
       loadFollowedUsers: 'fetchFollowedUsers',
+      loadFollowers: 'fetchFollowers',
     }),
     fetchFollowedUsers(userId) {
+      console.log('fetchFollowedUsers', userId);
       if (userId) {
+        console.log('여까지는 왔니');
         this.loadFollowedUsers(userId); // 변경된 메서드 이름 사용
+      } else {
+        console.error('User ID가 유효하지 않습니다.');
+      }
+    },
+    fetchFollowers(userId) {
+      console.log('fetchFollowers', userId);
+      if (userId) {
+        this.loadFollowers(userId); // 팔로워 목록 로드
+        console.log(this.loadFollowers);
       } else {
         console.error('User ID가 유효하지 않습니다.');
       }

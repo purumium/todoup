@@ -33,15 +33,11 @@ export default {
       type: Boolean,
       required: true,
     },
-    originalIndex: {
-      type: Number,
-      required: true,
-    },
   },
   emits: ['update:checked'],
   methods: {
     toggleCheck() {
-      this.$emit('update:checked', this.originalIndex, !this.checked);
+      this.$emit('update:checked', !this.checked);
     },
   },
 };
