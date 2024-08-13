@@ -25,7 +25,7 @@
         WHERE TO_CHAR(START_DATE, 'YYYY-MM-DD') <= #{date}
           AND TO_CHAR(END_DATE, 'YYYY-MM-DD') >= #{date}
           AND USER_ID = #{userId}
-
+        ORDER BY COMPLETED ASC, START_DATE ASC
         ]]>
     </select>
 
@@ -37,6 +37,7 @@
         WHERE TO_CHAR(START_DATE, 'YYYY-MM') <= #{date}
           AND TO_CHAR(END_DATE, 'YYYY-MM') >= #{date}
           AND USER_ID = #{userId}
+        ORDER BY START_DATE ASC
         ]]>
     </select>
 
@@ -51,4 +52,18 @@
     <delete id="deleteTodoById" parameterType="map">
         DELETE FROM TODO_LIST WHERE TODO_ID = #{todoId} AND USER_ID = #{userId}
     </delete>
+
+
+    <!-- 투두 항목 수정-->
+    <update id="modifyTodobyTodoId" parameterType="com.kosa.todoup.dto.TodoDTO">
+        update todo_list
+        set
+            title = #{title},
+            memo = #{memo},
+            category = #{category},
+            start_date = #{start_date},
+            end_date = #{end_date}
+        where todo_id = #{todo_id}
+    </update>
+
 </mapper>

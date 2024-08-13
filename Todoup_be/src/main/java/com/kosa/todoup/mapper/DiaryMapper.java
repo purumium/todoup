@@ -10,11 +10,11 @@ import java.util.List;
 public interface DiaryMapper {
     void insertDiaryByDate(DiaryDTO diary);
 
-    List<DiaryDTO> getEmotionByMonth(@Param("yearMonth") String yearMonth, @Param("userId") int userId);
+    List<DiaryDTO> getEmotionByMonth(@Param("yearMonth") String yearMonth, @Param("userId") long userId);
 
-    DiaryDTO getDiaryByDate(@Param("diaryDate") String date, @Param("userId") int userId);
+    DiaryDTO getDiaryByDate(@Param("diaryDate") String date, @Param("userId") long userId);
 
-    void deleteDiaryByDate(@Param("diaryDate") String date, @Param("userId") int userId);
+    void deleteDiaryByDate(@Param("diaryDate") String date, @Param("userId") long userId);
 
     void updateDiaryByDate(DiaryDTO diary);
 
