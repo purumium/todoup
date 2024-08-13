@@ -253,13 +253,13 @@ export default {
 
 .diary-title {
   display: flex;
-  justify-content: space-between; /* 좌우로 나눠 배치 */
-  align-items: center; /* 수직 가운데 정렬 */
+  justify-content: space-between;
+  align-items: center;
   padding: 3px;
 }
 
 .diary-date {
-  flex: 1; /* 가능한 모든 공간 차지 */
+  flex: 1;
   font-size: 14px !important;
   font-weight: bold;
   margin-left: 50px;
@@ -270,6 +270,7 @@ export default {
   font-size: 9px;
   padding: 5px 12px;
   background-color: rgb(133 175 17 / 21%);
+  margin-left: 15em;
 }
 
 .fontBox {
