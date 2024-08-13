@@ -3,26 +3,24 @@
     <img src="../../assets/logo.png" width="340" @click="goToHome" />
     <div class="header-rightBox" v-if="!userInfo.userId">
       <div class="header-InBox" @click="goToLogin">
-        <font-awesome-icon icon="fa-solid fa-right-to-bracket" class="fontBox" />
-        <span class="fontBox-Text">로그인</span>
+        <img src="@/assets/logo/login-icon.png" class="fontBox" />
+      </div>
+      <div class="header-InBox" @click="goToTodo">
+        <img src="@/assets/logo/todo-icon.png" class="fontBox" />
       </div>
     </div>
     <div class="header-rightBox" v-if="userInfo.userId">
       <div class="header-InBox" @click="goToRoom">
-        <font-awesome-icon icon="fa-solid fa-user-plus" class="fontBox" />
-        <span class="fontBox-Text">ROOM</span>
+        <img src="@/assets/logo/room-icon.png" class="fontBox" />
       </div>
       <div class="header-InBox" @click="goToTodo">
-        <font-awesome-icon icon="fa-solid fa-user-plus" class="fontBox" />
-        <span class="fontBox-Text">TODO</span>
+        <img src="@/assets/logo/todo-icon.png" class="fontBox" />
       </div>
       <div class="header-InBox" @click="goToDiary">
-        <font-awesome-icon icon="fa-solid fa-user-plus" class="fontBox" />
-        <span class="fontBox-Text">DIARY</span>
+        <img src="@/assets/logo/diary-icon.png" class="fontBox" />
       </div>
       <div class="header-InBox" @click="doLogout">
-        <font-awesome-icon icon="fa-solid fa-right-to-bracket" class="fontBox" />
-        <span class="fontBox-Text">LOGOUT</span>
+        <img src="@/assets/logo/logout-icon.png" class="fontBox" />
       </div>
     </div>
   </div>
@@ -72,14 +70,16 @@ export default {
 .header-header {
   width: 100%;
   display: flex;
-  align-items: end;
+  align-items: center;
   justify-content: space-between;
   margin: 3.6em 0;
 }
+
 .header-rightBox {
   display: flex;
-  gap: 20px;
+  gap: 25px;
 }
+
 .header-InBox {
   display: flex;
   flex-direction: column;
@@ -87,11 +87,12 @@ export default {
   justify-content: center;
   cursor: pointer;
 }
+
 .fontBox {
   margin-top: 10px;
   margin-bottom: 0;
-  width: 35px;
-  height: 35px;
+  width: 55px;
+  height: 55px;
   transition: color 0.25s ease-in-out;
 }
 .fontBox:hover {

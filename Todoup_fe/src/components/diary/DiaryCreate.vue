@@ -99,6 +99,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import axios from 'axios';
 
 export default {
@@ -121,8 +122,12 @@ export default {
     }
   },
   computed: {
-    // date가 변경되면 날짜 포맷 변경
+    ...mapState('user', {
+      // userId 가지고 오기
+      userId: (state) => state.user_info.userId,
+    }),
     formattedDate() {
+      // date가 변경되면 날짜 포맷 변경
       const [year, month, day] = this.date.split('-');
       return `${year}년 ${month}월 ${day}일`;
     },
@@ -130,11 +135,14 @@ export default {
   methods: {
     fetchDiaryDetail() {
       // 해당 날짜의 다이어리 데이터를 가지고 옴
+      const userId = this.userId;
+
       axios
-        .get(`/api/diary/detail/${this.date}`)
+        .get(`/api/diary/detail/${this.date}`, {
+          params: { userId },
+        })
         .then((response) => {
           const diaryData = response.data;
-
           this.weather = diaryData.weather;
           this.emotion = diaryData.emotion;
           this.content = diaryData.content;
@@ -168,13 +176,14 @@ export default {
       }
     },
     submitDiary() {
+      // 일기 내용을 적지 않았을 때, submit 불가
       if (this.content === null || this.content.trim() === '') {
         alert('일기의 내용을 입력해주세요!');
         return;
       }
 
-      const diaryData = new FormData();
-      // FormData: 이미지 파일을 포함해서 전송시 사용하는 객체
+      const diaryData = new FormData(); // FormData: 이미지 파일을 포함해서 전송시 사용하는 객체
+      diaryData.append('userId', this.userId);
       diaryData.append('diaryDate', this.date);
       diaryData.append('emotion', this.emotion);
       diaryData.append('weather', this.weather);
@@ -192,9 +201,7 @@ export default {
       request
         .then((response) => {
           console.log('Diary saved successfully:', response.data);
-
-          // 일기를 저장한 후, diarycalendar로 이동
-          this.$router.push('/diary');
+          this.$router.push('/diary'); // 일기를 저장한 후, diarycalendar로 이동
         })
         .catch((error) => {
           console.error('There was an error saving the diary:', error);

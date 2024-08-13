@@ -61,6 +61,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import axios from 'axios';
 
 export default {
@@ -80,6 +81,10 @@ export default {
   },
   computed: {
     // computed의 속성이기 때문에, 이를 필요로 하는 곳에서 자동으로 참조
+    ...mapState('user', {
+      // userId 가지고 오기
+      userId: (state) => state.user_info.userId,
+    }),
     formattedDate() {
       // date가 변경되면 날짜 포맷 변경
       const [year, month, day] = this.date.split('-');
@@ -96,11 +101,13 @@ export default {
   },
   methods: {
     fetchDiaryDetail() {
+      const userId = this.userId;
       axios
-        .get(`/api/diary/detail/${this.diaryDate}`)
+        .get(`/api/diary/detail/${this.diaryDate}`, {
+          params: { userId },
+        })
         .then((response) => {
           const diaryData = response.data;
-
           this.weather = diaryData.weather;
           this.emotion = diaryData.emotion;
           this.content = diaryData.content;
@@ -120,8 +127,11 @@ export default {
       return result;
     },
     deleteDiary() {
+      const userId = this.userId;
       axios
-        .delete(`/api/diary/delete/${this.diaryDate}`)
+        .delete(`/api/diary/delete/${this.diaryDate}`, {
+          params: { userId },
+        })
         .then((response) => {
           alert(response.data); // 서버에서 반환된 메시지
           this.$router.push('/diary'); // 다이어리 캘린더로 이동
