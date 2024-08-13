@@ -122,8 +122,6 @@ export default {
 
       // 배열은 0부터 시작
       const result = ArrayByContentLine[lineIndex - 1] ? ArrayByContentLine[lineIndex - 1] : '';
-      console.log('getContentLine :  ' + result);
-
       return result;
     },
     deleteDiary() {
@@ -160,9 +158,14 @@ export default {
 </script>
 
 <style scoped>
+.w-100 {
+  width: 100% !important;
+  height: 610px !important;
+}
+
 #diary-detail-container {
-  border: 1px solid #8080802e;
   border-radius: 12px;
+  border: 2px solid #635e5e21;
 }
 .diary-wrapper {
   margin: 18px 20px 28px 20px;
@@ -174,8 +177,7 @@ export default {
 
 .diary-table th,
 .diary-table td {
-  padding: 8px 10px;
-  text-align: left;
+  padding: 14px 10px;
 }
 
 .diary-header {
@@ -200,17 +202,15 @@ export default {
 }
 
 .modify-btn button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 45px;
-  height: 42px;
-  border: 1px solid #8080803d;
-  border-radius: 50%;
-  background-color: #f0f0f097;
-  font-size: 10px;
-  color: #5b5b5b;
+  width: 6em;
+  height: 2.5em;
+  background-color: #e5e5e51f;
+  color: #544545;
+  border-radius: 12px;
+  border: 2px solid #635e5e21;
   font-weight: 600;
+  font-size: 12px;
+  border-radius: 20px;
 }
 
 .modify-btn button:hover {
@@ -231,17 +231,19 @@ export default {
 
 .weather :nth-of-type(1),
 .emotion :nth-of-type(1) {
-  margin: 0 1px 0 10px;
+  margin: 0 4px 0 10px;
+  font-weight: 600;
 }
 
 .photo-grid {
-  border: 1px solid rgba(128, 128, 128, 0.239);
+  border: 2px solid #635e5e21;
   border-radius: 8px;
-  max-width: 600px;
-  height: 220px;
+  max-width: 570px;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: 10px;
 }
 
 .upload-photo {
@@ -252,21 +254,20 @@ export default {
 .diary-content-container {
   position: relative;
   width: 100%;
-  margin-top: 8px;
 }
 
 .diary-content {
   width: 100%;
-  max-height: 175px; /* 5줄의 높이만큼 설정 */
+  max-height: 180px; /* 5줄의 높이만큼 설정 */
   overflow-y: auto; /* 컨텐츠가 5줄을 넘을 경우 스크롤 생성 */
   padding: 0 10px; /* 스크롤바와의 간격을 위해 padding 추가 */
 }
 
 .diary-line {
   position: relative;
-  border-bottom: 1px solid #00000029;
+  border-bottom: 2px solid #635e5e21;
   height: 35px; /* 각 줄의 높이를 설정 */
-  line-height: 35px; /* 줄 간격을 설정 */
+  line-height: 37px; /* 줄 간격을 설정 */
   font-size: 14px;
   white-space: pre-wrap;
 }

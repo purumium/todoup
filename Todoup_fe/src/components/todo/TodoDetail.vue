@@ -290,14 +290,18 @@ export default {
 }
 
 .icon-button {
-  width: auto;
-  padding: 8px 12px;
-  background-color: transparent;
-  color: #4d9de0;
-  border: none;
-  border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
+  outline: none;
+  width: 70px;
+  height: 35px;
+  color: #544545;
+  border: 1px solid #1d13132e;
+  font-size: 11px;
+  border-radius: 20px;
+  background-color: #a4a4a41a;
+  border: none;
+  border-radius: 16px;
+  margin-left: 12px;
 }
 
 .icon-button:hover {
