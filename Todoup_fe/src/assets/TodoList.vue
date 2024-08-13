@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h4 class="header">{{ formattedDate }} TODO</h4>
+    <h4 class="header">{{ formattedDate }}</h4>
     <div class="todo-container">
       <div class="todo-list">
         <form @submit.prevent="addTodo" class="add-todo-form">
@@ -137,7 +137,7 @@ export default {
 <style scoped>
 /* 전체 레이아웃 및 컨테이너 스타일 */
 .todo-container {
-  height: 525px;
+  height: 400px;
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
@@ -150,7 +150,6 @@ export default {
 
 /* 투두 리스트 스타일 */
 .todo-list {
-  overflow-x: none;
   overflow-y: auto;
   flex: 1;
   background-color: #ffffff;
@@ -161,7 +160,6 @@ export default {
 
 .add-todo-form {
   display: flex;
-  align-items: center;
   margin-bottom: 8px;
 }
 
@@ -219,7 +217,7 @@ export default {
 }
 
 .todo-title {
-  font-size: 16px;
+  font-size: 18px;
   cursor: pointer;
   color: #333;
 }
@@ -231,14 +229,13 @@ export default {
 
 /* 상세보기 컨테이너 스타일 */
 .todo-detail-container {
-  width: 267px;
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #ffffff;
   border-radius: 15px;
-  padding: 0 10px;
+  padding: 20px;
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
