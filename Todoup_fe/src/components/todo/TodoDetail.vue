@@ -68,7 +68,6 @@
 <script>
 import axios from 'axios';
 import categories from '@/assets/categories.json';
-/* import { mapState } from 'vuex'; */
 
 export default {
   props: {
@@ -77,11 +76,14 @@ export default {
       required: false,
     },
   },
-  // computed: {
-  //   ...mapState('user', {
-  //     userId: (state) => state.user_info.userId,
-  //   }),
-  // },
+  computed: {
+    formattedStartDate() {
+      return this.formatDate(this.todo.start_date);
+    },
+    formattedEndDate() {
+      return this.formatDate(this.todo.end_date);
+    },
+  },
   data() {
     return {
       todo_id: '',
@@ -96,6 +98,34 @@ export default {
     };
   },
   methods: {
+    formatDate(dateString) {
+      if (!dateString) return '';
+      const date = new Date(dateString);
+      return date.toLocaleDateString('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    },
+    async deleteTodo() {
+      if (!this.todo) return;
+
+      try {
+        const isCompleted = this.todo.completed ? 1 : 0;
+        await axios.delete(`/api/todo/delete/${this.todo.todo_id}`, {
+          params: {
+            completed: isCompleted,
+            userId: this.todo.user_id,
+          },
+        });
+
+        alert('할일이 성공적으로 삭제되었습니다.');
+        this.$emit('todo-deleted', this.todo.todo_id);
+      } catch (error) {
+        console.error('Error deleting todo:', error);
+        alert('할일 삭제 중 오류가 발생했습니다.');
+      }
+    },
     showContent() {
       this.changeContent = !this.changeContent;
       if (this.changeContent) {
@@ -117,29 +147,6 @@ export default {
       }
       console.log('S.C: ', this.todo_id, '/', this.user_id);
     },
-    async deleteTodo() {
-      if (!this.todo) return;
-
-      try {
-        const isCompleted = this.todo.completed ? 1 : 0;
-        // 서버에 삭제 요청
-        await axios.delete(`/api/todo/delete/${this.todo_id}`, {
-          params: {
-            completed: isCompleted,
-            userId: this.todo.user_id,
-          },
-        });
-
-        alert('할일이 성공적으로 삭제되었습니다.');
-
-        // 상위 컴포넌트에 삭제된 항목을 알림
-        this.$emit('todo-deleted', this.todo.todo_id);
-      } catch (error) {
-        console.error('Error deleting todo:', error);
-        alert('할일 삭제 중 오류가 발생했습니다.');
-      }
-    },
-
     async modifyTodo() {
       if (!this.todo) return;
 
