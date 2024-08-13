@@ -18,7 +18,7 @@
           <span class="todo-date"> <font-awesome-icon icon="calendar-alt" /> 종료 {{ formattedEndDate }} </span>
         </div>
         <div class="button-group">
-          <button type="button" class="icon-button" @click="editTodo">
+          <button type="button" class="icon-button" @click="showContent">
             <font-awesome-icon icon="edit" />
           </button>
           <button type="button" class="icon-button" @click="deleteTodo">
