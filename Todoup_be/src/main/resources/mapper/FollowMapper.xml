@@ -6,13 +6,13 @@
 
     <!-- 내가 팔로우한 사람들 / 팔로잉 -->
     <select id="findFollowing" parameterType="long" resultType="com.kosa.todoup.dto.FollowDTO">
-        SELECT f.user_id,
-               f.follow_id,
+        SELECT f.user_id AS userId,
+               f.follow_id AS followId,
                u1.nickname AS userNickname,
                u2.nickname AS followNickname,
                u2.lv,
                u2.points,
-               a.img_url
+               a.img_url AS imgUrl
         FROM follow f
                  JOIN users u1 ON f.user_id = u1.user_id
                  JOIN users u2 ON f.follow_id = u2.user_id
@@ -20,25 +20,61 @@
         WHERE f.user_id = #{userId}
     </select>
     <!--  팔로잉 하기  -->
-    <insert id="insertFollow" parameterType="map">
+    <insert id="insertFollow" >
         INSERT INTO follow (user_id, follow_id)
         VALUES (#{userId}, #{followId})
     </insert>
 
     <!-- 팔로잉 취소  -->
-    <delete id="deleteFollow" parameterType="map">
+    <delete id="deleteFollow" >
         DELETE FROM follow
         WHERE user_id = #{userId}
           AND follow_id = #{followId}
     </delete>
 
+    <!-- 팔로잉 확인-->
+    <select id="isFollowing" resultType="boolean">
+        SELECT COUNT(*)
+        FROM follow
+        WHERE user_id = #{userId}
+          AND follow_id = #{followId}
+    </select>
+
     <!-- 나를 팔로우한 사람들 / 팔로워 -->
-    <select id="findFollowers" parameterType="long" resultType="com.kosa.todoup.dto.FollowDTO">
-        SELECT u.user_id, u.email, u.nickname, u.lv, u.points, a.img_url
+    <select id="findFollowers"  resultType="com.kosa.todoup.dto.FollowDTO">
+        SELECT f.user_id AS userId,
+               f.follow_id AS followId,
+               u1.nickname AS userNickname,
+               u2.nickname AS followNickname,
+               u1.lv,
+               u2.points,
+               a.img_url AS imgUrl
         FROM follow f
-                 JOIN users u ON f.user_id = u.user_id
-                 JOIN avatar_list a ON u.avatar_type = a.avatar_type AND u.lv = a.lv
+                 JOIN users u1 ON f.user_id = u1.user_id
+                 JOIN users u2 ON f.follow_id = u2.user_id
+                 JOIN avatar_list a ON u2.avatar_type = a.avatar_type AND u2.lv = a.lv
         WHERE f.follow_id = #{userId}
+    </select>
+
+    <!-- 팔로우 받기 -->
+    <insert id="insertReceivedFollow" >
+        INSERT INTO follow (user_id, follow_id)
+        VALUES (#{userId}, #{followId})
+    </insert>
+
+    <!-- 팔로우 취소 받기 -->
+    <delete id="deleteReceivedFollow">
+        DELETE FROM follow
+        WHERE user_id = #{userId}
+          AND follow_id = #{followId}
+    </delete>
+
+    <!-- 팔로우 받았는지 확인 -->
+    <select id="isReceivedFollow" resultType="boolean">
+        SELECT COUNT(*)
+        FROM follow
+        WHERE user_id = #{followId}
+          AND follow_id = #{userId}
     </select>
 
 </mapper>

@@ -63,20 +63,24 @@ export default {
     signUpPage() {
       this.$router.push('signup');
     },
-    doLogin() {
-      checkUser(this.email, this.password).then((userData) => {
+    async doLogin() {
+      try {
+        const userData = await checkUser(this.email, this.password);
         if (userData) {
           alert('로그인 되었습니다.');
-          this.login(userData); // userData에는 userId 포함
-          this.userId = userData; // userId를 data()에 저장
-          console.log('로그인-vuex', this.userId);
+          this.login(userData); // userData를 user-store에 저장
+          this.userId = userData.userId; // userId를 data()에 저장
+          console.log('로그인-vuex 스토어에 있는 값입니다.', this.user_info);
           this.$router.push('/');
         } else {
           alert('아이디 혹은 비밀번호를 확인해주세요.');
           this.login({ email: null, check: false });
           this.userId = null; // 로그인 실패 시 userId를 null로 설정
         }
-      });
+      } catch (error) {
+        console.error('Login error:', error);
+        alert('로그인 중 오류가 발생했습니다.');
+      }
     },
     ...mapActions({ login: 'user/login', logout: 'user/logout', logfail: 'user/logfail' }),
   },
