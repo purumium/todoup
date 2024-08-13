@@ -46,7 +46,6 @@ const checkUser = async (email, password) => {
     },
     withCredentials: true,
   });
-
   return response.data[0]; // 사용자 정보를 반환
 };
 

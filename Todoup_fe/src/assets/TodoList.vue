@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h4 class="header">{{ formattedDate }} TODO</h4>
+    <h4 class="header">{{ formattedDate }}</h4>
     <div class="todo-container">
       <div class="todo-list">
         <form @submit.prevent="addTodo" class="add-todo-form">
@@ -93,25 +93,16 @@ export default {
           },
         });
         todo.completed = newCompletionStatus;
+
         // 포인트를 update하는 로직 추가
         const pointsToAdd = newCompletionStatus ? 5 : -5; // 완료시 +5 포인트, 취소시 -5 포인트
         //const newPoints = this.points + pointsToAdd;
         this.$store.dispatch('user/updatePoints', pointsToAdd);
 
-        this.$swal.fire({
-          text: 'TODO의 완료 상태가 변경되었습니다.',
-          icon: 'success',
-          confirmButtonText: '확인',
-          confirmButtonColor: '#429f50',
-        });
+        alert('할일 상태 변경');
       } catch (error) {
         console.error('Error toggling completion status:', error);
-        this.$swal.fire({
-          text: 'TODO의 완료 상태가 변경에 실패하었습니다.',
-          icon: 'error',
-          confirmButtonText: '확인',
-          confirmButtonColor: '#429f50',
-        });
+        alert('할일 상태를 업데이트하는 중 오류가 발생했습니다.');
       }
     },
     selectTodo(todo) {
@@ -128,6 +119,7 @@ export default {
         this.newTodo.end_date = this.date;
         const response = await axios.post('/api/todo/insert', this.newTodo);
         const createdTodoId = response.data;
+        alert('Todo created successfully!');
         await this.getTodos();
         const newlyAddedTodo = this.todos.find((todo) => todo.todo_id === createdTodoId);
         this.selectTodo(newlyAddedTodo);
@@ -135,12 +127,7 @@ export default {
         this.newTodo.memo = '';
       } catch (error) {
         console.error('Error creating todo:', error);
-        this.$swal.fire({
-          text: '새로운 TODO 생성에 실패하었습니다.',
-          icon: 'error',
-          confirmButtonText: '확인',
-          confirmButtonColor: '#429f50',
-        });
+        alert('할일을 생성하는 중 오류가 발생했습니다.');
       }
     },
   },
@@ -150,7 +137,7 @@ export default {
 <style scoped>
 /* 전체 레이아웃 및 컨테이너 스타일 */
 .todo-container {
-  height: 525px;
+  height: 400px;
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
@@ -163,7 +150,6 @@ export default {
 
 /* 투두 리스트 스타일 */
 .todo-list {
-  overflow-x: none;
   overflow-y: auto;
   flex: 1;
   background-color: #ffffff;
@@ -174,7 +160,6 @@ export default {
 
 .add-todo-form {
   display: flex;
-  align-items: center;
   margin-bottom: 8px;
 }
 
@@ -232,7 +217,7 @@ export default {
 }
 
 .todo-title {
-  font-size: 16px;
+  font-size: 18px;
   cursor: pointer;
   color: #333;
 }
@@ -244,14 +229,13 @@ export default {
 
 /* 상세보기 컨테이너 스타일 */
 .todo-detail-container {
-  width: 267px;
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #ffffff;
   border-radius: 15px;
-  padding: 0 10px;
+  padding: 20px;
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
