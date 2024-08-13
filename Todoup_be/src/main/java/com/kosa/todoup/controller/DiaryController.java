@@ -33,12 +33,8 @@ public class DiaryController {
     public String insertDiaryByDate( @ModelAttribute DiaryDTO diary,
                                      @RequestParam(value="imgFile", required = false) MultipartFile imgFile ) {
         // formDate: @ModelAttribute로 객체(diaryDTO)를 받고, 파일은 개별 param으로 받기
-
-        int userId = 1;  // user 연결되면 바꿔서 사용
-        diary.setUserId(userId);
-
         System.out.println("insertDiaryByDate : " + diary.toString());
-        System.out.println(imgFile);
+        System.out.println("insertDiaryByDate - img : " + imgFile);
 
         try {
             diaryService.insertDiaryByDate(diary, imgFile);
@@ -49,31 +45,27 @@ public class DiaryController {
         }
     }
 
-    @GetMapping("/emotions")  // params로 넘김
-    public List<DiaryDTO> getEmotionByMonth(@RequestParam("yearMonth") String yearMonth) {
-        int userId = 1;  // user 연결되면 바꿔서 사용
-
+    @GetMapping("/emotions/{yearMonth}")  // PathVariable: 경로에 변수 붙여서 사용
+    public List<DiaryDTO> getEmotionByMonth(@PathVariable ("yearMonth") String yearMonth,
+                                            @RequestParam ("userId") long userId) {
         List<DiaryDTO> emotionByMonth = diaryService.getEmotionByMonth(yearMonth, userId);
 
         return emotionByMonth;
     }
 
 
-    @GetMapping("/detail/{date}")  // 경로에 변수 붙여서 사용
-    public DiaryDTO getDiaryByDate(@PathVariable("date") String date) {
-        int userId = 1;  // user 연결되면 바꿔서 사용
-
+    @GetMapping("/detail/{date}")
+    public DiaryDTO getDiaryByDate(@PathVariable("date") String date,
+                                   @RequestParam ("userId") long userId) {
         System.out.println("getDiaryByDate - date로 다이어리 가져오기 : " + date);
         DiaryDTO diaryData = diaryService.getDiaryByDate(date, userId);
-
-        System.out.println("controller diarydate : " + diaryData.toString());
 
         return diaryData;
     }
 
     @DeleteMapping("/delete/{date}")  // @RequestMapping(value = "/delete/{diaryDate}", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteDiaryByDate(@PathVariable("date") String date) {
-        int userId = 1;
+    public ResponseEntity<String> deleteDiaryByDate(@PathVariable("date") String date,
+                                                    @RequestParam ("userId") long userId) {
         System.out.println("deleteDiaryByDate : " + date);
         try {
             diaryService.deleteDiaryByDate(date, userId);
@@ -87,9 +79,6 @@ public class DiaryController {
     @PutMapping("/update")
     public ResponseEntity<String> updateDiaryByDate( @ModelAttribute DiaryDTO diary,
                                                      @RequestParam(value="imgFile", required = false) MultipartFile imgFile) {
-        int userId = 1;  // user 연결되면 바꿔서 사용
-        diary.setUserId(userId);
-
         System.out.println("updateDiaryByDate : " + diary.toString());
         System.out.println(imgFile);
 
@@ -104,8 +93,6 @@ public class DiaryController {
 
     @GetMapping("/images/{imgData}")
     public ResponseEntity<Resource> getImage(@PathVariable("imgData") String imgFile) {
-        System.out.println("details's getimage plz : " + imgFile);
-
         try {
             Path filePath = Paths.get("C:/uploads/" + imgFile);
             Resource resource = new UrlResource(filePath.toUri());

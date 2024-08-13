@@ -10,6 +10,7 @@
 
 <script>
 import axios from 'axios';
+import { mapState } from 'vuex';
 import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid'; // 연,월,주 별로 캘린더 사용
 import interactionPlugin from '@fullcalendar/interaction'; // 풀캘린더 메서드 사용
@@ -43,13 +44,18 @@ export default {
   created() {
     this.initialLoad(); // 초기 로드를 위한 메서드 호출
   },
+  computed: {
+    //mapState, mapGetter는 computed에서 사용
+    ...mapState('user', {
+      userId: (state) => state.user_info.userId,
+    }),
+  },
   methods: {
     initialLoad() {
-      // 초기의 캘린더 로드를 위한 메서드
+      // 초기의 캘린더 로드를 위한 메서드(emotion 데이터 가져옴)
       const currentDate = new Date();
-      const currentYear = currentDate.getFullYear();
+      const currentYear = currentDate.getFullYear(); //padStart(2자리 아니면, 0을 채움)
       const currentMonth = String(currentDate.getMonth() + 1).padStart(2, 0); // getMonth: 월을 0부터 시작, 1을 더함
-      //padStart(2자리 아니면, 0을 채움)
 
       const yearMonth = `${currentYear}-${currentMonth}`;
 
@@ -57,15 +63,14 @@ export default {
 
       this.fetchEmotionDataForMonth(yearMonth);
     },
-
     fetchEmotionDataForMonth(yearMonth) {
+      const userId = this.userId;
       axios
-        .get('/api/diary/emotions', {
-          params: { yearMonth },
+        .get(`/api/diary/emotions/${yearMonth}`, {
+          params: { userId },
         })
         .then((response) => {
           this.emotions = response.data;
-
           this.calendarOptions.events = this.emotions.map((data) => ({
             title: '',
             start: data.diaryDate,
@@ -79,11 +84,9 @@ export default {
           console.log(`fullcalendar first fetch error : ${error}`);
         });
     },
-
-    // 일반적인 뷰 변화 이벤트를 처리하는 메서드
     handleChangeView(info) {
-      // 현재 뷰의 시작 날짜 (연-월-일 형식)
-      const startDate = info.view.currentStart;
+      // 일반적인 뷰 변화 이벤트를 처리하는 메서드
+      const startDate = info.view.currentStart; // 현재 뷰의 시작 날짜 (연-월-일 형식)
 
       const year = startDate.getFullYear();
       const month = String(startDate.getMonth() + 1).padStart(2, '0'); // 월을 2자리로 맞추기, padStart(2자리 아니면, 0채움)
@@ -91,12 +94,10 @@ export default {
 
       console.log('바뀐 뷰의 연도- 월 : ' + yearMonth);
 
-      // 바뀐 뷰의 연도-월에 맞는 데이터를 가지고 옴
-      this.fetchEmotionDataForMonth(yearMonth);
+      this.fetchEmotionDataForMonth(yearMonth); // 바뀐 뷰의 연도-월에 맞는 데이터를 가지고 옴
     },
-
-    // 날짜 셀에 출력할 이벤트 : 이미지 출력
     renderEmotionImgContent(info) {
+      // 날짜 셀에 출력할 이벤트 : 이미지 출력
       const moods = info.event.extendedProps.emotion;
       var imgSrc = '';
 
@@ -119,9 +120,8 @@ export default {
       }
       return {};
     },
-
-    // 날짜 셀 누르면, diary detail or create
     handleDateClick(info) {
+      // 날짜 셀 누르면, diary detail page or create page
       const event = this.calendarOptions.events.find((event) => event.start === info.dateStr); // 선택한 날짜에 해당하는 이벤트
 
       if (event && event.extendedProps && event.extendedProps.emotion) {
