@@ -66,6 +66,13 @@ export default {
   created() {
     this.getTodos();
   },
+  watch: {
+    '$route.params.date'(newDate) {
+      this.date = newDate;
+      this.getTodos();
+    },
+  },
+
   methods: {
     async getTodos() {
       try {
