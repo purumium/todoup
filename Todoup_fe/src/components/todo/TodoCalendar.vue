@@ -86,7 +86,8 @@ export default {
         this.calendarOptions.events = todos.map((todo) => {
           return {
             title: todo.title,
-            date: todo.start_date, // start_date를 사용하여 이벤트 날짜 설정
+            start: todo.start_date, // 시작 날짜 설정
+            end: this.formatEndDate(todo.end_date), // 종료 날짜 설정 (포함되지 않으므로 다음 날로 설정)
             completed: todo.completed, // 완료 여부 추가
             todoId: todo.todo_id,
           };
@@ -94,6 +95,12 @@ export default {
       } catch (error) {
         console.error('Error fetching todos:', error);
       }
+    },
+    formatEndDate(endDate) {
+      // 종료 날짜를 다음 날로 설정하여 이벤트 범위에 포함되도록 함
+      const date = new Date(endDate);
+      date.setDate(date.getDate() + 2);
+      return date.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
     },
     handleDatesSet(arg) {
       const year = arg.view.currentStart.getFullYear();
@@ -157,7 +164,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2px; /* 수정 */
+  padding: 2px;
   border-radius: 4px;
   background-color: #d4efdf;
   border: 1px solid #f1f2f3;
@@ -190,5 +197,10 @@ export default {
   margin-top: 2px;
   font-size: 10px;
   font-weight: 500;
+}
+
+.fc-h-event {
+  background-color: #d4efdf !important;
+  border: none !important;
 }
 </style>

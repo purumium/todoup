@@ -93,16 +93,25 @@ export default {
           },
         });
         todo.completed = newCompletionStatus;
-
         // 포인트를 update하는 로직 추가
         const pointsToAdd = newCompletionStatus ? 5 : -5; // 완료시 +5 포인트, 취소시 -5 포인트
         //const newPoints = this.points + pointsToAdd;
         this.$store.dispatch('user/updatePoints', pointsToAdd);
 
-        alert('할일 상태 변경');
+        this.$swal.fire({
+          text: 'TODO의 완료 상태가 변경되었습니다.',
+          icon: 'success',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#429f50',
+        });
       } catch (error) {
         console.error('Error toggling completion status:', error);
-        alert('할일 상태를 업데이트하는 중 오류가 발생했습니다.');
+        this.$swal.fire({
+          text: 'TODO의 완료 상태가 변경에 실패하었습니다.',
+          icon: 'error',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#429f50',
+        });
       }
     },
     selectTodo(todo) {
@@ -119,7 +128,6 @@ export default {
         this.newTodo.end_date = this.date;
         const response = await axios.post('/api/todo/insert', this.newTodo);
         const createdTodoId = response.data;
-        alert('Todo created successfully!');
         await this.getTodos();
         const newlyAddedTodo = this.todos.find((todo) => todo.todo_id === createdTodoId);
         this.selectTodo(newlyAddedTodo);
@@ -127,7 +135,12 @@ export default {
         this.newTodo.memo = '';
       } catch (error) {
         console.error('Error creating todo:', error);
-        alert('할일을 생성하는 중 오류가 발생했습니다.');
+        this.$swal.fire({
+          text: '새로운 TODO 생성에 실패하었습니다.',
+          icon: 'error',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#429f50',
+        });
       }
     },
   },
