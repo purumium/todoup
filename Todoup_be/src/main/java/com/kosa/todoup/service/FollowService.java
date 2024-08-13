@@ -20,6 +20,9 @@ public class FollowService {
     public List<FollowDTO> findFollowers(long userId) {
         return followMapper.findFollowers(userId);
     }
+    public List<FollowDTO> findAllUsers(long userId) {
+        return followMapper.findAllUsers(userId);
+    }
     // 팔로잉 추가
     public void insertFollow(long userId, long followId) {
         followMapper.insertFollow(userId, followId);
@@ -40,7 +43,7 @@ public class FollowService {
     public  void insertReceivedFollow(long userId, long followId){
         followMapper.insertReceivedFollow(userId, followId);
     }
-    
+
     //팔로우 삭제
     public void deleteReceivedFollow(long userId, long followId){
         followMapper.deleteReceivedFollow(userId, followId);
