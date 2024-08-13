@@ -21,7 +21,7 @@
               <div class="progress" :style="{ width: progressWidth + '%' }"></div>
             </div>
             <p class="progress-text">
-              <b>{{ userInfo?.points || 25 % 100 }}</b> / 100 points
+              <b>{{ userInfo.points % 100 }}</b> / 100 points
             </p>
           </div>
         </div>
@@ -50,8 +50,7 @@ export default {
       profileImg: 'user/getProfileImg', // Vuex의 profileImg 상태를 컴포넌트에 매핑
     }),
     progressWidth() {
-      // userInfo.points가 존재하지 않으면 기본값 25를 반환
-      return (this.userInfo?.points || 25) % 100;
+      return this.userInfo.points % 100;
     },
   },
   methods: {
