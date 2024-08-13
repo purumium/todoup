@@ -69,4 +69,10 @@ public class TodoService {
             userMapper.updateUserPointsOnTodoDelete(userId);
         }
     }
+
+    @Transactional
+    public void updateTodo(TodoDTO todoDTO) {
+        todoMapper.modifyTodobyTodoId(todoDTO);
+    }
+
 }
