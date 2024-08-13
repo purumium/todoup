@@ -186,7 +186,12 @@ export default {
     submitDiary() {
       // 일기 내용을 적지 않았을 때, submit 불가
       if (this.content === null || this.content.trim() === '') {
-        alert('일기의 내용을 입력해주세요!');
+        this.$swal.fire({
+          text: '일기의 내용을 입력해주세요.',
+          icon: 'warning',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#f39c12',
+        });
         return;
       }
 
