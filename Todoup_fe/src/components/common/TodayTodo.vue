@@ -10,8 +10,8 @@
       </li>
     </ul>
 
-    <ul class="todo-list" v-if="!userInfo.userId || todoList.length == 0">
-      <li>조회된 목록이 없습니다.</li>
+    <ul class="todo-list rainbow" v-if="!userInfo.userId || todoList.length == 0">
+      <li class="todo-empty"><span class="text-rainbow">조회된 데이터가 없습니다.!</span></li>
     </ul>
   </div>
 </template>
@@ -84,6 +84,21 @@ export default {
   height: 190px;
   overflow-y: auto;
   padding: 18px 25px;
+}
+.todo-empty {
+  width: 230px;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.text-rainbow {
+  background-image: linear-gradient(90deg, red, orange, yellow, green, blue, navy, purple);
+  -webkit-background-clip: text;
+  color: transparent;
+
+  font-weight: bold;
 }
 
 li {

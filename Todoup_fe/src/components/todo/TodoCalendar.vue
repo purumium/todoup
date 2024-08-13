@@ -53,6 +53,16 @@ export default {
       userId: (state) => state.user_info.userId,
     }),
   },
+  watch: {
+    userId: {
+      handler(newValue) {
+        if (!newValue) {
+          this.$router.push('/');
+        }
+      },
+      immediate: true, // 컴포넌트 생성 시에도 watcher를 즉시 호출
+    },
+  },
   created() {
     this.setInitialMonth(); // 초기 월과 연도 설정
     this.fetchTodos(); // 초기 데이터를 가져옴
@@ -75,24 +85,26 @@ export default {
       this.$router.push(`/todo/${dateStr}?selectedTodoId=${todoId}`);
     },
     async fetchTodos() {
-      try {
-        const userId = this.userId;
-        const response = await axios.get(`/api/todo/month/${this.currentMonth}`, {
-          params: { userId },
-        });
-        const todos = response.data;
+      if (this.userId) {
+        try {
+          const userId = this.userId;
+          const response = await axios.get(`/api/todo/month/${this.currentMonth}`, {
+            params: { userId },
+          });
+          const todos = response.data;
 
-        // todos 배열을 FullCalendar의 events 배열 형식에 맞게 변환
-        this.calendarOptions.events = todos.map((todo) => {
-          return {
-            title: todo.title,
-            date: todo.start_date, // start_date를 사용하여 이벤트 날짜 설정
-            completed: todo.completed, // 완료 여부 추가
-            todoId: todo.todo_id,
-          };
-        });
-      } catch (error) {
-        console.error('Error fetching todos:', error);
+          // todos 배열을 FullCalendar의 events 배열 형식에 맞게 변환
+          this.calendarOptions.events = todos.map((todo) => {
+            return {
+              title: todo.title,
+              date: todo.start_date, // start_date를 사용하여 이벤트 날짜 설정
+              completed: todo.completed, // 완료 여부 추가
+              todoId: todo.todo_id,
+            };
+          });
+        } catch (error) {
+          console.error('Error fetching todos:', error);
+        }
       }
     },
     handleDatesSet(arg) {
