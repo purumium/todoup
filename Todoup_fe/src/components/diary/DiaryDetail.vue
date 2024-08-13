@@ -46,8 +46,10 @@
           <td colspan="4">
             <div class="diary-content-container">
               <div class="diary-content">
-                <div v-for="line in lines" :key="line" class="diary-line">
+                <div v-for="line in computedLines" :key="line" class="diary-line">
+                  <!-- computedLines: 최소 5줄을 반환하거나, 실제 줄 수가 5줄을 초과하면 그 줄 수를 반환 -->
                   <span>{{ getContentLine(line) }}</span>
+                  <!-- 각 줄에 대해 getContentLine(line) 메서드를 호출하여 텍스트를 가져옴-->
                 </div>
               </div>
             </div>
@@ -70,7 +72,6 @@ export default {
       emotion: '',
       content: '', // 다이어리 작성 내용
       imgData: '', // 추가한 사진
-      lines: 5, // 기본적으로 5줄을 보여줌
     };
   },
   created() {
@@ -78,10 +79,19 @@ export default {
     this.fetchDiaryDetail();
   },
   computed: {
+    // computed의 속성이기 때문에, 이를 필요로 하는 곳에서 자동으로 참조
     formattedDate() {
       // date가 변경되면 날짜 포맷 변경
       const [year, month, day] = this.date.split('-');
       return `${year}년 ${month}월 ${day}일`;
+    },
+    computedLines() {
+      // 5줄 미만이면, 5줄
+      // 5줄 초과하면 실제 내용에 해당하는 줄 개수(6개 이상)
+      const minimumLines = 5;
+      const contentLine = this.content.split('\n').length; // 줄바꿈 기준으로 줄 수 몇개?
+
+      return Math.max(minimumLines, contentLine);
     },
   },
   methods: {
@@ -101,8 +111,13 @@ export default {
         });
     },
     getContentLine(lineIndex) {
-      const lines = this.content.split('\n');
-      return lines[lineIndex - 1] || '';
+      const ArrayByContentLine = this.content.split('\n'); // 줄바꿈을 기준으로 잘라서, 1줄씩 배열로 담김
+
+      // 배열은 0부터 시작
+      const result = ArrayByContentLine[lineIndex - 1] ? ArrayByContentLine[lineIndex - 1] : '';
+      console.log('getContentLine :  ' + result);
+
+      return result;
     },
     deleteDiary() {
       axios
@@ -147,8 +162,6 @@ export default {
   position: relative;
   display: flex;
   justify-content: space-between;
-  /* align-items: center;
-  margin-bottom: 12px; */
 }
 
 .diary-date {

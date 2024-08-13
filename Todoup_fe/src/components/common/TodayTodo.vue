@@ -67,34 +67,34 @@ export default {
 <style scoped>
 .todo-section {
   margin-top: 25px;
-  border: 1.2px solid #635e5e21;
+  border: 2px solid #635e5e21;
   border-radius: 11px;
 }
 
 .todo-section div {
-  border-bottom: 1px solid #8080803d;
-  padding: 12px 18px;
-  font-size: 13px;
+  border-bottom: 2px solid #635e5e21;
+  padding: 13px 20px;
+  font-size: 19px;
   font-weight: 600;
   color: #635a5a;
 }
 
 .todo-list {
-  max-height: 175px;
+  max-height: 190px;
+  height: 190px;
   overflow-y: auto;
-  padding: 15px 20px;
+  padding: 18px 25px;
 }
 
 li {
   list-style-type: none;
-  font-size: 13px;
-  margin-bottom: 7px;
+  font-size: 18px;
+  margin-bottom: 8px;
 }
 
 li input[type='checkbox'] {
-  margin-right: 5px;
+  margin-right: 10px;
 }
-
 .check-line-through {
   text-decoration: line-through;
 }

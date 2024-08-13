@@ -168,8 +168,13 @@ export default {
       }
     },
     submitDiary() {
-      // FormData: 이미지 파일을 포함해서 전송시 사용
+      if (this.content === null || this.content.trim() === '') {
+        alert('일기의 내용을 입력해주세요!');
+        return;
+      }
+
       const diaryData = new FormData();
+      // FormData: 이미지 파일을 포함해서 전송시 사용하는 객체
       diaryData.append('diaryDate', this.date);
       diaryData.append('emotion', this.emotion);
       diaryData.append('weather', this.weather);
@@ -181,8 +186,8 @@ export default {
       }
 
       const request = this.isEditMode
-        ? axios.put('/api/diary/update', diaryData)
-        : axios.post('/api/diary/insert', diaryData);
+        ? axios.put('/api/diary/update', diaryData) // isEditMode == true이면, update
+        : axios.post('/api/diary/insert', diaryData); // isEditMode == false라면, insert
 
       request
         .then((response) => {
