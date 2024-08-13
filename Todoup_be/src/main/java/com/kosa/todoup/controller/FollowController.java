@@ -22,7 +22,7 @@ public class FollowController {
 
     // 팔로잉 추가
     @PostMapping("/add/following")
-    public ResponseEntity<String> addFollow(Long userId,  Long followId) {
+    public ResponseEntity<String> addFollow(@RequestBody Long userId,@RequestBody Long followId) {
         try {
             followService.insertFollow(userId, followId);
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -55,7 +55,7 @@ public class FollowController {
 
     // 팔로우 추가
     @PostMapping("/add/followers")
-    public ResponseEntity<Void> addFollowers(long userId,  long followId) {
+    public ResponseEntity<Void> addFollowers(@RequestBody long userId, @RequestBody long followId) {
         try {
             followService.insertReceivedFollow(userId, followId);
             return new ResponseEntity<>(HttpStatus.CREATED);
