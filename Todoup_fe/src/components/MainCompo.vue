@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex w-100" style="height: 100vh">
+  <div class="d-flex w-100" style="height: 100vh; gap: 2.8em">
     <aside>
       <profile-compo />
       <today-todo />

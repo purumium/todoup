@@ -77,10 +77,6 @@ export default {
 
 <style scoped>
 .profile-section {
-  margin-bottom: 20px;
-  border: 1.2px solid #635e5e21;
-  padding: 22px 13px;
-  border-radius: 11px;
   display: flex;
   flex-direction: column; /* 세로 정렬 */
   align-items: center;
@@ -96,7 +92,6 @@ export default {
 
 .profile-top img {
   border: 1px solid #8080803d;
-  margin-right: 15px;
   border-radius: 70%;
   width: 130px;
 }
@@ -106,8 +101,13 @@ export default {
 }
 
 .my-name {
-  font-size: 13px;
+  font-size: 14px;
   color: #5b5b5b;
+}
+
+.my-name :nth-of-type(1) {
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .my-follow-btn {
@@ -118,13 +118,13 @@ export default {
 }
 
 .my-follow-btn > div {
-  width: 57px;
-  height: 53px;
+  width: 73px;
+  height: 67px;
   border-radius: 50%;
-  background-color: #f0f0f03b;
-  font-size: 10px;
+  background-color: #f0f0f08c;
+  font-size: 12px;
   color: #5b5b5b;
-  border: 1px solid #8080803d;
+  border: 2px solid #635e5e21;
   font-weight: 600;
   display: flex;
   align-items: center;

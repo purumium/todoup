@@ -1,10 +1,10 @@
 <template>
   <div class="w-100">
     <div>
-      <div class="calendar-title">성장 일기 캘린더</div>
-      <full-calendar v-if="calendarOptions" :options="calendarOptions"></full-calendar>
-      <router-view></router-view>
+      <div class="calendar-title">DIARY 캘린더</div>
     </div>
+    <full-calendar v-if="calendarOptions" :options="calendarOptions"></full-calendar>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -26,8 +26,8 @@ export default {
         plugins: [dayGridPlugin, interactionPlugin],
         initialView: 'dayGridMonth',
         headerToolbar: {
-          left: '',
-          center: 'title',
+          left: 'title',
+          center: '',
           right: 'prev today next',
         },
         events: [], // 초기 상태에서는 비어있음, `fetchEmotionDataForMonth`에서 데이터 채워짐
@@ -148,11 +148,17 @@ export default {
 }
 
 .calendar-title {
-  position: absolute;
-  color: #2b2222;
+  color: #2b2222b8 !important;
   font-weight: 600;
   font-size: 22px;
+  display: flex;
+  justify-content: center;
+  padding: 7px 0;
+  border-bottom: 2px solid #cfcece70;
+  border-top: 2px solid #cfcece70;
+  justify-content: center;
 }
+
 .fc .fc-bg-event {
   --fc-bg-event-opacity: 0.9 !important; /* 투명도를 0.8로 설정 */
   background: none !important;
@@ -164,15 +170,26 @@ export default {
   margin: 0 auto !important; /* 가운데 정렬 */
 }
 
-.fc-toolbar-title {
-  font-size: 1em !important;
+.fc .fc-toolbar.fc-header-toolbar {
+  margin: 0.5em 0 1em 0;
 }
 
 .fc .fc-toolbar-title {
-  position: relative !important;
-  top: -1px !important;
-  left: 207px !important;
   color: #544f4fe3 !important;
+  font-weight: 600;
+  font-size: 1em !important;
+}
+
+.fc .fc-toolbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  position: relative !important;
+  left: 2.5em !important;
+}
+
+.fc-direction-ltr .fc-toolbar > * > :not(:first-child) {
+  margin-left: -30px !important;
 }
 
 /* 버튼의 백그라운드 컬러를 화이트로 변경하고, 기호의 컬러를 블랙으로 변경 */

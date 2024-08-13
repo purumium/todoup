@@ -1,11 +1,15 @@
 <template>
-  <div class="w-100">
-    <div class="d-flex justify-content-between">
-      <h4>Todo Calendar</h4>
-      <button type="button" class="px-2 add-todo" @click="$router.push('/todo/create')">TODO 추가</button>
+  <div>
+    <div class="d-flex justify-content-between align-items-center todo-calendar-top">
+      <div class="todo-calendar">TODO 캘린더</div>
+      <div class="add-todo-wrap">
+        <button type="button" class="px-2 add-todo" @click="$router.push('/todo/create')">
+          <font-awesome-icon :icon="['fas', 'check-double']" /> TODO 추가
+        </button>
+      </div>
     </div>
 
-    <full-calendar :options="calendarOptions"></full-calendar>
+    <full-calendar :options="calendarOptions"> </full-calendar>
   </div>
 </template>
 
@@ -111,9 +115,43 @@ export default {
 </script>
 
 <style>
-.add-todo {
-  font-weight: 500;
+.todo-calendar-top {
+  color: #2b2222b8 !important;
+  font-weight: 600;
+  font-size: 22px;
+  display: flex;
+  padding: 7px 0;
+  border-bottom: 2px solid #cfcece70;
+  border-top: 2px solid #cfcece70;
+  justify-content: center;
 }
+
+.todo-calendar {
+  left: 39%;
+  position: relative;
+}
+
+.add-todo-wrap {
+  position: absolute;
+}
+
+.add-todo {
+  position: relative;
+  top: 4.2em;
+  width: 105px;
+  height: 30px;
+  background-color: #e5e5e51f;
+  color: #544545;
+  border: 1px solid #1d13132e;
+  font-weight: 600;
+  font-size: 12px;
+  border-radius: 20px;
+}
+
+.add-todo :hover {
+  cursor: pointer;
+}
+
 .todo-event {
   display: flex;
   align-items: center;
