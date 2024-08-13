@@ -2,23 +2,26 @@
   <div class="profile-section">
     <!-- 프로필 이미지 및 팔로우 버튼들 -->
     <div class="profile-top">
-      <img src="@/assets/profile.png" alt="Profile" @click="goToRoom" />
+      <img v-if="userInfo.userId" :src="`/avatar/${profileImg}`" alt="Profile" @click="goToRoom" />
+      <img v-else src="/avatar/defaultAvatar.png" alt="Profile" @click="goToRoom" />
       <div class="profile-details">
         <div class="my-name">
-          <div>{{ userInfo?.nickName || '김투두' }}</div>
+          <div>{{ userInfo?.nickName || 'KimToDo' }}</div>
           <div>{{ userInfo?.email || 'todolist@gmail.com' }}</div>
         </div>
         <!-- 레벨과 포인트 프로그레스바 컨테이너 -->
         <div class="profile-level-progress">
           <div class="level-container">
-            <span class="level-icon">🏆</span> LEVEL&nbsp;<span class="level-value">{{ userInfo.lv }}</span>
+            <span class="level-icon">🏆</span> LEVEL&nbsp;<span class="level-value">
+              {{ userInfo?.lv || '3' }}
+            </span>
           </div>
           <div class="progress-bar-container">
             <div class="progress-bar">
               <div class="progress" :style="{ width: progressWidth + '%' }"></div>
             </div>
             <p class="progress-text">
-              <b>{{ userInfo.points % 100 }}</b> / 100 points
+              <b>{{ userInfo?.points || 25 % 100 }}</b> / 100 points
             </p>
           </div>
         </div>
@@ -35,7 +38,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'ProfileCompo',
@@ -43,8 +46,12 @@ export default {
     ...mapState('user', {
       userInfo: 'user_info', // Vuex의 user_info 상태를 userInfo로 매핑
     }),
+    ...mapGetters({
+      profileImg: 'user/getProfileImg', // Vuex의 profileImg 상태를 컴포넌트에 매핑
+    }),
     progressWidth() {
-      return this.userInfo.points % 100;
+      // userInfo.points가 존재하지 않으면 기본값 25를 반환
+      return (this.userInfo?.points || 25) % 100;
     },
   },
   methods: {
