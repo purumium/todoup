@@ -43,6 +43,7 @@ export default {
         dayCellContent: (args) => ({ html: args.dayNumberText.replace('일', '') }),
         datesSet: this.handleDatesSet, // 캘린더 날짜가 변경될 때 호출
         eventContent: this.renderEventContent, // 이벤트 콘텐츠 커스텀
+        dayMaxEvents: 2,
       },
       currentMonth: '', // 현재 월과 연도 저장
     };
@@ -157,7 +158,7 @@ export default {
   justify-content: space-between;
   padding: 4px;
   border-radius: 4px;
-  background-color: #e0e0e0;
+  background-color: #d0e7ff;
   border: 1px solid #f1f2f3;
   width: 100%;
   white-space: nowrap;
@@ -168,8 +169,10 @@ export default {
 }
 
 .todo-event.completed {
-  background-color: #d0e7ff;
+  color: #333;
+  background-color: #e0e0e0;
   text-decoration: line-through;
+  border: 1px solid #f1f2f3;
 }
 
 .todo-title {
@@ -179,5 +182,12 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
+}
+
+.fc-daygrid-more-link.fc-more-link {
+  color: #333;
+  margin-top: 2px;
+  font-size: 10px;
+  font-weight: 500;
 }
 </style>
