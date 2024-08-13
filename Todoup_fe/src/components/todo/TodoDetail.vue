@@ -119,6 +119,11 @@ export default {
           },
         });
 
+        console.log('detail: ', this.todo.todo_id);
+        console.log('Before committing to Vuex - Vuex State:', this.$store.state.todo_info);
+        this.$store.commit('todo/REMOVE_TODO', this.todo.todo_id);
+        console.log('After committing to Vuex - Vuex State:', this.$store.state.todo_info);
+
         alert('할일이 성공적으로 삭제되었습니다.');
         this.$emit('todo-deleted', this.todo.todo_id);
       } catch (error) {
@@ -173,11 +178,14 @@ export default {
 <style scoped>
 .todo-detail {
   border-radius: 15px;
+  padding: 20px;
   color: #333;
-  width: 215px;
+  width: 250px;
   height: 300px;
   overflow-y: auto;
   overflow-x: hidden;
+  background-color: #f9f9f9;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
 .todo-title {

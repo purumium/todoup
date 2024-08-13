@@ -1,28 +1,27 @@
 export default {
-  namespaced: true, // 네임스페이스를 사용하여 모듈을 구분
+  namespaced: true,
   state() {
     return {
-      todos: [],
+      todo_info: [], // todos 배열을 상태로 관리, 이름을 todo_info로 변경
     };
   },
   mutations: {
     ADD_TODO(state, todo) {
-      state.todos.push(todo);
+      state.todo_info.push(todo); // 새로운 todo를 추가
+    },
+    SET_TODOS(state, todos) {
+      state.todo_info = todos; // todos 배열을 상태로 저장, todo_info로 변경
     },
     REMOVE_TODO(state, todoId) {
-      state.todos = state.todos.filter((todo) => todo.id !== todoId);
+      state.todo_info = state.todo_info.filter((todo) => todo.todo_id != todoId); // 해당 할 일을 상태에서 제거
     },
   },
-  actions: {
-    addTodo({ commit }, todo) {
-      // 추가적인 비즈니스 로직을 여기에 작성 가능
-      commit('ADD_TODO', todo);
-    },
-    removeTodo({ commit }, todoId) {
-      commit('REMOVE_TODO', todoId);
-    },
-  },
+
   getters: {
-    allTodos: (state) => state.todos,
+    allTodos: (state) => state.todo_info, // 모든 todos를 반환하는 getter
+    todayTodos: (state) => {
+      const today = new Date().toISOString().split('T')[0];
+      return state.todo_info.filter((todo) => todo.start_date.split(' ')[0] === today); // 오늘의 todos만 반환하는 getter
+    },
   },
 };

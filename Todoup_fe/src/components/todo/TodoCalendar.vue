@@ -52,6 +52,9 @@ export default {
     ...mapState('user', {
       userId: (state) => state.user_info.userId,
     }),
+    ...mapState('todo', {
+      todos: 'todo_info', // Vuex의 todo_info 상태를 todos로 매핑
+    }),
   },
   watch: {
     userId: {
@@ -92,6 +95,12 @@ export default {
             params: { userId },
           });
           const todos = response.data;
+
+          const today = new Date().toISOString().split('T')[0];
+          const todayTodos = todos.filter((todo) => todo.start_date.split(' ')[0] === today);
+          this.$store.commit('todo/SET_TODOS', todayTodos);
+          console.log('calendar Vuex: ', todayTodos);
+          console.log('After committing to Vuex - Vuex State:', this.$store.state.todo.todo_info);
 
           // todos 배열을 FullCalendar의 events 배열 형식에 맞게 변환
           this.calendarOptions.events = todos.map((todo) => {

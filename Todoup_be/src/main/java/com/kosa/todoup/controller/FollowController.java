@@ -41,5 +41,4 @@ public class FollowController {
         List<FollowDTO> followers = followService.findFollowers(userId);
         return new ResponseEntity<>(followers, HttpStatus.OK);
     }
-
 }

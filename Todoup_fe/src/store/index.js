@@ -3,13 +3,13 @@ import createPersistedState from 'vuex-persistedstate';
 
 import UserStore from '@/store/user-store';
 import modalStore from './modal-store';
-import TodoStore from './todo-store';
+import todoStore from './todo-store';
 
 const store = createStore({
   modules: {
     modal: modalStore,
     user: UserStore,
-    todo: TodoStore,
+    todo: todoStore,
   },
   plugins: [
     createPersistedState({
