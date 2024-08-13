@@ -63,4 +63,32 @@ public class TodoController {
         }
     }
 
+
+    @DeleteMapping("/delete/{todoId}")
+    public ResponseEntity<?> deleteTodo(@RequestParam("userId") long userId, @PathVariable long todoId, @RequestParam("completed") int completed) {
+        try {
+            todoService.deleteTodo(userId, todoId, completed);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Error deleting todo", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PatchMapping("/modify/{todoId}")
+    public ResponseEntity<?> updateTodo(@PathVariable("todoId") long todo_id, @RequestBody TodoDTO todoDTO) {
+        todoDTO.setTodo_id(todo_id);
+        try {
+            todoService.updateTodo(todoDTO);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Error deleting todo", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
