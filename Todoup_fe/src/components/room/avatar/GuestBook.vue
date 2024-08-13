@@ -145,7 +145,12 @@ export default {
     // 등록
     async submitMessage() {
       if (this.newMessageContent.trim() === '') {
-        alert('내용을 채워주세요.');
+        this.$swal.fire({
+          text: '내용을 채워주세요.',
+          icon: 'warning',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#f39c12',
+        });
         return;
       }
 

@@ -79,10 +79,20 @@ export default {
           nickName: this.nickname,
           password: this.password,
         });
-        alert(response.data);
+        this.$swal.fire({
+          text: response.data,
+          icon: 'success',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#429f50',
+        });
         this.$router.push('/');
       } catch (error) {
-        alert('회원가입에 실패 : ' + error.response.data);
+        this.$swal.fire({
+          text: '회원가입에 실패 : ' + error.response.data,
+          icon: 'error',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#429f50',
+        });
       }
     },
   },

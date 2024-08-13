@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'normalize.css';
 
@@ -22,6 +23,9 @@ app.use(store);
 
 // FontAwesome 아이콘 컴포넌트 등록
 app.component('font-awesome-icon', FontAwesomeIcon);
+
+// SweetAlert2를 전역으로 사용 가능하도록 설정
+app.config.globalProperties.$swal = Swal;
 
 // 애플리케이션을 마운트
 app.mount('#app');
