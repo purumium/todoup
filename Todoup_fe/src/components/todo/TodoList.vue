@@ -15,7 +15,14 @@
           </li>
         </ul>
       </div>
-      <todo-detail :todo="selectedTodo"></todo-detail>
+      <!-- Todo Detail or Placeholder Image -->
+      <div class="todo-detail-container">
+        <todo-detail v-if="selectedTodo" :todo="selectedTodo" @todo-deleted="handleTodoDeleted"></todo-detail>
+        <div v-else class="no-selection">
+          <img src="@/assets/avatar_test.png" alt="No selection" />
+          <p>할일을 선택해주세요</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -97,6 +104,13 @@ export default {
     selectTodo(todo) {
       this.selectedTodo = todo; // 선택된 투두 항목을 selectedTodo에 저장
     },
+    handleTodoDeleted(deletedTodoId) {
+      // 삭제된 투두를 todos 배열에서 제거
+      this.todos = this.todos.filter((todo) => todo.todo_id !== deletedTodoId);
+
+      // 선택된 투두 초기화
+      this.selectedTodo = null;
+    },
     async addTodo() {
       try {
         this.newTodo.user_id = this.userId;
@@ -107,7 +121,6 @@ export default {
         const response = await axios.post('/api/todo/insert', this.newTodo);
         const createdTodoId = response.data; // 서버에서 새로 생성된 todoId를 응답받음
 
-        console.log(createdTodoId);
         alert('Todo created successfully!');
 
         // 투두 리스트를 다시 가져옴
@@ -129,4 +142,28 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.todo-detail-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid #ccc;
+  padding: 20px;
+}
+
+.no-selection {
+  text-align: center;
+  color: #888;
+}
+
+.no-selection img {
+  max-width: 150px;
+  margin-bottom: 20px;
+}
+
+.no-selection p {
+  font-size: 16px;
+  font-weight: bold;
+}
+</style>
