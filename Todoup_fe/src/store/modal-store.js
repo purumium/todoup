@@ -49,19 +49,17 @@ const modalStore = {
         console.error('Error fetching followers:', e);
       }
     },
-    // 팔로잉 요청들
+    // 팔로잉 요청들 followUser
     async followUser(context, { userId, followId }) {
       try {
         await axios.post(`/api/add/following`, {
-          params: {
-            userId: userId,
-            followId: followId,
-          },
+          userId: userId,
+          followId: followId,
         });
 
         // await dispatch('fetchFollowedUsers', userId); // 팔로우 후 팔로우 사용자 목록 갱신
       } catch (e) {
-        console.error('Error following user:', e);
+        console.error('Error followers user:', e);
       }
     },
     async unfollowUser(context, { userId, followId }) {
@@ -96,10 +94,8 @@ const modalStore = {
     async followersUser(context, { userId, followId }) {
       try {
         await axios.post(`/api/add/followers`, {
-          params: {
-            userId: userId,
-            followId: followId,
-          },
+          userId: userId,
+          followId: followId,
         });
 
         // await dispatch('fetchFollowedUsers', userId); // 팔로우 후 팔로우 사용자 목록 갱신
@@ -107,6 +103,7 @@ const modalStore = {
         console.error('Error followers user:', e);
       }
     },
+
     async unfollowersUser(context, { userId, followId }) {
       // payload를 구조분해하여 가져옴
       console.log('unfollowersUser : step 1');

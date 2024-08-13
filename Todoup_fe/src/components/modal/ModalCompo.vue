@@ -143,12 +143,12 @@ export default {
         const followId = this.followUsers[i].followId;
         const shouldFollow = this.isFollowArr[i];
 
-        const user = this.followUsers[i];
-        const result = await this.checkIfFollowing({ userId: user.followId, followId: currentUserId });
+        // const user = this.followUsers[i];
+        // const result = await this.checkIfFollowing({ userId: user.followId, followId: currentUserId });
 
         console.log('followId', followId);
         console.log('currentUserId', currentUserId);
-        if (shouldFollow && result) {
+        if (shouldFollow) {
           try {
             await this.followUser({ userId: currentUserId, followId: currentUserId });
             console.log('Follow user successful', currentUserId, followId);
