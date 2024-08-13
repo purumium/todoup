@@ -7,7 +7,7 @@
           <div class="todo-meta">
             <span class="todo-status" :class="{ completed: todo.completed }">
               <font-awesome-icon :icon="todo.completed ? 'check-circle' : 'clock'" />
-              &nbsp;{{ todo.completed ? ' 완료됨' : ' 미완료' }}
+              &nbsp;{{ todo.completed ? ' 완료' : ' 미완료' }}
             </span>
             <span class="todo-category d-flex align-items-center">
               <font-awesome-icon icon="tags" /> &nbsp;{{ todo.category }}
@@ -26,10 +26,10 @@
         <div>
           <div class="button-group">
             <button type="button" class="icon-button" @click="showContent">
-              <font-awesome-icon icon="edit" />
+              <font-awesome-icon icon="edit" /> 수정
             </button>
             <button type="button" class="icon-button" @click="deleteTodo">
-              <font-awesome-icon icon="trash-alt" />
+              <font-awesome-icon icon="trash-alt" /> 삭제
             </button>
           </div>
         </div>
@@ -54,16 +54,16 @@
         </select>
       </div>
       <div class="form-group mb-3">
-        <label for="startDate">시작 날짜</label>
+        <label for="startDate">시작날짜</label>
         <input type="date" id="startDate" v-model="start_date" class="form-control" required />
       </div>
       <div class="form-group mb-3">
-        <label for="endDate">종료 날짜</label>
+        <label for="endDate">종료날짜</label>
         <input type="date" id="endDate" v-model="end_date" class="form-control" />
       </div>
-      <div class="d-flex justify-content-end">
-        <button type="button" @click="modifyTodo">수정하기</button>
-        <button type="button" @click="showContent">취소</button>
+      <div class="button-group">
+        <button type="button" class="icon-button" @click="modifyTodo"><font-awesome-icon icon="save" /> 저장</button>
+        <button type="button" class="icon-button" @click="showContent"><font-awesome-icon icon="times" /> 취소</button>
       </div>
     </div>
   </div>
@@ -270,5 +270,9 @@ export default {
 
 .icon-button:hover {
   color: #2a6b9d;
+}
+
+.form-group > label {
+  margin-bottom: 2px;
 }
 </style>
