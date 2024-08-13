@@ -29,7 +29,7 @@
         <button v-if="isMyRoom" @click="confirmDeleteMessageAsOwner(message.guestbookId, index)">삭제</button>
       </div>
       <div v-else>
-        <textarea v-model="message.content"></textarea>
+        <textarea v-model="message.content" @keydown.enter.prevent="submitEdit(index, message.guestbookId)"></textarea>
         <button @click="submitEdit(index, message.guestbookId)">저장</button>
         <button @click="cancelEdit(index)">취소</button>
       </div>
@@ -244,6 +244,10 @@ export default {
           content: message.content,
         });
         if (response.status === 200) {
+          // 전체 리스트를 다시 로드
+          this.page = 0;
+          this.allDataLoaded = false;
+          this.messages = [];
           await this.fetchGuestbookMessages();
         } else {
           console.error('방명록 수정이 제대로 완료되지 못 했습니다.', response.status, response.statusText);
