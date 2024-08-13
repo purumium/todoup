@@ -102,18 +102,19 @@ export default {
           console.log('calendar Vuex: ', todayTodos);
           console.log('After committing to Vuex - Vuex State:', this.$store.state.todo.todo_info);
 
-        // todos 배열을 FullCalendar의 events 배열 형식에 맞게 변환
-        this.calendarOptions.events = todos.map((todo) => {
-          return {
-            title: todo.title,
-            start: todo.start_date, // 시작 날짜 설정
-            end: this.formatEndDate(todo.end_date), // 종료 날짜 설정 (포함되지 않으므로 다음 날로 설정)
-            completed: todo.completed, // 완료 여부 추가
-            todoId: todo.todo_id,
-          };
-        });
-      } catch (error) {
-        console.error('Error fetching todos:', error);
+          // todos 배열을 FullCalendar의 events 배열 형식에 맞게 변환
+          this.calendarOptions.events = todos.map((todo) => {
+            return {
+              title: todo.title,
+              start: todo.start_date, // 시작 날짜 설정
+              end: this.formatEndDate(todo.end_date), // 종료 날짜 설정 (포함되지 않으므로 다음 날로 설정)
+              completed: todo.completed, // 완료 여부 추가
+              todoId: todo.todo_id,
+            };
+          });
+        } catch (error) {
+          console.error('Error fetching todos:', error);
+        }
       }
     },
     formatEndDate(endDate) {
