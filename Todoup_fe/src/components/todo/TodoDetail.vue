@@ -2,28 +2,36 @@
   <div v-if="todo">
     <div v-if="changeContent">
       <div class="todo-detail">
-        <h3 class="todo-title">{{ todo.title }}</h3>
-        <p v-if="todo.memo !== todo.title" class="todo-memo">{{ todo.memo }}</p>
-        <div class="todo-meta">
-          <span class="todo-status" :class="{ completed: todo.completed }">
-            <font-awesome-icon :icon="todo.completed ? 'check-circle' : 'clock'" />
-            &nbsp;{{ todo.completed ? ' 완료됨' : ' 미완료' }}
-          </span>
-          <span class="todo-category d-flex align-items-center">
-            <font-awesome-icon icon="tags" /> &nbsp;{{ todo.category }}
-          </span>
+        <div>
+          <h3 class="todo-title">{{ todo.title }}</h3>
+          <div class="todo-meta">
+            <span class="todo-status" :class="{ completed: todo.completed }">
+              <font-awesome-icon :icon="todo.completed ? 'check-circle' : 'clock'" />
+              &nbsp;{{ todo.completed ? ' 완료됨' : ' 미완료' }}
+            </span>
+            <span class="todo-category d-flex align-items-center">
+              <font-awesome-icon icon="tags" /> &nbsp;{{ todo.category }}
+            </span>
+          </div>
+          <div class="todo-dates">
+            <span class="todo-date">
+              <font-awesome-icon icon="calendar-alt" /> 시작날짜 &nbsp; {{ formattedStartDate }}
+            </span>
+            <span class="todo-date">
+              <font-awesome-icon icon="calendar-alt" /> 종료날짜 &nbsp; {{ formattedEndDate }}
+            </span>
+          </div>
+          <p v-if="todo.memo !== todo.title" class="todo-memo">{{ todo.memo }}</p>
         </div>
-        <div class="todo-dates">
-          <span class="todo-date"> <font-awesome-icon icon="calendar-alt" /> 시작 {{ formattedStartDate }} </span>
-          <span class="todo-date"> <font-awesome-icon icon="calendar-alt" /> 종료 {{ formattedEndDate }} </span>
-        </div>
-        <div class="button-group">
-          <button type="button" class="icon-button" @click="showContent">
-            <font-awesome-icon icon="edit" />
-          </button>
-          <button type="button" class="icon-button" @click="deleteTodo">
-            <font-awesome-icon icon="trash-alt" />
-          </button>
+        <div>
+          <div class="button-group">
+            <button type="button" class="icon-button" @click="showContent">
+              <font-awesome-icon icon="edit" />
+            </button>
+            <button type="button" class="icon-button" @click="deleteTodo">
+              <font-awesome-icon icon="trash-alt" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -61,7 +69,7 @@
   </div>
   <div v-else class="no-selection">
     <img src="@/assets/avatar_test.png" alt="No selection" />
-    <p>할일을 선택해주세요</p>
+    <p>할 일을 선택해주세요</p>
   </div>
 </template>
 
@@ -98,6 +106,9 @@ export default {
     };
   },
   methods: {
+    formatModDate(dateString) {
+      return dateString ? dateString.split(' ')[0] : ''; // 날짜만 추출
+    },
     formatDate(dateString) {
       if (!dateString) return '';
       const date = new Date(dateString);
@@ -142,10 +153,10 @@ export default {
         this.title = this.todo.title;
         this.memo = this.todo.memo;
         this.category = this.todo.category;
-        this.start_date = this.todo.start_date;
-        this.end_date = this.todo.end_date;
+        this.start_date = this.formatModDate(this.todo.start_date);
+        this.end_date = this.formatModDate(this.todo.end_date);
       }
-      console.log('S.C: ', this.todo_id, '/', this.user_id);
+      console.log('S.C: ', this.todo_id, '/', this.user_id, this.start_date, this.end_date);
     },
     async modifyTodo() {
       if (!this.todo) return;
@@ -172,36 +183,40 @@ export default {
 
 <style scoped>
 .todo-detail {
-  border-radius: 15px;
   color: #333;
-  width: 215px;
-  height: 300px;
+  width: 267px;
+  height: 450px;
+  padding: 15px;
+  box-sizing: border-box;
   overflow-y: auto;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
 }
 
 .todo-title {
   font-size: 22px;
-  color: #000;
+  color: #333;
   font-weight: bold;
-  margin-bottom: 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; /* 제목이 길어질 경우 말줄임표 처리 */
+  margin-bottom: 20px;
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 .todo-memo {
-  margin: 10px 0;
+  margin-top: 20px;
+  padding: 0 0 16px;
   font-size: 16px;
   color: #555;
-  white-space: nowrap;
-  overflow: hidden;
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 .todo-meta {
   display: flex;
-  gap: 15px;
-  margin-bottom: 10px;
+  gap: 14px;
 }
 
 .todo-status.completed {
@@ -216,37 +231,41 @@ export default {
 
 .todo-category {
   background-color: #f0f8ff;
-  padding: 2px 8px;
+  padding: 4px 10px;
   border-radius: 10px;
   font-size: 14px;
   color: #333;
   display: flex;
   align-items: center;
+  font-weight: 500;
 }
 
 .todo-dates {
-  font-size: 14px;
+  font-size: 16px;
   color: #555;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 12px;
+  font-weight: 500;
+  margin-top: 30px;
 }
 
 .button-group {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
   margin-top: 20px;
-  gap: 10px;
 }
 
 .icon-button {
+  width: auto;
   padding: 8px 12px;
   background-color: transparent;
   color: #4d9de0;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .icon-button:hover {
