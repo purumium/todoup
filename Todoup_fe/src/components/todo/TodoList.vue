@@ -42,7 +42,7 @@ export default {
       todos: [],
       selectedTodo: null,
       newTodo: {
-        user_id: 6,
+        user_id: this.userId,
         title: '',
         memo: '',
         category: '기타',
@@ -83,6 +83,11 @@ export default {
           params: { userId },
         });
         this.todos = response.data;
+
+        const today = new Date().toISOString().split('T')[0];
+        const todayTodos = this.todos.filter((todo) => todo.start_date.split(' ')[0] === today);
+        this.$store.commit('todo/SET_TODOS', todayTodos);
+
         const selectedTodoId = this.$route.query.selectedTodoId;
         if (selectedTodoId) {
           this.selectedTodo = this.todos.find((todo) => todo.todo_id === parseInt(selectedTodoId));
@@ -106,17 +111,10 @@ export default {
         const pointsToAdd = newCompletionStatus ? 5 : -5; // 완료시 +5 포인트, 취소시 -5 포인트
         //const newPoints = this.points + pointsToAdd;
         this.$store.dispatch('user/updatePoints', pointsToAdd);
-
-        this.$swal.fire({
-          text: 'TODO의 완료 상태가 변경되었습니다.',
-          icon: 'success',
-          confirmButtonText: '확인',
-          confirmButtonColor: '#429f50',
-        });
       } catch (error) {
         console.error('Error toggling completion status:', error);
         this.$swal.fire({
-          text: 'TODO의 완료 상태가 변경에 실패하었습니다.',
+          text: 'TODO의 완료 상태 변경에 실패하었습니다.',
           icon: 'error',
           confirmButtonText: '확인',
           confirmButtonColor: '#429f50',

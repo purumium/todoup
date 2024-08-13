@@ -14,6 +14,18 @@ public class FollowController {
     @Autowired
     private FollowService followService;
 
+    @GetMapping("/allusers")
+    public ResponseEntity<List<FollowDTO>> findAllUsers(long userId) {
+        try {
+            List<FollowDTO> users = followService.findAllUsers(userId);
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
     @GetMapping("/following")
     public ResponseEntity<List<FollowDTO>> findFollowing(Long userId) {
         List<FollowDTO> following = followService.findFollowing(userId);
@@ -52,6 +64,7 @@ public class FollowController {
         System.out.println("findFollowers");
         return new ResponseEntity<>(followers, HttpStatus.OK);
     }
+
 
     // 팔로우 추가
     @PostMapping("/add/followers")

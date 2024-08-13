@@ -14,6 +14,8 @@ public interface FollowMapper {
     // 팔로우 리스트 불러오기
     List<FollowDTO> findFollowers(long userId);
 
+    List<FollowDTO> findAllUsers(long userId);
+
     // 팔로잉 추가
     void insertFollow(long userId, long followId);
 
@@ -33,5 +35,6 @@ public interface FollowMapper {
 
     //팔로우 확인
     boolean isReceivedFollow(long userId, long followId);
+
 
 }

@@ -52,6 +52,21 @@ export default {
     ...mapState('user', {
       userId: (state) => state.user_info.userId,
     }),
+    ...mapState('todo', {
+      todos: 'todo_info', // Vuex의 todo_info 상태를 todos로 매핑
+    }),
+  },
+  watch: {
+    userId: {
+      handler(newValue) {
+        if (!newValue) {
+          this.setExampleEvents();
+        } else {
+          this.fetchTodos();
+        }
+      },
+      immediate: true, // 컴포넌트 생성 시에도 watcher를 즉시 호출
+    },
   },
   created() {
     this.setInitialMonth(); // 초기 월과 연도 설정
@@ -68,33 +83,81 @@ export default {
       this.$router.push(`/todo/${info.dateStr}`);
     },
     handleEventClick(info) {
-      const date = new Date(info.event.start); // Date 객체 생성
-      date.setDate(date.getDate() + 1); // 1일 추가
-      const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
-      const todoId = info.event.extendedProps.todoId;
-      this.$router.push(`/todo/${dateStr}?selectedTodoId=${todoId}`);
+      if (!this.userId) {
+        this.$swal
+          .fire({
+            text: '로그인이 필요합니다.',
+            icon: 'warning',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#f39c12',
+          })
+          .then(() => {
+            this.$router.push('/login');
+          });
+      } else {
+        const date = new Date(info.event.start); // Date 객체 생성
+        date.setDate(date.getDate() + 1); // 1일 추가
+        const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
+        const todoId = info.event.extendedProps.todoId;
+        this.$router.push(`/todo/${dateStr}?selectedTodoId=${todoId}`);
+      }
     },
     async fetchTodos() {
-      try {
-        const userId = this.userId;
-        const response = await axios.get(`/api/todo/month/${this.currentMonth}`, {
-          params: { userId },
-        });
-        const todos = response.data;
+      if (this.userId) {
+        try {
+          const userId = this.userId;
+          const response = await axios.get(`/api/todo/month/${this.currentMonth}`, {
+            params: { userId },
+          });
+          const todos = response.data;
 
-        // todos 배열을 FullCalendar의 events 배열 형식에 맞게 변환
-        this.calendarOptions.events = todos.map((todo) => {
-          return {
-            title: todo.title,
-            start: todo.start_date, // 시작 날짜 설정
-            end: this.formatEndDate(todo.end_date), // 종료 날짜 설정 (포함되지 않으므로 다음 날로 설정)
-            completed: todo.completed, // 완료 여부 추가
-            todoId: todo.todo_id,
-          };
-        });
-      } catch (error) {
-        console.error('Error fetching todos:', error);
+          const today = new Date().toISOString().split('T')[0];
+          const todayTodos = todos.filter((todo) => todo.start_date.split(' ')[0] === today);
+          this.$store.commit('todo/SET_TODOS', todayTodos);
+          console.log('calendar Vuex: ', todayTodos);
+          console.log('After committing to Vuex - Vuex State:', this.$store.state.todo.todo_info);
+
+          // todos 배열을 FullCalendar의 events 배열 형식에 맞게 변환
+          this.calendarOptions.events = todos.map((todo) => {
+            return {
+              title: todo.title,
+              start: todo.start_date, // 시작 날짜 설정
+              end: this.formatEndDate(todo.end_date), // 종료 날짜 설정 (포함되지 않으므로 다음 날로 설정)
+              completed: todo.completed, // 완료 여부 추가
+              todoId: todo.todo_id,
+            };
+          });
+        } catch (error) {
+          console.error('Error fetching todos:', error);
+        }
+      } else {
+        this.setExampleEvents(); // 로그인하지 않은 경우 예시 이벤트 설정
       }
+    },
+    setExampleEvents() {
+      const today = new Date();
+      const exampleEvents = [
+        {
+          title: 'TO DO UP 사용해보기!',
+          start: new Date(today.getFullYear(), today.getMonth(), 5).toISOString().split('T')[0],
+          end: new Date(today.getFullYear(), today.getMonth(), 7).toISOString().split('T')[0],
+          completed: false,
+        },
+        {
+          title: 'TO DO 추가!',
+          start: new Date(today.getFullYear(), today.getMonth(), 10).toISOString().split('T')[0],
+          end: new Date(today.getFullYear(), today.getMonth(), 10).toISOString().split('T')[0],
+          completed: false,
+        },
+        {
+          title: 'TO DO 달성하고 레벨업하기!',
+          start: new Date(today.getFullYear(), today.getMonth(), 15).toISOString().split('T')[0],
+          end: new Date(today.getFullYear(), today.getMonth(), 17).toISOString().split('T')[0],
+          completed: false,
+        },
+      ];
+
+      this.calendarOptions.events = exampleEvents;
     },
     formatEndDate(endDate) {
       // 종료 날짜를 다음 날로 설정하여 이벤트 범위에 포함되도록 함
