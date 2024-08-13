@@ -122,21 +122,48 @@ export default {
       if (!this.todo) return;
 
       try {
-        const isCompleted = this.todo.completed ? 1 : 0;
-        await axios.delete(`/api/todo/delete/${this.todo.todo_id}`, {
-          params: {
-            completed: isCompleted,
-            userId: this.todo.user_id,
-          },
+        // 첫 번째 알림: 삭제 확인 요청
+        const result = await this.$swal.fire({
+          text: 'TODO를 삭제하시겠습니까?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: '확인',
+          confirmButtonColor: '#e74c3c',
+          cancelButtonText: '취소',
         });
 
-        alert('할일이 성공적으로 삭제되었습니다.');
-        this.$emit('todo-deleted', this.todo.todo_id);
+        // 사용자가 '확인' 버튼을 클릭했을 때만 삭제 진행
+        if (result.isConfirmed) {
+          const isCompleted = this.todo.completed ? 1 : 0;
+          await axios.delete(`/api/todo/delete/${this.todo.todo_id}`, {
+            params: {
+              completed: isCompleted,
+              userId: this.todo.user_id,
+            },
+          });
+
+          // 삭제 완료 알림
+          await this.$swal.fire({
+            text: 'TODO가 삭제되었습니다.',
+            icon: 'success',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#429f50',
+          });
+
+          // 삭제 완료 후 이벤트 발생
+          this.$emit('todo-deleted', this.todo.todo_id);
+        }
       } catch (error) {
         console.error('Error deleting todo:', error);
-        alert('할일 삭제 중 오류가 발생했습니다.');
+        this.$swal.fire({
+          text: '할일 삭제 중 오류가 발생했습니다.',
+          icon: 'error',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#429f50',
+        });
       }
     },
+
     showContent() {
       this.changeContent = !this.changeContent;
       if (this.changeContent) {
@@ -171,7 +198,12 @@ export default {
           start_date: this.start_date,
           end_date: this.end_date,
         });
-        alert('수정되었습니다.');
+        this.$swal.fire({
+          text: 'TODO가 수정되었습니다.',
+          icon: 'success',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#429f50',
+        });
         this.showContent();
       } catch (error) {
         console.log();

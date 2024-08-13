@@ -87,13 +87,23 @@ export default {
           this.todo.end_date = this.todo.start_date;
         }
         await axios.post('/api/todo/insert', this.todo);
-        alert('Todo created successfully!');
+        this.$swal.fire({
+          text: '새로운 TODO가 생성되었습니다.',
+          icon: 'success',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#429f50',
+        });
         this.todo = { user_id: this.userId, title: '', memo: '', category: '', start_date: '', end_date: '' };
         this.setDefaultDates(); // 새로운 TODO를 생성한 후에도 디폴트 날짜를 설정
         this.$router.push('/');
       } catch (error) {
         console.error('Error creating todo:', error);
-        alert('There was an error creating the todo.');
+        this.$swal.fire({
+          text: '새로운 TODO 생성에 실패하였습니다.',
+          icon: 'error',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#429f50',
+        });
       }
     },
   },
