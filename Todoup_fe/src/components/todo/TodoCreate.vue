@@ -36,12 +36,13 @@
 <script>
 import axios from 'axios';
 import categories from '@/assets/categories.json';
+import { mapState } from 'vuex';
 
 export default {
   data() {
     return {
       todo: {
-        user_id: 6,
+        user_id: '',
         title: '',
         memo: '',
         category: '',
@@ -51,10 +52,21 @@ export default {
       categories: categories,
     };
   },
+  computed: {
+    ...mapState('user', {
+      userId: (state) => state.user_info.userId,
+    }),
+  },
   created() {
+    this.setDefaultDates();
     this.loadCategories();
   },
   methods: {
+    setDefaultDates() {
+      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 현재 날짜 가져오기
+      this.todo.start_date = today;
+      this.todo.end_date = today;
+    },
     async loadCategories() {
       try {
         // JSON 파일로부터 카테고리 데이터를 가져옴
@@ -70,14 +82,14 @@ export default {
     },
     async submitTodo() {
       try {
+        this.todo.user_id = this.userId;
         if (!this.todo.end_date) {
           this.todo.end_date = this.todo.start_date;
         }
-        console.log(this.todo.title, this.todo.memo, this.todo.category, this.todo.start_date, this.todo.end_date);
-
         await axios.post('/api/todo/insert', this.todo);
         alert('Todo created successfully!');
-        this.todo = { user_id: 6, title: '', memo: '', category: '', start_date: '', end_date: '' };
+        this.todo = { user_id: this.userId, title: '', memo: '', category: '', start_date: '', end_date: '' };
+        this.setDefaultDates(); // 새로운 TODO를 생성한 후에도 디폴트 날짜를 설정
         this.$router.push('/');
       } catch (error) {
         console.error('Error creating todo:', error);

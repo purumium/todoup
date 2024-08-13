@@ -6,8 +6,8 @@ import java.sql.Date;
 
 @Data
 public class DiaryDTO {
-    private int diaryId;        // 일기 ID
-    private int userId;         // 사용자 ID
+    private long diaryId;        // 일기 ID
+    private long userId;         // 사용자 ID
     private Date diaryDate; // 일기의 내용이 해당하는 날짜
     private String emotion;      // 감정 상태
     private String weather;      // 날씨

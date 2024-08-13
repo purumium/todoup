@@ -6,7 +6,7 @@
 
 
     <!-- 할일 생성 -->
-    <insert id="insertTodo" parameterType="com.kosa.todoup.dto.TodoDTO">
+    <insert id="insertTodo" parameterType="com.kosa.todoup.dto.TodoDTO" useGeneratedKeys="true" keyProperty="todo_id" keyColumn="todo_id">
         insert into TODO_LIST (USER_ID, TITLE, CATEGORY, START_DATE, END_DATE
         <if test="memo != null">
             , MEMO
@@ -25,7 +25,7 @@
         WHERE TO_CHAR(START_DATE, 'YYYY-MM-DD') <= #{date}
           AND TO_CHAR(END_DATE, 'YYYY-MM-DD') >= #{date}
           AND USER_ID = #{userId}
-
+        ORDER BY COMPLETED ASC, START_DATE ASC
         ]]>
     </select>
 
@@ -37,7 +37,33 @@
         WHERE TO_CHAR(START_DATE, 'YYYY-MM') <= #{date}
           AND TO_CHAR(END_DATE, 'YYYY-MM') >= #{date}
           AND USER_ID = #{userId}
+        ORDER BY START_DATE ASC
         ]]>
-</select>
+    </select>
+
+    <!-- 할일 완료 상태 업데이트 -->
+    <update id="toggleTodoCompletion" parameterType="map">
+        UPDATE TODO_LIST
+        SET COMPLETED = #{completed}
+        WHERE TODO_ID = #{todoId}
+    </update>
+
+    <!-- 투두 항목 삭제 -->
+    <delete id="deleteTodoById" parameterType="map">
+        DELETE FROM TODO_LIST WHERE TODO_ID = #{todoId} AND USER_ID = #{userId}
+    </delete>
+
+
+    <!-- 투두 항목 수정-->
+    <update id="modifyTodobyTodoId" parameterType="com.kosa.todoup.dto.TodoDTO">
+        update todo_list
+        set
+            title = #{title},
+            memo = #{memo},
+            category = #{category},
+            start_date = #{start_date},
+            end_date = #{end_date}
+        where todo_id = #{todo_id}
+    </update>
 
 </mapper>

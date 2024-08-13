@@ -1,21 +1,28 @@
 <template>
   <div>
-    <h4>{{ formattedDate }}</h4>
-    <div class="d-flex">
-      <div class="todo-list border">
-        <div>TodoList</div>
-        <form @submit.prevent="addTodo">
-          <input v-model="newTodo.title" type="text" placeholder="할일 추가" required />
-          <button type="submit">추가</button>
+    <h4 class="header">{{ formattedDate }} TODO</h4>
+    <div class="todo-container">
+      <div class="todo-list">
+        <form @submit.prevent="addTodo" class="add-todo-form">
+          <input class="add-input" v-model="newTodo.title" type="text" placeholder="할 일을 작성해주세요" required />
+          <button type="submit" class="add-todo-button">추가</button>
         </form>
-        <ul>
-          <li v-for="todo in todos" :key="todo.todoId" class="d-flex align-items-center">
-            <input type="checkbox" :checked="todo.completed" />
-            <p class="align-middle" @click="selectTodo(todo)">{{ todo.title }}</p>
+        <ul class="todo-ul">
+          <li v-for="todo in todos" :key="todo.todoId" @click="selectTodo(todo)" class="todo-item">
+            <input type="checkbox" :checked="todo.completed" @change="toggleCompletion(todo)" class="todo-checkbox" />
+            <p class="todo-title mb-0" :class="{ completed: todo.completed }">
+              {{ todo.title }}
+            </p>
           </li>
         </ul>
       </div>
-      <todo-detail :todo="selectedTodo"></todo-detail>
+      <div class="todo-detail-container">
+        <todo-detail v-if="selectedTodo" :todo="selectedTodo" @todo-deleted="handleTodoDeleted"></todo-detail>
+        <div v-else class="no-selection">
+          <img src="@/assets/avatar_test.png" alt="No selection" />
+          <p>할일을 선택해주세요</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -23,17 +30,17 @@
 <script>
 import axios from 'axios';
 import TodoDetail from './TodoDetail.vue';
+import { mapState } from 'vuex';
 
 export default {
   components: { TodoDetail },
   data() {
     return {
-      date: this.$route.params.date, // URL에서 날짜를 가져와 초기화
-      todos: [], // 투두 리스트를 저장할 배열
-      selectedTodo: null, // 선택된 투두 항목을 저장할 객체
+      date: this.$route.params.date,
+      todos: [],
+      selectedTodo: null,
       newTodo: {
         user_id: 6,
-        // 새로 추가할 투두 항목
         title: '',
         memo: '',
         category: '기타',
@@ -43,8 +50,10 @@ export default {
     };
   },
   computed: {
+    ...mapState('user', {
+      userId: (state) => state.user_info.userId,
+    }),
     formattedDate() {
-      // 날짜 포맷팅
       const date = new Date(this.date);
       return date.toLocaleDateString('ko-KR', {
         year: 'numeric',
@@ -54,45 +63,190 @@ export default {
     },
   },
   created() {
-    this.getTodos(); // 컴포넌트가 생성될 때 투두 리스트를 가져옴
+    this.getTodos();
   },
   methods: {
     async getTodos() {
       try {
-        const response = await axios.get(`/api/todo/date/${this.date}`);
-        this.todos = response.data; // 응답 데이터를 todos 배열에 저장
-        console.log(this.todos);
+        const userId = this.userId;
+        const response = await axios.get(`/api/todo/date/${this.date}`, {
+          params: { userId },
+        });
+        this.todos = response.data;
+        const selectedTodoId = this.$route.query.selectedTodoId;
+        if (selectedTodoId) {
+          this.selectedTodo = this.todos.find((todo) => todo.todo_id === parseInt(selectedTodoId));
+        }
       } catch (error) {
         console.error('Error getting todos:', error);
       }
     },
+    async toggleCompletion(todo) {
+      try {
+        const userId = this.userId;
+        const newCompletionStatus = todo.completed ? 0 : 1;
+        await axios.post(`/api/todo/completion/${todo.todo_id}`, null, {
+          params: {
+            completed: newCompletionStatus,
+            userId,
+          },
+        });
+        todo.completed = newCompletionStatus;
+        alert('할일 상태 변경');
+      } catch (error) {
+        console.error('Error toggling completion status:', error);
+        alert('할일 상태를 업데이트하는 중 오류가 발생했습니다.');
+      }
+    },
     selectTodo(todo) {
-      this.selectedTodo = todo; // 선택된 투두 항목을 selectedTodo에 저장
+      this.selectedTodo = todo;
+    },
+    handleTodoDeleted(deletedTodoId) {
+      this.todos = this.todos.filter((todo) => todo.todo_id !== deletedTodoId);
+      this.selectedTodo = null;
     },
     async addTodo() {
       try {
+        this.newTodo.user_id = this.userId;
         this.newTodo.start_date = this.date;
         this.newTodo.end_date = this.date;
-
-        console.log(
-          this.newTodo.title,
-          this.newTodo.memo,
-          this.newTodo.category,
-          this.newTodo.start_date,
-          this.newTodo.end_date
-        );
-
-        await axios.post('/api/todo/insert', this.newTodo);
+        const response = await axios.post('/api/todo/insert', this.newTodo);
+        const createdTodoId = response.data;
         alert('Todo created successfully!');
-        this.getTodos(); // 새로 추가된 할일 포함하여 리스트 갱신
+        await this.getTodos();
+        const newlyAddedTodo = this.todos.find((todo) => todo.todo_id === createdTodoId);
+        this.selectTodo(newlyAddedTodo);
         this.newTodo.title = '';
+        this.newTodo.memo = '';
       } catch (error) {
         console.error('Error creating todo:', error);
-        alert('There was an error creating the todo.');
+        alert('할일을 생성하는 중 오류가 발생했습니다.');
       }
     },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+/* 전체 레이아웃 및 컨테이너 스타일 */
+.todo-container {
+  height: 525px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  gap: 20px;
+  background-color: #e8f1f2;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* 투두 리스트 스타일 */
+.todo-list {
+  overflow-x: none;
+  overflow-y: auto;
+  flex: 1;
+  background-color: #ffffff;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.add-todo-form {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.add-input {
+  margin-right: 2px;
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 25px;
+  border: 2px solid #4d9de0;
+  background-color: #f0f8ff;
+}
+
+.add-todo-button {
+  white-space: nowrap;
+  padding: 10px 18px;
+  background-color: #4d9de0; /* 기존 테마의 파란색 계열로 변경 */
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #fff; /* 텍스트 색상을 흰색으로 설정 */
+}
+
+.add-todo-button:hover {
+  background-color: #3c7bb0; /* 호버 시 조금 더 진한 파란색으로 */
+}
+
+/* 투두 항목 스타일 */
+.todo-ul {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 0;
+}
+
+.todo-item {
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.todo-item:hover {
+  background-color: #c5e0f6;
+}
+
+.todo-item:last-child {
+  border-bottom: none;
+}
+
+.todo-checkbox {
+  margin-right: 10px;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.todo-title {
+  font-size: 16px;
+  cursor: pointer;
+  color: #333;
+}
+
+.todo-title.completed {
+  text-decoration: line-through;
+  color: #888;
+}
+
+/* 상세보기 컨테이너 스타일 */
+.todo-detail-container {
+  width: 267px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  border-radius: 15px;
+  padding: 0 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.no-selection {
+  text-align: center;
+  color: #888;
+}
+
+.no-selection img {
+  max-width: 200px;
+  margin-bottom: 20px;
+}
+
+.no-selection p {
+  font-size: 18px;
+  font-weight: bold;
+}
+</style>

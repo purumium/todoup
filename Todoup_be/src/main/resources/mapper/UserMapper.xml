@@ -32,4 +32,61 @@
             and nickname = #{nickName}
         </if>
     </select>
+
+    <!-- 포인트 업데이트 -->
+    <update id="updateUserPoints">
+        UPDATE Users
+        SET points = points + #{points}
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 레벨 업데이트 -->
+    <update id="updateUserLevel">
+    <![CDATA[
+            UPDATE Users
+            SET
+                lv = CASE
+                     WHEN lv >= 5 AND points < 0 THEN lv - 1  -- 레벨이 5 이상이고 포인트가 음수가 되면 레벨 다운
+                     WHEN lv >= 5 THEN lv  -- 레벨이 5 이상일 경우 레벨 유지
+                     WHEN points >= 1000 THEN lv + 1  -- 포인트가 1000 이상이면 레벨 업
+                     WHEN points < 0 AND lv > 1 THEN lv - 1  -- 포인트가 음수이고 레벨이 1보다 크면 레벨 다운
+                     ELSE lv  -- 위 조건들에 해당하지 않으면 레벨 유지
+                END,
+                points = CASE
+                         WHEN lv >= 5 AND points >= 0 THEN points  -- 레벨이 5 이상이고 포인트가 0 이상일 경우 포인트 유지
+                         WHEN lv >= 5 AND points < 1000 THEN points + 1000  -- 레벨 5 이상이고 포인트가 음수가 될 경우 1000 보정
+                         WHEN points >= 1000 THEN points - 1000  -- 포인트가 1000 이상이면 포인트 감소
+                         WHEN points < 0 AND lv > 1 THEN points + 1000  -- 포인트가 음수이고 레벨이 1보다 크면 포인트 보정
+                         WHEN points < 0 AND lv = 1 THEN 0  -- 포인트가 음수이고 레벨이 1일 경우 포인트 0으로 설정
+                         ELSE points  -- 위 조건들에 해당하지 않으면 포인트 유지
+                END
+            WHERE user_id = #{userId}
+        ]]>
+    </update>
+
+    <!--유저 존재 여부 확인-->
+    <select id="findUserById" resultType="boolean" parameterType="long">
+        SELECT COUNT(*)
+        FROM users
+        WHERE user_id = #{userId}
+    </select>
+
+    <!--삭제 포인트 업데이트-->
+    <update id="updateUserPointsOnTodoDelete" parameterType="map">
+    <![CDATA[
+        UPDATE Users
+        SET
+            points = CASE
+                 WHEN points - 5 < 0 THEN 0  -- 포인트가 0 이하로 떨어지지 않도록 설정
+                 ELSE points - 5
+            END,
+            lv = CASE
+                 WHEN points - 5 < 0 AND lv > 1 THEN lv - 1  -- 포인트가 음수로 떨어지고 레벨이 1보다 크면 레벨 감소
+                 ELSE lv
+            END
+        WHERE user_id = #{userId}
+    ]]>
+    </update>
+
+
 </mapper>
