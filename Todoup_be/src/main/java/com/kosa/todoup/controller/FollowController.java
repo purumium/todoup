@@ -22,9 +22,9 @@ public class FollowController {
 
     // 팔로잉 추가
     @PostMapping("/add/following")
-    public ResponseEntity<String> addFollow(@RequestBody Long userId,@RequestBody Long followId) {
+    public ResponseEntity<String> addFollow(@RequestBody FollowDTO followDTO) {
         try {
-            followService.insertFollow(userId, followId);
+            followService.insertFollow(followDTO.getUserId(), followDTO.getFollowId());
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             e.printStackTrace();
@@ -55,9 +55,9 @@ public class FollowController {
 
     // 팔로우 추가
     @PostMapping("/add/followers")
-    public ResponseEntity<Void> addFollowers(@RequestBody long userId, @RequestBody long followId) {
+    public ResponseEntity<Void> addFollowers(@RequestBody FollowDTO followDTO) {
         try {
-            followService.insertReceivedFollow(userId, followId);
+            followService.insertReceivedFollow(followDTO.getUserId(), followDTO.getFollowId());
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
