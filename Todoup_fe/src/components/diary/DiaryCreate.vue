@@ -1,19 +1,27 @@
 <template>
   <div class="w-100">
     <div class="diary-wrapper">
-      <div class="submit-btn">
+      <!-- <div class="submit-btn">
         <button @click="submitDiary">
           <font-awesome-icon :icon="['far', 'circle-check']" />
           {{ isEditMode ? '수정 완료' : '작성 완료' }}
         </button>
-      </div>
+      </div> -->
       <table class="diary-table">
         <tr>
           <td colspan="4">
-            <div class="diary-title">
-              <div class="diary-date">{{ formattedDate }}의 일기</div>
-              <div class="create-or-edit">
-                {{ isEditMode ? '수정 중' : '작성 중' }}
+            <div class="title">
+              <div class="submit-btn">
+                <button @click="submitDiary">
+                  <font-awesome-icon :icon="['far', 'circle-check']" />
+                  {{ isEditMode ? '수정 완료' : '작성 완료' }}
+                </button>
+              </div>
+              <div class="diary-title">
+                <div class="diary-date">{{ formattedDate }}의 일기</div>
+                <div class="create-or-edit">
+                  {{ isEditMode ? '수정 중' : '작성 중' }}
+                </div>
               </div>
             </div>
           </td>
@@ -233,7 +241,14 @@ export default {
   border: 1px solid #1d13132e;
   padding: 10px;
   text-align: left;
-  font-size: 12px;
+  font-size: 14px;
+  color: #544d4d;
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .diary-title {
@@ -316,20 +331,19 @@ textarea {
   padding: 10px;
 }
 
-.submit-btn {
+/* .submit-btn {
   text-align: end;
   margin-bottom: 6px;
-}
+} */
 
 .submit-btn button {
   width: 95px;
-  height: 26px;
+  height: 30px;
   background-color: #e5e5e51f;
   color: #544545;
   border: 1px solid #1d13132e;
   font-weight: 600;
-  font-size: 10px;
+  font-size: 12px;
   border-radius: 20px;
-  margin-bottom: 10px;
 }
 </style>
