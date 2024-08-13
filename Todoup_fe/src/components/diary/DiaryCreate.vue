@@ -76,7 +76,7 @@
         </tr>
         <tr>
           <th colspan="4">
-            <span>오늘의 사진</span>
+            <span style="margin-left: 30px">오늘의 사진</span>
             <button @click="triggerBtnFileUpload" class="fileload-btn">+</button>
             <!-- + 버튼 클릭시 파일 업로드를 트리거-->
           </th>
@@ -222,7 +222,7 @@ export default {
 <style scoped>
 .diary-wrapper {
   margin: 0 auto;
-  padding: 20px 26px 28px 26px;
+  padding: 32px 26px;
   border: 1px solid #8080802e;
   border-radius: 12px;
 }
@@ -240,7 +240,7 @@ export default {
 .diary-table td {
   border: 1px solid #1d13132e;
   padding: 10px;
-  text-align: left;
+  text-align: center;
   font-size: 14px;
   color: #544d4d;
 }
@@ -249,6 +249,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 5px 5px;
 }
 
 .diary-title {
@@ -260,9 +261,9 @@ export default {
 
 .diary-date {
   flex: 1;
-  font-size: 14px !important;
+  font-size: 17px !important;
   font-weight: bold;
-  margin-left: 50px;
+  margin-left: 42px;
 }
 
 .create-or-edit {
@@ -270,7 +271,7 @@ export default {
   font-size: 9px;
   padding: 5px 12px;
   background-color: rgb(133 175 17 / 21%);
-  margin-left: 15em;
+  margin-left: 13em;
 }
 
 .fontBox {
@@ -305,7 +306,7 @@ label {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100px;
+  height: 130px;
 }
 
 .uploaded-photo {
@@ -325,17 +326,12 @@ textarea {
 
 .textarea {
   width: 100%;
-  height: 130px;
+  height: 150px;
   border: none;
   resize: none;
   font-size: 13px;
-  padding: 10px;
+  padding: 13px;
 }
-
-/* .submit-btn {
-  text-align: end;
-  margin-bottom: 6px;
-} */
 
 .submit-btn button {
   width: 95px;
