@@ -88,6 +88,10 @@ export default {
   cursor: pointer;
 }
 
+.header-InBox:hover {
+  transform: scale(1.1);
+}
+
 .fontBox {
   margin-top: 10px;
   margin-bottom: 0;
