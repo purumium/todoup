@@ -5,26 +5,20 @@
 
 <mapper namespace="com.kosa.todoup.mapper.DiaryMapper">
 
-
-<!--    <insert id="insertDiaryByDate" parameterType="DiaryDTO">-->
-<!--        INSERT INTO-->
-<!--            diary(user_id, diary_date, emotion, weather, content, image_url)-->
-<!--        VALUES-->
-<!--            (#{userId}, #{diaryDate}, #{emotion}, #{weather}, #{content}, #{imageUrl})-->
-<!--    </insert>-->
-
     <insert id="insertDiaryByDate" parameterType="DiaryDTO">
-        INSERT INTO diary(user_id, diary_date, emotion, weather, content
-        <if test="imageUrl != null">
-            , image_url
-        </if>
-        )
+        INSERT INTO
+            diary
+                (user_id, diary_date, emotion, weather, content
+                    <if test="imageUrl != null">
+                        , image_url
+                    </if>
+                )
         VALUES
-        (#{userId}, #{diaryDate}, #{emotion}, #{weather}, #{content}
-        <if test="imageUrl != null">
-            , #{imageUrl}
-        </if>
-        )
+            (#{userId}, #{diaryDate}, #{emotion}, #{weather}, #{content}
+                <if test="imageUrl != null">
+                    , #{imageUrl}
+                </if>
+            )
     </insert>
 
 
@@ -72,13 +66,14 @@
         SET
             weather = #{weather},
             emotion = #{emotion},
-            content = #{content},
-            image_url = #{imageUrl}
+            content = #{content}
+            <if test="imageUrl != null">
+                ,image_url = #{imageUrl}
+            </if>
         WHERE
             user_id = #{userId}
         AND
             TO_CHAR(diary_date, 'YYYY-MM-DD') = #{diaryDate}
-
     </update>
 
 </mapper>

@@ -54,7 +54,6 @@ public class TodoService {
         userMapper.updateUserLevel(userId); // 포인트와 레벨을 확인하여 레벨 업데이트
     }
 
-
     @Transactional
     public void deleteTodo(long userId, long todoId, int completed) {
         // 유저가 존재하는지 확인

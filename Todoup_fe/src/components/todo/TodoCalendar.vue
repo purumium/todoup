@@ -1,11 +1,15 @@
 <template>
-  <div class="w-100">
-    <div class="d-flex justify-content-between">
-      <h4>Todo Calendar</h4>
-      <button type="button" class="px-2 add-todo" @click="$router.push('/todo/create')">TODO 추가</button>
+  <div>
+    <div class="d-flex justify-content-between align-items-center todo-calendar-top">
+      <div class="todo-calendar">TODO 캘린더</div>
+      <div class="add-todo-wrap">
+        <button type="button" class="px-2 add-todo" @click="$router.push('/todo/create')">
+          <font-awesome-icon :icon="['fas', 'check-double']" /> TODO 추가
+        </button>
+      </div>
     </div>
 
-    <full-calendar :options="calendarOptions"></full-calendar>
+    <full-calendar :options="calendarOptions"> </full-calendar>
   </div>
 </template>
 
@@ -39,6 +43,7 @@ export default {
         dayCellContent: (args) => ({ html: args.dayNumberText.replace('일', '') }),
         datesSet: this.handleDatesSet, // 캘린더 날짜가 변경될 때 호출
         eventContent: this.renderEventContent, // 이벤트 콘텐츠 커스텀
+        dayMaxEvents: 2,
       },
       currentMonth: '', // 현재 월과 연도 저장
     };
@@ -110,16 +115,50 @@ export default {
 </script>
 
 <style>
-.add-todo {
-  font-weight: 500;
+.todo-calendar-top {
+  color: #2b2222b8 !important;
+  font-weight: 600;
+  font-size: 22px;
+  display: flex;
+  padding: 7px 0;
+  border-bottom: 2px solid #cfcece70;
+  border-top: 2px solid #cfcece70;
+  justify-content: center;
 }
+
+.todo-calendar {
+  left: 39%;
+  position: relative;
+}
+
+.add-todo-wrap {
+  position: absolute;
+}
+
+.add-todo {
+  position: relative;
+  top: 4.2em;
+  width: 105px;
+  height: 30px;
+  background-color: #e5e5e51f;
+  color: #544545;
+  border: 1px solid #1d13132e;
+  font-weight: 600;
+  font-size: 12px;
+  border-radius: 20px;
+}
+
+.add-todo :hover {
+  cursor: pointer;
+}
+
 .todo-event {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 4px;
   border-radius: 4px;
-  background-color: #e0e0e0;
+  background-color: #d0e7ff;
   border: 1px solid #f1f2f3;
   width: 100%;
   white-space: nowrap;
@@ -130,8 +169,10 @@ export default {
 }
 
 .todo-event.completed {
-  background-color: #d0e7ff;
+  color: #333;
+  background-color: #e0e0e0;
   text-decoration: line-through;
+  border: 1px solid #f1f2f3;
 }
 
 .todo-title {
@@ -141,5 +182,12 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
+}
+
+.fc-daygrid-more-link.fc-more-link {
+  color: #333;
+  margin-top: 2px;
+  font-size: 10px;
+  font-weight: 500;
 }
 </style>

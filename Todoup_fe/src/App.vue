@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 1024px; height: 100vh; margin: 0 auto">
+  <div style="width: 1060px; height: 100vh; margin: 0 auto">
     <header-compo></header-compo>
     <main-wrapper-compo></main-wrapper-compo>
   </div>
