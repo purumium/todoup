@@ -1,8 +1,10 @@
 <template>
   <div class="profile-section">
-    <!-- 프로필 이미지 및 팔로우 버튼들 -->
     <div class="profile-top">
-      <img src="@/assets/profile.png" alt="Profile" @click="goToRoom" />
+      <div class="profile-image-container">
+        <img src="@/assets/profile.png" alt="Profile" @click="goToRoom" />
+        <div v-if="showMessage" class="message-bubble">{{ pointsUpMessage }}</div>
+      </div>
       <div class="profile-details">
         <div class="my-name">
           <div>{{ userInfo?.nickName || '김투두' }}</div>
@@ -39,6 +41,12 @@ import { mapActions, mapState } from 'vuex';
 
 export default {
   name: 'ProfileCompo',
+  data() {
+    return {
+      showMessage: false,
+      pointsUpMessage: '',
+    };
+  },
   computed: {
     ...mapState('user', {
       userInfo: 'user_info', // Vuex의 user_info 상태를 userInfo로 매핑
@@ -95,6 +103,20 @@ export default {
         console.log('userInfo가 정의되지 않았습니다.');
       }
     },
+    showMessageBubble(message) {
+      this.pointsUpMessage = message;
+      this.showMessage = true;
+      setTimeout(() => {
+        this.showMessage = false;
+      }, 3000);
+    },
+  },
+  watch: {
+    'userInfo.points'(newPoints, oldPoints) {
+      if (newPoints > oldPoints) {
+        this.showMessageBubble('👍');
+      }
+    },
   },
 };
 </script>
@@ -118,11 +140,60 @@ export default {
   margin-left: 9px;
 }
 
+.profile-image-container {
+  position: relative;
+}
+
 .profile-top img {
   border: 1px solid #8080803d;
   border-radius: 70%;
   width: 130px;
   margin-right: 20px;
+}
+
+.message-bubble {
+  position: absolute;
+  top: -40px;
+  right: 28px;
+  background-color: #429f50;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-size: 12px;
+  white-space: nowrap;
+  animation: fade-in-out 3s ease forwards;
+  z-index: 1;
+}
+
+.message-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -6px; /* 말풍선의 아래쪽에 꼬리를 추가 */
+  right: 7px; /* 말풍선의 오른쪽에 꼬리 위치 */
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #429f50; /* 말풍선 색과 동일한 색상으로 설정 */
+}
+
+@keyframes fade-in-out {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
 }
 
 .profile-details {

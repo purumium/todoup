@@ -60,7 +60,9 @@ export default {
     userId: {
       handler(newValue) {
         if (!newValue) {
-          this.$router.push('/');
+          this.setExampleEvents();
+        } else {
+          this.fetchTodos();
         }
       },
       immediate: true, // 컴포넌트 생성 시에도 watcher를 즉시 호출
@@ -81,11 +83,24 @@ export default {
       this.$router.push(`/todo/${info.dateStr}`);
     },
     handleEventClick(info) {
-      const date = new Date(info.event.start); // Date 객체 생성
-      date.setDate(date.getDate() + 1); // 1일 추가
-      const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
-      const todoId = info.event.extendedProps.todoId;
-      this.$router.push(`/todo/${dateStr}?selectedTodoId=${todoId}`);
+      if (!this.userId) {
+        this.$swal
+          .fire({
+            text: '로그인이 필요합니다.',
+            icon: 'warning',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#f39c12',
+          })
+          .then(() => {
+            this.$router.push('/login');
+          });
+      } else {
+        const date = new Date(info.event.start); // Date 객체 생성
+        date.setDate(date.getDate() + 1); // 1일 추가
+        const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
+        const todoId = info.event.extendedProps.todoId;
+        this.$router.push(`/todo/${dateStr}?selectedTodoId=${todoId}`);
+      }
     },
     async fetchTodos() {
       if (this.userId) {
@@ -115,7 +130,34 @@ export default {
         } catch (error) {
           console.error('Error fetching todos:', error);
         }
+      } else {
+        this.setExampleEvents(); // 로그인하지 않은 경우 예시 이벤트 설정
       }
+    },
+    setExampleEvents() {
+      const today = new Date();
+      const exampleEvents = [
+        {
+          title: 'TO DO UP 사용해보기!',
+          start: new Date(today.getFullYear(), today.getMonth(), 5).toISOString().split('T')[0],
+          end: new Date(today.getFullYear(), today.getMonth(), 7).toISOString().split('T')[0],
+          completed: false,
+        },
+        {
+          title: 'TO DO 추가!',
+          start: new Date(today.getFullYear(), today.getMonth(), 10).toISOString().split('T')[0],
+          end: new Date(today.getFullYear(), today.getMonth(), 10).toISOString().split('T')[0],
+          completed: false,
+        },
+        {
+          title: 'TO DO 달성하고 레벨업하기!',
+          start: new Date(today.getFullYear(), today.getMonth(), 15).toISOString().split('T')[0],
+          end: new Date(today.getFullYear(), today.getMonth(), 17).toISOString().split('T')[0],
+          completed: false,
+        },
+      ];
+
+      this.calendarOptions.events = exampleEvents;
     },
     formatEndDate(endDate) {
       // 종료 날짜를 다음 날로 설정하여 이벤트 범위에 포함되도록 함
