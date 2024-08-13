@@ -83,14 +83,11 @@ export default {
 <style scoped>
 .todo-detail {
   border-radius: 15px;
-  padding: 20px;
   color: #333;
-  width: 250px;
+  width: 215px;
   height: 300px;
   overflow-y: auto;
   overflow-x: hidden;
-  background-color: #f9f9f9;
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
 .todo-title {
