@@ -67,7 +67,6 @@
 
 <script>
 import axios from 'axios';
-
 import categories from '@/assets/categories.json';
 /* import { mapState } from 'vuex'; */
 
@@ -143,6 +142,7 @@ export default {
 
     async modifyTodo() {
       if (!this.todo) return;
+
       console.log('M.T:', this.todo.todo_id, '/', this.todo.user_id);
       try {
         await axios.patch(`/api/todo/modify/${this.todo.todo_id}`, {
@@ -158,28 +158,6 @@ export default {
       } catch (error) {
         console.log();
       }
-    },
-    async deleteTodo() {
-      if (!this.todo) return;
-
-      try {
-        const isCompleted = this.todo.completed ? 1 : 0;
-        await axios.delete(`/api/todo/delete/${this.todo.todo_id}`, {
-          params: {
-            completed: isCompleted,
-            userId: this.todo.user_id,
-          },
-        });
-
-        alert('할일이 성공적으로 삭제되었습니다.');
-        this.$emit('todo-deleted', this.todo.todo_id);
-      } catch (error) {
-        console.error('Error deleting todo:', error);
-        alert('할일 삭제 중 오류가 발생했습니다.');
-      }
-    },
-    editTodo() {
-      alert('수정 기능은 구현 중입니다.');
     },
   },
 };
