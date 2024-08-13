@@ -1,3 +1,5 @@
+import Swal from 'sweetalert2';
+
 const store = {
   namespaced: true,
   state() {
@@ -47,11 +49,13 @@ const store = {
       let newLevel = state.user_info.lv;
       let newProfileImg = state.profileImg;
       const avatarType = state.user_info.avatarType;
+      let levelChanged = false; // 레벨 변경 여부를 추적하기 위한 변수
 
       // 레벨 업
       if (newPoints >= 100) {
         newLevel += 1;
         newPoints -= 100; // 포인트가 100이상이면, 레벨 up후, 포인트 감소
+        levelChanged = true;
 
         if (newLevel <= 5) {
           // 레벨 올라갈 때, 프로필 이미지 변경
@@ -71,6 +75,16 @@ const store = {
       }
       commit('updatePointsAndLevel', { newPoints, newLevel });
       commit('updateProfileImg', newProfileImg);
+
+      // 레벨이 변경된 경우 alert를 띄움
+      if (levelChanged) {
+        Swal.fire({
+          text: `축하합니다! 🏆 LEVEL ${newLevel} 🏆 로 업그레이드 되었습니다.`,
+          icon: 'success',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#429f50',
+        });
+      }
     },
   },
   getters: {
