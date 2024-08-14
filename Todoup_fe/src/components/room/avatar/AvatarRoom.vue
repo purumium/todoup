@@ -87,9 +87,9 @@ export default {
 }
 
 .friend-avatar {
-  /* 친구 아바타의 추가 스타일이 필요한 경우 여기에 추가 */
-}
-
-.guest-book {
+  width: 45%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
