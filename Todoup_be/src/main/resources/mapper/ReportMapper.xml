@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kosa.todoup.mapper.ReportMapper">
+
+    <!--월별 획득 포인트(경험치)-->
+    <select id="findMonthlyPoints" resultType="map">
+        SELECT TO_CHAR(end_date, 'YYYY-MM') AS month,
+           (SUM(CASE WHEN completed = 1 THEN 5 ELSE 0 END) +
+            (SELECT COUNT(*) * 5 FROM diary WHERE TO_CHAR(written_at, 'YYYY-MM') = TO_CHAR(end_date, 'YYYY-MM') AND user_id = #{userId})) AS points
+        FROM todo_list
+        WHERE user_id = #{userId}
+        GROUP BY TO_CHAR(end_date, 'YYYY-MM')
+        ORDER BY month
+    </select>
+
+    <!-- 월별 todo 달성률 -->
+    <select id="findMonthlyTodoCompletionRate" resultType="map">
+        SELECT TO_CHAR(end_date, 'YYYY-MM') AS month,
+           COUNT(*) AS total_tasks,
+           SUM(CASE WHEN completed = 1 THEN 1 ELSE 0 END) AS completed_tasks,
+           ROUND(SUM(CASE WHEN completed = 1 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS completion_rate
+        FROM todo_list
+        WHERE user_id = #{userId}
+        GROUP BY TO_CHAR(end_date, 'YYYY-MM')
+        ORDER BY month
+    </select>
+
+    <!-- 카테고리별 할일 등록 비율 -->
+    <select id="findCategoryRegistrationRatio" resultType="map">
+        SELECT category, COUNT(*) AS task_count
+        FROM todo_list
+        WHERE user_id = #{userId}
+          AND TO_CHAR(created_date, 'YYYY-MM') = #{yearMonth}
+        GROUP BY category
+        ORDER BY task_count DESC
+    </select>
+
+    <!-- 카테고리별 할일 완료 비율 -->
+    <select id="findCategoryCompletionRatio" resultType="map">
+        SELECT category, COUNT(*) AS completed_count
+        FROM todo_list
+        WHERE user_id = #{userId}
+          AND completed = 1
+          AND TO_CHAR(created_date, 'YYYY-MM') = #{yearMonth}
+        GROUP BY category
+        ORDER BY completed_count DESC
+    </select>
+
+    <!-- 월별 일기 작성 수 -->
+    <select id="findMonthlyDiaryCount" resultType="map">
+        SELECT TO_CHAR(written_at, 'YYYY-MM') AS month,
+           COUNT(*) AS diary_count
+        FROM diary
+        WHERE user_id = #{userId}
+        GROUP BY TO_CHAR(written_at, 'YYYY-MM')
+        ORDER BY month
+    </select>
+
+</mapper>

@@ -8,10 +8,10 @@ import java.util.List;
 public interface GuestbookMapper {
 
     // 특정 사용자의 아바타 방에서 친구들이 남긴 방명록 조회 (userId 기준, 최근 daysAgo일 동안의 기록)
-    List<GuestbookDTO> findRecentByOwner(@Param("ownerId") Long ownerId, @Param("daysAgo") int daysAgo);
+    List<GuestbookDTO> findRecentByOwner(@Param("ownerId") Long ownerId, @Param("daysAgo") int daysAgo, @Param("offset") int offset, @Param("size") int size);
 
     // 친구 아바타 방 방문 시, 해당 사용자가 남긴 방명록 조회
-    List<GuestbookDTO> findByOwnerAndWriter(@Param("ownerId") Long ownerId, @Param("writerId") Long writerId);
+    List<GuestbookDTO> findByOwnerAndWriter(@Param("ownerId") Long ownerId, @Param("writerId") Long writerId, @Param("offset") int offset, @Param("size") int size);
 
     // 새로운 방명록 항목 추가 (writerId 기준)
     int insertGuestbook(GuestbookDTO guestbookDTO);

@@ -17,13 +17,15 @@ public class GuestbookServiceImpl implements GuestbookService {
     }
 
     @Override
-    public List<GuestbookDTO> findRecentByOwner(Long ownerId, int daysAgo) {
-        return guestbookMapper.findRecentByOwner(ownerId, daysAgo);
+    public List<GuestbookDTO> findRecentByOwner(Long ownerId, int daysAgo, int page, int size) {
+        int offset = page * size;
+        return guestbookMapper.findRecentByOwner(ownerId, daysAgo, offset, size);
     }
 
     @Override
-    public List<GuestbookDTO> findByOwnerAndWriter(Long ownerId, Long writerId) {
-        return guestbookMapper.findByOwnerAndWriter(ownerId, writerId);
+    public List<GuestbookDTO> findByOwnerAndWriter(Long ownerId, Long writerId, int page, int size) {
+        int offset = page * size;
+        return guestbookMapper.findByOwnerAndWriter(ownerId, writerId, offset, size);
     }
 
     @Override
