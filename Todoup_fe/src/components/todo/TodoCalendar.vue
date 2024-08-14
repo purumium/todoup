@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="w-100">
     <div class="d-flex justify-content-between align-items-center todo-calendar-top">
       <div class="todo-calendar">TODO 캘린더</div>
       <div class="add-todo-wrap">
@@ -38,7 +38,7 @@ export default {
         dateClick: this.handleMoveToTodo,
         eventClick: this.handleEventClick, // 이벤트 클릭 시 호출될 핸들러
         events: [], // 초기 events 배열
-        height: 525,
+        height: 550,
         locale: koLocale,
         dayCellContent: (args) => ({ html: args.dayNumberText.replace('일', '') }),
         datesSet: this.handleDatesSet, // 캘린더 날짜가 변경될 때 호출
@@ -185,6 +185,11 @@ export default {
 </script>
 
 <style>
+.w-100 {
+  width: 100% !important;
+  height: 610px !important;
+}
+
 .todo-calendar-top {
   color: #2b2222b8 !important;
   font-weight: 600;
@@ -229,8 +234,8 @@ export default {
   justify-content: space-between;
   padding: 2px;
   border-radius: 4px;
-  background-color: #d4efdf;
-  border: 1px solid #f1f2f3;
+  background-color: #fddd0a36;
+  border: 1px solid #cfb50952;
   width: 100%;
   white-space: nowrap;
   overflow: hidden;
@@ -241,7 +246,7 @@ export default {
 
 .todo-event.completed {
   color: #333;
-  background-color: #e0e0e0;
+  background-color: #e0e0e096;
   text-decoration: line-through;
   border: 1px solid #f1f2f3;
 }
@@ -256,14 +261,30 @@ export default {
 }
 
 .fc-daygrid-more-link.fc-more-link {
-  color: #333;
-  margin-top: 2px;
-  font-size: 10px;
-  font-weight: 500;
+  color: #3333338c;
+  margin-top: 1px;
+  font-size: 9px;
+  font-weight: 600;
 }
 
 .fc-h-event {
   background-color: #d4efdf !important;
   border: none !important;
+}
+
+.fc .fc-daygrid-day-bottom {
+  font-size: 0.85em !important;
+  margin: 0px 2px !important;
+  position: absolute !important;
+  top: -20px !important;
+}
+
+.fc .fc-daygrid-day-frame {
+  min-height: 74px !important;
+  position: relative !important;
+}
+
+.root {
+  --fc-today-bg-color: rgb(238 231 100 / 15%);
 }
 </style>

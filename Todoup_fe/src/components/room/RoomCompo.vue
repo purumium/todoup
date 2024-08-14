@@ -37,8 +37,19 @@ export default {
 <style scoped>
 .room-btn-group {
   display: flex;
-  justify-content: flex-start;
+  justify-content: end;
   gap: 10px;
   margin-bottom: 20px;
+}
+
+.room-btn-group button {
+  width: 10em;
+  height: 3em;
+  background-color: #e5e5e51f;
+  color: #544545;
+  border: 1.5px solid #1d13132e;
+  font-weight: 600;
+  font-size: 13px;
+  border-radius: 20px;
 }
 </style>
