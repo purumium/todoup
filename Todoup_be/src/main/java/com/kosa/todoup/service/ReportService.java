@@ -12,10 +12,10 @@ public interface ReportService {
     List<Map<String, Object>> getMonthlyTodoCompletionRate(Long userId);
 
     // 3. 카테고리별 할일 등록 비율
-    List<Map<String, Object>> getCategoryRegistrationRatio(Long userId, String startDate, String endDate);
+    List<Map<String, Object>> getCategoryRegistrationRatio(Long userId, String yearMonth);
 
     // 4. 카테고리별 할일 완료 비율
-    List<Map<String, Object>> getCategoryCompletionRatio(Long userId, String startDate, String endDate);
+    List<Map<String, Object>> getCategoryCompletionRatio(Long userId, String yearMonth);
 
     // 5. 월별 일기 작성 수
     List<Map<String, Object>> getMonthlyDiaryCount(Long userId);

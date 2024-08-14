@@ -4,6 +4,7 @@ import com.kosa.todoup.mapper.ReportMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,13 +29,13 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public List<Map<String, Object>> getCategoryRegistrationRatio(Long userId, String startDate, String endDate) {
-        return reportMapper.findCategoryRegistrationRatio(userId, startDate, endDate);
+    public List<Map<String, Object>> getCategoryRegistrationRatio(Long userId, String yearMonth) {
+        return reportMapper.findCategoryRegistrationRatio(userId, yearMonth);
     }
 
     @Override
-    public List<Map<String, Object>> getCategoryCompletionRatio(Long userId, String startDate, String endDate) {
-        return reportMapper.findCategoryCompletionRatio(userId, startDate, endDate);
+    public List<Map<String, Object>> getCategoryCompletionRatio(Long userId, String yearMonth) {
+        return reportMapper.findCategoryCompletionRatio(userId, yearMonth);
     }
 
     @Override

@@ -29,25 +29,21 @@
 
     <!-- 카테고리별 할일 등록 비율 -->
     <select id="findCategoryRegistrationRatio" resultType="map">
-        SELECT category,
-        COUNT(*) AS task_count
+        SELECT category, COUNT(*) AS task_count
         FROM todo_list
         WHERE user_id = #{userId}
-        AND created_date >= TO_DATE(#{startDate}, 'YYYY-MM-DD')
-        AND created_date <= TO_DATE(#{endDate}, 'YYYY-MM-DD')
+          AND TO_CHAR(created_date, 'YYYY-MM') = #{yearMonth}
         GROUP BY category
         ORDER BY task_count DESC
     </select>
 
     <!-- 카테고리별 할일 완료 비율 -->
     <select id="findCategoryCompletionRatio" resultType="map">
-        SELECT category,
-        COUNT(*) AS completed_count
+        SELECT category, COUNT(*) AS completed_count
         FROM todo_list
         WHERE user_id = #{userId}
-        AND completed = 1
-        AND end_date >= TO_DATE(#{startDate}, 'YYYY-MM-DD')
-        AND end_date <= TO_DATE(#{endDate}, 'YYYY-MM-DD')
+          AND completed = 1
+          AND TO_CHAR(created_date, 'YYYY-MM') = #{yearMonth}
         GROUP BY category
         ORDER BY completed_count DESC
     </select>
