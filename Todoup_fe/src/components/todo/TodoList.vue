@@ -107,9 +107,10 @@ export default {
           },
         });
         todo.completed = newCompletionStatus;
+
         // 포인트를 update하는 로직 추가
         const pointsToAdd = newCompletionStatus ? 5 : -5; // 완료시 +5 포인트, 취소시 -5 포인트
-        //const newPoints = this.points + pointsToAdd;
+
         this.$store.dispatch('user/updatePoints', pointsToAdd);
       } catch (error) {
         console.error('Error toggling completion status:', error);

@@ -34,7 +34,7 @@ const modalStore = {
     async fetchAllUsers({ commit }, userId) {
       try {
         const response = await axios.get('/api/allusers', { params: { userId } });
-        console.log('============Fetching all users:==============', response);
+
         commit('SET_ALL_USERS', response.data);
         commit('TOGGLE_MODAL');
       } catch (e) {
@@ -42,11 +42,9 @@ const modalStore = {
       }
     },
     async fetchFollowedUsers({ commit }, userId) {
-      console.log('여까지는 왔니????????????');
       try {
-        console.log('Fetching users for userId:', userId); // userId 값을 확인
         const response = await axios.get(`/api/following`, { params: { userId } });
-        console.log('API 응답데이터', response);
+
         commit('SET_FOLLOWING_USERS', response.data);
         commit('TOGGLE_MODAL');
       } catch (e) {
@@ -55,9 +53,8 @@ const modalStore = {
     },
     async fetchFollowers({ commit }, userId) {
       try {
-        console.log('Fetching followers for userId:', userId); // userId 값을 확인
         const response = await axios.get(`/api/followers`, { params: { userId } });
-        console.log('Followers API 응답데이터', response);
+
         commit('SET_FOLLOWED_USERS', response.data);
         commit('TOGGLE_MODAL');
       } catch (e) {
@@ -98,7 +95,6 @@ const modalStore = {
             followId: followId,
           },
         });
-        console.log('checkIfFollowing', response);
         return response.data; // API에서 받은 true 또는 false 값 반환
       } catch (error) {
         console.error('Error checking follow status:', error);
@@ -121,7 +117,7 @@ const modalStore = {
 
     async unfollowersUser(context, { userId, followId }) {
       // payload를 구조분해하여 가져옴
-      console.log('unfollowersUser : step 1');
+
       try {
         await axios.delete(`/api/cancel/followers`, {
           params: {
@@ -129,7 +125,6 @@ const modalStore = {
             followId: followId,
           },
         });
-        console.log('unfollowersUser : step 2');
       } catch (e) {
         console.error('Error unfollowing user:', e);
       }
@@ -142,7 +137,7 @@ const modalStore = {
             followId: followId,
           },
         });
-        console.log('checkIfFollowersssssssssssss', response);
+
         return response.data; // API에서 받은 true 또는 false 값 반환
       } catch (error) {
         console.error('Error checking follow status:', error);
