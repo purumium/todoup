@@ -1,7 +1,7 @@
 <template>
   <div class="friend-item">
     <div class="friend-leftBox">
-      <div class="item-img"></div>
+      <img class="item-img" @click="onImageClick" :scr="`/avatar/${this.type}_level${this.level}.png`" />
       <div>{{ nickname }}</div>
     </div>
     <div class="friend-rightBox">
@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   props: {
     nickname: {
@@ -26,8 +28,15 @@ export default {
       type: Boolean,
       required: true,
     },
+    userId: {
+      type: Number,
+      required: true,
+    },
+    type: {
+      type: String,
+      required: true,
+    },
   },
-  emits: ['update:checked'],
   computed: {
     buttonText() {
       return this.checked ? '언팔로우' : '팔로우';
@@ -36,9 +45,22 @@ export default {
       return this.checked ? 'unfollow-button' : 'follow-button';
     },
   },
+
   methods: {
+    ...mapActions('modal', ['setSelectedUserId', 'setModalVisible']), // Vuex 액션을 컴포넌트 메서드로 바인딩
+
     toggleCheck() {
       this.$emit('update:checked', !this.checked);
+    },
+    onImageClick() {
+      // 유저 아이디를 Vuex 스토어에 저장
+      this.setSelectedUserId(this.userId);
+
+      // 모달을 먼저 닫고
+      this.setModalVisible(false);
+
+      // 라우팅을 컴포넌트에서 직접 처리
+      this.$router.push(`/room/${this.userId}/avatarroom`);
     },
   },
 };
@@ -54,11 +76,11 @@ export default {
   border-radius: 5px;
 }
 .item-img {
-  background-color: #333;
   width: 70px;
   height: 70px;
   border-radius: 100%;
   margin-right: 20px;
+  cursor: pointer; /* 클릭 가능한 상태로 변경 */
 }
 .friend-leftBox {
   display: flex;

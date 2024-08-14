@@ -16,8 +16,9 @@
             <find-modal-compo
               v-for="(user, idx) in filteredUsers(followUsers)"
               :key="idx"
-              :userid="user.userId"
+              :userId="user.userId"
               :followid="user.followId"
+              :type="user.followUserAvatarType"
               :nickname="user.followNickname"
               :level="user.followUserLv"
               :imgUrl="user.imgUrl"
@@ -35,8 +36,9 @@
             <find-modal-compo
               v-for="(user, idx) in filteredUsers(followedUsers)"
               :key="idx"
-              :userid="user.userId"
+              :userId="user.userId"
               :followid="user.followId"
+              :type="user.followUserAvatarType"
               :nickname="user.userNickname"
               :level="user.lv"
               :imgUrl="user.imgUrl"
@@ -54,10 +56,11 @@
             <find-modal-compo
               v-for="(user, idx) in filteredUsers(allUsers)"
               :key="idx"
-              :userid="user.userId"
+              :userId="user.userId"
               :nickname="user.userNickname"
               :level="user.lv"
               :imgUrl="user.imgUrl"
+              :type="user.userAvatarType"
               :checked="AllUserArr[idx]"
               @update:checked="CheckedAllUsers(idx, $event)"
             ></find-modal-compo>
@@ -80,7 +83,6 @@ export default {
       isFollowArr: [], // 팔로우 상태를 저장할 배열
       isFolledArr: [], // 나를 팔로우한 사람들 배열
       AllUserArr: [], // 모든 유저들 배열
-      modalTitle: 'title', // 동적으로 변경할 타이틀
     };
   },
   computed: {
@@ -95,6 +97,18 @@ export default {
     ...mapGetters('modal', {
       isModalVisible: 'isModalVisible',
     }),
+    modalTitle() {
+      if (this.followUsers.length > 0) {
+        return '팔로잉';
+      } else if (this.followedUsers.length > 0) {
+        return '팔로워';
+      } else if (this.allUsers.length > 0) {
+        return '친구 찾기';
+      } else {
+        this.setModalVisible(false);
+        return 'title';
+      }
+    },
   },
   watch: {
     async isModalVisible(newValue) {
@@ -118,8 +132,17 @@ export default {
     ]),
     filteredUsers(users) {
       const searchTerm = this.username.toLowerCase();
-      return users.filter((user) => (user.followNickname || user.userNickname).toLowerCase().includes(searchTerm));
+      const filtered = users.filter((user) =>
+        (user.followNickname || user.userNickname).toLowerCase().includes(searchTerm)
+      );
+      console.log('아이디값이 있나요?', filtered); // 필터링된 사용자 데이터를 확인
+      return filtered;
     },
+
+    // filteredUsers(users) {
+    //   const searchTerm = this.username.toLowerCase();
+    //   return users.filter((user) => (user.followNickname || user.userNickname).toLowerCase().includes(searchTerm));
+    // },
     async openModal() {
       this.setModalVisible(false); // 초기화 동안 모달이 보이지 않도록 설정
       await this.initializeFollowStatus(); // 상태 초기화
@@ -301,7 +324,8 @@ export default {
 }
 
 .modal-title {
-  font-size: 20px;
-  font-weight: 500;
+  font-size: 22px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.719);
 }
 </style>
