@@ -40,7 +40,7 @@ export default {
   height: 50%; /* 아래쪽 절반을 차지 */
   border: 1px solid green; /* 구분을 위해 테두리 추가 */
   display: flex;
-  justify-content: center;
+  justify-content: end;
   align-items: center;
 }
 </style>
