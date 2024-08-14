@@ -62,6 +62,7 @@ export default {
         confirmButtonText: '확인',
         confirmButtonColor: '#429f50',
       });
+      this.$router.push('/example');
     },
     ...mapActions('user', ['logout']),
   },
