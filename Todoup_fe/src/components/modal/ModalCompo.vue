@@ -16,8 +16,8 @@
             <find-modal-compo
               v-for="(user, idx) in filteredUsers(followUsers)"
               :key="idx"
-              :userId="user.userId"
-              :followid="user.followId"
+              :userId="user.followId"
+              :followid="user.userId"
               :type="user.followUserAvatarType"
               :nickname="user.followNickname"
               :level="user.followUserLv"

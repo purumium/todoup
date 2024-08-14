@@ -8,9 +8,6 @@ const modalStore = {
     followedUsers: [], // 나를 팔로우한 사용자들
     allUsers: [], // 모든 유저들
     selectedUserId: null, // 선택된 유저 아이디를 저장할 상태
-    selectedAvatar: null,
-    selectedLv: null,
-    profileImg: '',
   },
   mutations: {
     SET_FOLLOWING_USERS(state, users) {
@@ -22,11 +19,8 @@ const modalStore = {
     SET_ALL_USERS(state, users) {
       state.allUsers = users; // 모든 유저를 상태에 저장
     },
-    SET_SELECTED_USER_ID(state, userId, avatar, selectedLv) {
+    SET_SELECTED_USER_ID(state, userId) {
       state.selectedUserId = userId; // 선택된 유저 아이디를 상태에 저장
-      state.selectedAvatar = avatar;
-      state.selectedLv = selectedLv;
-      state.profileImg = `${state.selectedAvatar}_level${state.selectedLv}.png`;
     },
     TOGGLE_MODAL(state) {
       state.isModalVisible = !state.isModalVisible;
