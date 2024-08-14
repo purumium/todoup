@@ -42,7 +42,15 @@ export default {
       const labels = reportData.map((item) => item.MONTH);
       const completionRates = reportData.map((item) => item.COMPLETION_RATE);
 
+      const canvas = document.getElementById('todoCompletionRateChart');
       const ctx = document.getElementById('todoCompletionRateChart').getContext('2d');
+
+      // 고해상도 지원을 위해 캔버스의 크기와 비율 설정
+      const devicePixelRatio = window.devicePixelRatio || 1;
+      canvas.width = canvas.clientWidth * devicePixelRatio;
+      canvas.height = canvas.clientHeight * devicePixelRatio;
+      ctx.scale(devicePixelRatio, devicePixelRatio);
+
       new Chart(ctx, {
         type: 'line',
         data: {
@@ -61,6 +69,7 @@ export default {
           scales: {
             y: {
               beginAtZero: true,
+              max: 100,
             },
           },
         },

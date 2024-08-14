@@ -39,7 +39,15 @@ export default {
 
     async renderChart() {
       const data = await this.fetchReportData();
+
+      const canvas = document.getElementById('monthlyPointsChart');
       const ctx = document.getElementById('monthlyPointsChart').getContext('2d');
+
+      // 고해상도 지원을 위해 캔버스의 크기와 비율 설정
+      const devicePixelRatio = window.devicePixelRatio || 1;
+      canvas.width = canvas.clientWidth * devicePixelRatio;
+      canvas.height = canvas.clientHeight * devicePixelRatio;
+      ctx.scale(devicePixelRatio, devicePixelRatio);
 
       // 예시: 데이터 구조가 { month: '2024-08', points: 50 } 형태라고 가정
       const labels = data.map((item) => item.MONTH); // 월별 레이블 추출

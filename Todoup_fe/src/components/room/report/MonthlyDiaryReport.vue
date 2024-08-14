@@ -43,7 +43,15 @@ export default {
       const labels = data.map((item) => item.MONTH); // 'month' 컬럼을 사용
       const diaryCounts = data.map((item) => item.DIARY_COUNT); // 'diary_count' 컬럼을 사용
 
+      const canvas = document.getElementById('monthlyDiaryChart');
       const ctx = document.getElementById('monthlyDiaryChart').getContext('2d');
+
+      // 고해상도 지원을 위해 캔버스의 크기와 비율 설정
+      const devicePixelRatio = window.devicePixelRatio || 1;
+      canvas.width = canvas.clientWidth * devicePixelRatio;
+      canvas.height = canvas.clientHeight * devicePixelRatio;
+      ctx.scale(devicePixelRatio, devicePixelRatio);
+
       new Chart(ctx, {
         type: 'bar',
         data: {
