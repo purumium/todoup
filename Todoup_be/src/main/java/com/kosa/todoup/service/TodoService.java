@@ -41,6 +41,7 @@ public class TodoService {
 
     @Transactional
     public void toggleTodoCompletion(long userId, long todoId, int completed) {
+        System.out.println("체크박스 서비스 실행");
         todoMapper.toggleTodoCompletion(todoId, completed); // 할 일의 완료 상태를 업데이트
         int pointsChange = 0;
 

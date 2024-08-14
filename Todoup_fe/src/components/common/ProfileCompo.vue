@@ -2,7 +2,9 @@
   <div class="profile-section">
     <div class="profile-top">
       <div class="profile-image-container">
-        <img src="@/assets/profile.png" alt="Profile" @click="goToRoom" />
+        <!-- <img src="@/assets/profile.png" alt="Profile" @click="goToRoom" /> -->
+        <img v-if="userInfo.userId" :src="`/avatar/${profileImg}`" alt="Profile" @click="goToRoom" />
+        <img v-else src="/avatar/defaultAvatar.png" alt="Profile" @click="goToRoom" />
         <div v-if="showMessage" class="message-bubble">{{ pointsUpMessage }}</div>
       </div>
       <div class="profile-details">
@@ -37,7 +39,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'ProfileCompo',
@@ -51,9 +53,15 @@ export default {
     ...mapState('user', {
       userInfo: 'user_info', // Vuex의 user_info 상태를 userInfo로 매핑
     }),
+    ...mapGetters({
+      profileImg: 'user/getProfileImg', // Vuex의 profileImg 상태를 컴포넌트에 매핑
+    }),
     progressWidth() {
       return this.userInfo.points % 100;
     },
+  },
+  created() {
+    console.log(this.profileImg);
   },
   methods: {
     ...mapActions('modal', {
@@ -66,6 +74,17 @@ export default {
       if (userId) {
         console.log('여까지는 왔니');
         this.loadAllUsers(userId);
+      } else if (!userId) {
+        this.$swal
+          .fire({
+            text: '로그인이 필요합니다.',
+            icon: 'warning',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#f39c12',
+          })
+          .then(() => {
+            this.$router.push('/login');
+          });
       } else {
         console.error('User ID가 유효하지 않습니다.');
       }
@@ -76,6 +95,17 @@ export default {
       if (userId) {
         console.log('여까지는 왔니');
         this.loadFollowedUsers(userId); // 변경된 메서드 이름 사용
+      } else if (!userId) {
+        this.$swal
+          .fire({
+            text: '로그인이 필요합니다.',
+            icon: 'warning',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#f39c12',
+          })
+          .then(() => {
+            this.$router.push('/login');
+          });
       } else {
         console.error('User ID가 유효하지 않습니다.');
       }
@@ -85,6 +115,17 @@ export default {
       if (userId) {
         this.loadFollowers(userId); // 팔로워 목록 로드
         console.log(this.loadFollowers);
+      } else if (!userId) {
+        this.$swal
+          .fire({
+            text: '로그인이 필요합니다.',
+            icon: 'warning',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#f39c12',
+          })
+          .then(() => {
+            this.$router.push('/login');
+          });
       } else {
         console.error('User ID가 유효하지 않습니다.');
       }
@@ -141,13 +182,18 @@ export default {
 }
 
 .profile-image-container {
-  position: relative;
+  /* position: relative; */
 }
 
 .profile-top img {
-  border: 1px solid #8080803d;
+  /* border: 1px solid #8080803d;
   border-radius: 70%;
   width: 130px;
+  margin-right: 20px; */
+  border: 1px solid #8080803d;
+  border-radius: 70%;
+  width: 110px;
+  height: 100px;
   margin-right: 20px;
 }
 

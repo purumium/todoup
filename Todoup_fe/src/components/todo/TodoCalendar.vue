@@ -3,7 +3,7 @@
     <div class="d-flex justify-content-between align-items-center todo-calendar-top">
       <div class="todo-calendar">TODO 캘린더</div>
       <div class="add-todo-wrap">
-        <button type="button" class="px-2 add-todo" @click="$router.push('/todo/create')">
+        <button type="button" class="px-2 add-todo" @click="handleAddTodo">
           <font-awesome-icon :icon="['fas', 'check-double']" /> TODO 추가
         </button>
       </div>
@@ -56,7 +56,8 @@ export default {
       todos: 'todo_info', // Vuex의 todo_info 상태를 todos로 매핑
     }),
   },
-  watch: {
+
+  /*   watch: {
     userId: {
       handler(newValue) {
         if (!newValue) {
@@ -67,10 +68,20 @@ export default {
       },
       immediate: true, // 컴포넌트 생성 시에도 watcher를 즉시 호출
     },
-  },
+  }, */
   created() {
     this.setInitialMonth(); // 초기 월과 연도 설정
+    this.loadCalendarData();
     this.fetchTodos(); // 초기 데이터를 가져옴
+  },
+  watch: {
+    todos: {
+      handler() {
+        this.fetchTodos();
+      },
+      immediate: true, // 객체 내부의 값들도 감지하려면 deep 옵션을 true로 설정
+      deep: true,
+    },
   },
   methods: {
     setInitialMonth() {
@@ -102,37 +113,69 @@ export default {
         this.$router.push(`/todo/${dateStr}?selectedTodoId=${todoId}`);
       }
     },
-    async fetchTodos() {
+    handleAddTodo() {
+      if (!this.userId) {
+        this.$swal
+          .fire({
+            text: '로그인이 필요합니다.',
+            icon: 'warning',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#f39c12',
+          })
+          .then(() => {
+            this.$router.push('/login');
+          });
+      } else {
+        this.$router.push('/todo/create');
+      }
+    },
+    async loadCalendarData() {
+      const kor_time = new Date();
+      const month =
+        kor_time.getFullYear() +
+        '-' +
+        (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1);
       if (this.userId) {
         try {
           const userId = this.userId;
-          const response = await axios.get(`/api/todo/month/${this.currentMonth}`, {
+          const response = await axios.get(`/api/todo/month/${month}`, {
             params: { userId },
           });
-          const todos = response.data;
+          this.$store.commit('todo/SET_TODOS', response.data);
+          console.log('VueX Date: ', this.$store.state.todo);
+          console.log('todostore', this.todos);
+          /*const kor_time = new Date();
+          const today =
+            kor_time.getFullYear() +
+            '-' +
+            (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1) +
+            '-' +
+            kor_time.getDate();
 
-          const today = new Date().toISOString().split('T')[0];
           const todayTodos = todos.filter((todo) => todo.start_date.split(' ')[0] === today);
-          this.$store.commit('todo/SET_TODOS', todayTodos);
-          console.log('calendar Vuex: ', todayTodos);
-          console.log('After committing to Vuex - Vuex State:', this.$store.state.todo.todo_info);
-
+          if (todayTodos) {
+            this.$store.commit('todo/SET_TODOS', todayTodos);
+          }*/
+          this.fetchTodos();
           // todos 배열을 FullCalendar의 events 배열 형식에 맞게 변환
-          this.calendarOptions.events = todos.map((todo) => {
-            return {
-              title: todo.title,
-              start: todo.start_date, // 시작 날짜 설정
-              end: this.formatEndDate(todo.end_date), // 종료 날짜 설정 (포함되지 않으므로 다음 날로 설정)
-              completed: todo.completed, // 완료 여부 추가
-              todoId: todo.todo_id,
-            };
-          });
         } catch (error) {
           console.error('Error fetching todos:', error);
         }
       } else {
         this.setExampleEvents(); // 로그인하지 않은 경우 예시 이벤트 설정
       }
+    },
+
+    fetchTodos() {
+      this.calendarOptions.events = this.todos.map((todo) => {
+        return {
+          title: todo.title,
+          start: todo.start_date, // 시작 날짜 설정
+          end: this.formatEndDate(todo.end_date), // 종료 날짜 설정 (포함되지 않으므로 다음 날로 설정)
+          completed: todo.completed, // 완료 여부 추가
+          todoId: todo.todo_id,
+        };
+      });
     },
     setExampleEvents() {
       const today = new Date();
@@ -282,6 +325,31 @@ export default {
 .fc .fc-daygrid-day-frame {
   min-height: 74px !important;
   position: relative !important;
+}
+
+.fc .fc-popover-title {
+  font-size: 12px !important;
+  margin: 6px 10px !important;
+  font-weight: 600 !important;
+}
+
+.fc .fc-more-popover .fc-popover-body {
+  min-width: 186px !important;
+  padding: 8px 8px;
+}
+
+.fc-theme-standard .fc-popover {
+  max-height: 180px !important;
+  overflow-y: auto !important;
+  background: var(--fc-page-bg-color) !important;
+  border: 1px solid var(--fc-border-color) !important;
+}
+
+.fc .fc-popover {
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 6px !important;
+  position: absolute !important;
+  z-index: 9999 !important;
+  min-height: 180px !important;
 }
 
 .root {
