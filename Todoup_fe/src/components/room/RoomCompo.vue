@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h3>{{ nickName }}님의 방</h3>
     <div class="room-btn-group">
       <router-link :to="`/room/${ownerId}/avatarroom`">
         <button>AVATARROOM</button>
@@ -26,6 +27,7 @@ export default {
   computed: {
     ...mapState('user', {
       loginId: (state) => String(state.user_info.userId), // 화살표 함수: Vuex의 user_info.userId를 loginId로 매핑 // ownerId와 맞춰서 String
+      nickName: (state) => String(state.user_info.nickName),
     }),
     isMyRoom() {
       return this.loginId === this.ownerId;

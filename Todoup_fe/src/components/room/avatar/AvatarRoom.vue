@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h3>AvatarRoom</h3>
     <back-ground>
       <template #avatar>
         <div class="avatar-wrapper" :class="{ 'is-friend-room': !isMyRoom }">
