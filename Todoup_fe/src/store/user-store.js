@@ -1,3 +1,4 @@
+import router from '@/router';
 import Swal from 'sweetalert2';
 
 const store = {
@@ -40,6 +41,7 @@ const store = {
     logout(context) {
       localStorage.removeItem('user_info');
       context.commit('logout');
+      router.push('/');
     },
     logfail(context, payload) {
       context.commit('logfail', payload);
