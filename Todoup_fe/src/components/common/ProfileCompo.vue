@@ -71,6 +71,17 @@ export default {
       if (userId) {
         console.log('여까지는 왔니');
         this.loadAllUsers(userId);
+      } else if (!userId) {
+        this.$swal
+          .fire({
+            text: '로그인이 필요합니다.',
+            icon: 'warning',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#f39c12',
+          })
+          .then(() => {
+            this.$router.push('/login');
+          });
       } else {
         console.error('User ID가 유효하지 않습니다.');
       }
@@ -81,6 +92,17 @@ export default {
       if (userId) {
         console.log('여까지는 왔니');
         this.loadFollowedUsers(userId); // 변경된 메서드 이름 사용
+      } else if (!userId) {
+        this.$swal
+          .fire({
+            text: '로그인이 필요합니다.',
+            icon: 'warning',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#f39c12',
+          })
+          .then(() => {
+            this.$router.push('/login');
+          });
       } else {
         console.error('User ID가 유효하지 않습니다.');
       }
@@ -90,6 +112,17 @@ export default {
       if (userId) {
         this.loadFollowers(userId); // 팔로워 목록 로드
         console.log(this.loadFollowers);
+      } else if (!userId) {
+        this.$swal
+          .fire({
+            text: '로그인이 필요합니다.',
+            icon: 'warning',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#f39c12',
+          })
+          .then(() => {
+            this.$router.push('/login');
+          });
       } else {
         console.error('User ID가 유효하지 않습니다.');
       }

@@ -3,7 +3,7 @@
     <div class="d-flex justify-content-between align-items-center todo-calendar-top">
       <div class="todo-calendar">TODO 캘린더</div>
       <div class="add-todo-wrap">
-        <button type="button" class="px-2 add-todo" @click="$router.push('/todo/create')">
+        <button type="button" class="px-2 add-todo" @click="handleAddTodo">
           <font-awesome-icon :icon="['fas', 'check-double']" /> TODO 추가
         </button>
       </div>
@@ -100,6 +100,22 @@ export default {
         const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
         const todoId = info.event.extendedProps.todoId;
         this.$router.push(`/todo/${dateStr}?selectedTodoId=${todoId}`);
+      }
+    },
+    handleAddTodo() {
+      if (!this.userId) {
+        this.$swal
+          .fire({
+            text: '로그인이 필요합니다.',
+            icon: 'warning',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#f39c12',
+          })
+          .then(() => {
+            this.$router.push('/login');
+          });
+      } else {
+        this.$router.push('/todo/create');
       }
     },
     async fetchTodos() {
