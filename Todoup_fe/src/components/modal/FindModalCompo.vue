@@ -5,15 +5,8 @@
       <div>{{ nickname }}</div>
     </div>
     <div class="friend-rightBox">
-      <div>Lv : {{ level }}</div>
-      <font-awesome-icon
-        v-if="checked"
-        icon="square-check"
-        style="color: #0077ff"
-        class="realcheck"
-        @click="toggleCheck"
-      />
-      <font-awesome-icon v-else icon="square-xmark" style="color: #ff0000" class="realcheck" @click="toggleCheck" />
+      <div>LEVEL {{ level }}</div>
+      <button @click="toggleCheck" :class="buttonClass">{{ buttonText }}</button>
     </div>
   </div>
 </template>
@@ -35,6 +28,14 @@ export default {
     },
   },
   emits: ['update:checked'],
+  computed: {
+    buttonText() {
+      return this.checked ? '언팔로우' : '팔로우';
+    },
+    buttonClass() {
+      return this.checked ? 'unfollow-button' : 'follow-button';
+    },
+  },
   methods: {
     toggleCheck() {
       this.$emit('update:checked', !this.checked);
@@ -48,32 +49,47 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px; /* 내부 여백 추가 */
-  margin-bottom: 10px; /* 아이템 간 간격 추가 */
-  border-radius: 5px; /* 둥근 모서리 */
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
 }
 .item-img {
-  background-color: blue;
-  width: 80px;
-  height: 80px;
+  background-color: #333;
+  width: 70px;
+  height: 70px;
   border-radius: 100%;
-  margin-right: 10px; /* 이미지와 텍스트 간 간격 추가 */
+  margin-right: 20px;
 }
 .friend-leftBox {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 200px;
 }
 .friend-rightBox {
-  width: 140px;
   justify-content: space-between;
   display: flex;
   align-items: center;
 }
-.realcheck {
-  cursor: pointer; /* 클릭 가능한 영역임을 표시 */
-  width: 25px;
-  height: 25px;
+.friend-rightBox > div {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  margin-right: 28px;
+}
+button {
+  cursor: pointer;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: none;
+  outline: none;
+}
+.follow-button {
+  background-color: #3a84d8;
+  color: white;
+}
+.unfollow-button {
+  background-color: #cf4848;
+  color: white;
 }
 </style>

@@ -187,6 +187,7 @@ export default {
           confirmButtonText: '확인',
           confirmButtonColor: '#f39c12',
         });
+
         return;
       }
 
@@ -208,7 +209,24 @@ export default {
 
       request
         .then((response) => {
-          console.log('Diary saved successfully:', response.data);
+          // 포인트를 up하는 로직 추가
+          let pointsToAdd = 0;
+          if (!this.isEditMode && response.data) {
+            // diary가 editmode가 아닌(insert) 경우에만 포인트 +5
+            pointsToAdd = 5; // 완료시 +5 포인트
+          }
+          this.$store.dispatch('user/updatePoints', pointsToAdd);
+
+          if (this.isEditMode) {
+            //diary가 editmode인 경우 수정 완료 alert창
+            this.$swal.fire({
+              text: response.data, // 서버에서 반환된 메시지
+              icon: 'info',
+              confirmButtonText: '확인',
+              confirmButtonColor: '#429f50',
+            });
+          }
+
           this.$router.push('/diary'); // 일기를 저장한 후, diarycalendar로 이동
         })
         .catch((error) => {
