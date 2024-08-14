@@ -1,12 +1,6 @@
 <template>
   <div class="w-100">
     <div class="diary-wrapper">
-      <!-- <div class="submit-btn">
-        <button @click="submitDiary">
-          <font-awesome-icon :icon="['far', 'circle-check']" />
-          {{ isEditMode ? '수정 완료' : '작성 완료' }}
-        </button>
-      </div> -->
       <table class="diary-table">
         <tr>
           <td colspan="4">
@@ -14,7 +8,7 @@
               <div class="submit-btn">
                 <button @click="submitDiary">
                   <font-awesome-icon :icon="['far', 'circle-check']" />
-                  {{ isEditMode ? '수정 완료' : '작성 완료' }}
+                  {{ isEditMode ? '수정 끝' : '일기 끝' }}
                 </button>
               </div>
               <div class="diary-title">
@@ -184,6 +178,7 @@ export default {
       }
     },
     submitDiary() {
+      console.log('submit 버튼 ');
       // 일기 내용을 적지 않았을 때, submit 불가
       if (this.content === null || this.content.trim() === '') {
         this.$swal.fire({
@@ -192,6 +187,7 @@ export default {
           confirmButtonText: '확인',
           confirmButtonColor: '#f39c12',
         });
+
         return;
       }
 
@@ -208,12 +204,29 @@ export default {
       }
 
       const request = this.isEditMode
-        ? axios.put('/api/diary/update', diaryData) // isEditMode == true이면, update
+        ? axios.post('/api/diary/update', diaryData) // isEditMode == true이면, update
         : axios.post('/api/diary/insert', diaryData); // isEditMode == false라면, insert
 
       request
         .then((response) => {
-          console.log('Diary saved successfully:', response.data);
+          // 포인트를 up하는 로직 추가
+          let pointsToAdd = 0;
+          if (!this.isEditMode && response.data) {
+            // diary가 editmode가 아닌(insert) 경우에만 포인트 +5
+            pointsToAdd = 5; // 완료시 +5 포인트
+          }
+          this.$store.dispatch('user/updatePoints', pointsToAdd);
+
+          if (this.isEditMode) {
+            //diary가 editmode인 경우 수정 완료 alert창
+            this.$swal.fire({
+              text: response.data, // 서버에서 반환된 메시지
+              icon: 'info',
+              confirmButtonText: '확인',
+              confirmButtonColor: '#429f50',
+            });
+          }
+
           this.$router.push('/diary'); // 일기를 저장한 후, diarycalendar로 이동
         })
         .catch((error) => {
@@ -225,10 +238,15 @@ export default {
 </script>
 
 <style scoped>
+.w-100 {
+  width: 100% !important;
+  height: 610px !important;
+}
+
 .diary-wrapper {
   margin: 0 auto;
   padding: 32px 26px;
-  border: 1px solid #8080802e;
+  border: 2px solid #635e5e21;
   border-radius: 12px;
 }
 
@@ -243,7 +261,7 @@ export default {
 
 .diary-table th,
 .diary-table td {
-  border: 1px solid #1d13132e;
+  border: 2px solid #635e5e21;
   padding: 10px;
   text-align: center;
   font-size: 14px;
@@ -339,11 +357,11 @@ textarea {
 }
 
 .submit-btn button {
-  width: 95px;
+  width: 100px;
   height: 30px;
-  background-color: #e5e5e51f;
+  background-color: #e5e5e56b;
   color: #544545;
-  border: 1px solid #1d13132e;
+  border: 2px solid #635e5e21;
   font-weight: 600;
   font-size: 12px;
   border-radius: 20px;

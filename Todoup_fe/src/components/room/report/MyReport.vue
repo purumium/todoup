@@ -5,23 +5,31 @@
       <p>본인의 Report만 확인 가능합니다.</p>
     </div>
     <div v-else>
-      <first-report :login-id="loginId" />
-      <second-report :login-id="loginId" />
+      <monthly-points-report :login-id="loginId" />
+      <todo-completion-rate-report :login-id="loginId" />
+      <category-registration-report :login-id="loginId" />
+      <category-completion-report :login-id="loginId" />
+      <monthly-diary-report :login-id="loginId" />
       <!-- 추가 리포트 컴포넌트들 -->
     </div>
   </div>
 </template>
 
 <script>
-import FirstReport from './FirstReport.vue';
-import SecondReport from './SecondReport.vue';
+import MonthlyPointsReport from './MonthlyPointsReport.vue';
+import TodoCompletionRateReport from './TodoCompletionRateReport.vue';
+import CategoryRegistrationReport from './CategoryRegistrationReport.vue';
+import CategoryCompletionReport from './CategoryCompletionReport.vue';
+import MonthlyDiaryReport from './MonthlyDiaryReport.vue';
 
 export default {
   name: 'MyReport',
   components: {
-    FirstReport,
-    SecondReport,
-    // 추가 리포트 컴포넌트들
+    MonthlyPointsReport,
+    TodoCompletionRateReport,
+    CategoryRegistrationReport,
+    CategoryCompletionReport,
+    MonthlyDiaryReport,
   },
   props: {
     loginId: {

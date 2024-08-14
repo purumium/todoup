@@ -21,25 +21,37 @@ public class GuestbookController {
 
     // 특정 사용자의 방명록 중, 최근 작성된 방명록 조회
     @GetMapping("/users/{ownerId}/recent")
-    public List<GuestbookDTO> findRecentByOwner(
+    public ResponseEntity<List<GuestbookDTO>> findRecentByOwner(
             @PathVariable Long ownerId,
-            @RequestParam(defaultValue = "30") int daysAgo) {
-        return guestbookService.findRecentByOwner(ownerId, daysAgo);
+            @RequestParam(defaultValue = "30") int daysAgo,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        List<GuestbookDTO> guestbooks = guestbookService.findRecentByOwner(ownerId, daysAgo, page, size);
+        if (guestbooks.isEmpty()) {
+            return ResponseEntity.noContent().build();  // 데이터가 없으면 204 반환
+        }
+        return ResponseEntity.ok(guestbooks);  // 정상적으로 데이터를 반환
     }
 
     // 특정 사용자의 방명록 중, 특정 작성자가 남긴 방명록 조회
     @GetMapping("/users/{ownerId}/writers/{writerId}")
-    public List<GuestbookDTO> findByOwnerAndWriter(
+    public ResponseEntity<List<GuestbookDTO>> findByOwnerAndWriter(
             @PathVariable Long ownerId,
-            @PathVariable Long writerId) {
-        return guestbookService.findByOwnerAndWriter(ownerId, writerId);
+            @PathVariable Long writerId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size) {
+        List<GuestbookDTO> guestbooks = guestbookService.findByOwnerAndWriter(ownerId, writerId, page, size);
+        if (guestbooks.isEmpty()) {
+            return ResponseEntity.noContent().build();  // 데이터가 없으면 204 반환
+        }
+        return ResponseEntity.ok(guestbooks);  // 정상적으로 데이터를 반환
     }
 
     // 방명록 작성
     @PostMapping("/users/{ownerId}/writers/{writerId}")
     public ResponseEntity<Void> createGuestbook(
-            @PathVariable Long ownerId,
-            @PathVariable Long writerId,
+//            @PathVariable Long ownerId,
+//            @PathVariable Long writerId,
             @RequestBody GuestbookDTO guestbookDTO) {
         int insertedRows = guestbookService.createGuestbook(guestbookDTO);
         if (insertedRows > 0) {
@@ -52,8 +64,8 @@ public class GuestbookController {
     // 방명록 수정
     @PutMapping("/{guestbookId}/writers/{writerId}")
     public ResponseEntity<Void> updateGuestbook(
-            @PathVariable Long guestbookId,
-            @PathVariable Long writerId,
+//            @PathVariable Long guestbookId,
+//            @PathVariable Long writerId,
             @RequestBody GuestbookDTO guestbookDTO) {
         int updatedRows = guestbookService.updateGuestbook(guestbookDTO);
         if (updatedRows > 0) {

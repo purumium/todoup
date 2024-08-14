@@ -30,18 +30,15 @@ public class DiaryController {
     private DiaryService diaryService;
 
     @PostMapping("/insert")
-    public String insertDiaryByDate( @ModelAttribute DiaryDTO diary,
+    public ResponseEntity<String> insertDiaryByDate( @ModelAttribute DiaryDTO diary,
                                      @RequestParam(value="imgFile", required = false) MultipartFile imgFile ) {
         // formDate: @ModelAttribute로 객체(diaryDTO)를 받고, 파일은 개별 param으로 받기
-        System.out.println("insertDiaryByDate : " + diary.toString());
-        System.out.println("insertDiaryByDate - img : " + imgFile);
-
         try {
             diaryService.insertDiaryByDate(diary, imgFile);
 
-            return "today's diary insert success!";
-        } catch (Exception e) {
-            return "today's diary insert error 'ㅠ'";
+            return ResponseEntity.ok(diary.getDiaryDate() + "의 일기, 입력, 성공적!");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(diary.getDiaryDate() + "의 일기, 입력, 오류 'ㅠ'");
         }
     }
 
@@ -57,7 +54,6 @@ public class DiaryController {
     @GetMapping("/detail/{date}")
     public DiaryDTO getDiaryByDate(@PathVariable("date") String date,
                                    @RequestParam ("userId") long userId) {
-        System.out.println("getDiaryByDate - date로 다이어리 가져오기 : " + date);
         DiaryDTO diaryData = diaryService.getDiaryByDate(date, userId);
 
         return diaryData;
@@ -66,28 +62,24 @@ public class DiaryController {
     @DeleteMapping("/delete/{date}")  // @RequestMapping(value = "/delete/{diaryDate}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteDiaryByDate(@PathVariable("date") String date,
                                                     @RequestParam ("userId") long userId) {
-        System.out.println("deleteDiaryByDate : " + date);
         try {
             diaryService.deleteDiaryByDate(date, userId);
 
-            return ResponseEntity.ok(date + " 일기가 성공적으로 삭제!");
+            return ResponseEntity.ok(date + "의 일기, 삭제, 성공적!");
         } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("일기 삭제 중 오류 발생 'ㅠ'");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(date + "의 일기, 삭제, 오류 'ㅠ'");
         }
     }
 
-    @PutMapping("/update")
+    @PostMapping("/update")
     public ResponseEntity<String> updateDiaryByDate( @ModelAttribute DiaryDTO diary,
                                                      @RequestParam(value="imgFile", required = false) MultipartFile imgFile) {
-        System.out.println("updateDiaryByDate : " + diary.toString());
-        System.out.println(imgFile);
-
         try{
             diaryService.updateDiaryByDate(diary, imgFile);
 
-            return ResponseEntity.ok("일기 수정 완료 :)");
+            return ResponseEntity.ok(diary.getDiaryDate() + "의 일기, 수정, 성공적!");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("일기 수정 중 오류 발생 '0'");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(diary.getDiaryDate() + "의 일기, 수정, 오류 'ㅠ'");
         }
     }
 
@@ -104,7 +96,6 @@ public class DiaryController {
             } else {
                 return ResponseEntity.notFound().build();
             }
-
         } catch(MalformedURLException e){
             return ResponseEntity.badRequest().build();
         }

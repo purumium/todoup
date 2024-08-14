@@ -1,11 +1,13 @@
 <template>
   <div>
-    <h4 class="header">{{ formattedDate }} TODO</h4>
+    <h4 class="header">{{ formattedDate }}의 TODO</h4>
     <div class="todo-container">
       <div class="todo-list">
         <form @submit.prevent="addTodo" class="add-todo-form">
-          <input class="add-input" v-model="newTodo.title" type="text" placeholder="할 일을 작성해주세요" required />
-          <button type="submit" class="add-todo-button">추가</button>
+          <div class="input-container">
+            <input class="add-input" v-model="newTodo.title" type="text" placeholder="할 일을 작성해주세요" required />
+            <button type="submit" class="add-todo-button">추가</button>
+          </div>
         </form>
         <ul class="todo-ul">
           <li v-for="todo in todayTodos" :key="todo.todo_id" @click="selectTodo(todo)" class="todo-item">
@@ -19,8 +21,8 @@
       <div class="todo-detail-container">
         <todo-detail v-if="selectedTodo" :todo="selectedTodo" @todo-deleted="handleTodoDeleted"></todo-detail>
         <div v-else class="no-selection">
-          <img src="@/assets/avatar_test.png" alt="No selection" />
-          <p>할일을 선택해주세요</p>
+          <p>할 일을 선택해주세요</p>
+          <img :src="`/avatar/${profileImg}`" alt="No selection" />
         </div>
       </div>
     </div>
@@ -30,7 +32,7 @@
 <script>
 import axios from 'axios';
 import TodoDetail from './TodoDetail.vue';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 export default {
   components: { TodoDetail },
@@ -40,7 +42,7 @@ export default {
       todayTodos: [],
       selectedTodo: null,
       newTodo: {
-        user_id: 6,
+        user_id: this.userId,
         title: '',
         memo: '',
         category: '기타',
@@ -54,8 +56,13 @@ export default {
       userId: (state) => state.user_info.userId,
       points: (state) => state.user_info.points,
     }),
+
     ...mapState('todo', {
       todos: 'todo_info', // Vuex의 todo_info 상태를 todos로 매핑
+
+    ...mapGetters({
+      profileImg: 'user/getProfileImg', // Vuex의 profileImg 상태를 컴포넌트에 매핑
+
     }),
     formattedDate() {
       const date = new Date(this.date);
@@ -121,21 +128,15 @@ export default {
           },
         });
         todo.completed = newCompletionStatus;
+
         // 포인트를 update하는 로직 추가
         const pointsToAdd = newCompletionStatus ? 5 : -5; // 완료시 +5 포인트, 취소시 -5 포인트
-        //const newPoints = this.points + pointsToAdd;
-        this.$store.dispatch('user/updatePoints', pointsToAdd);
 
-        this.$swal.fire({
-          text: 'TODO의 완료 상태가 변경되었습니다.',
-          icon: 'success',
-          confirmButtonText: '확인',
-          confirmButtonColor: '#429f50',
-        });
+        this.$store.dispatch('user/updatePoints', pointsToAdd);
       } catch (error) {
         console.error('Error toggling completion status:', error);
         this.$swal.fire({
-          text: 'TODO의 완료 상태가 변경에 실패하었습니다.',
+          text: 'TODO의 완료 상태 변경에 실패하었습니다.',
           icon: 'error',
           confirmButtonText: '확인',
           confirmButtonColor: '#429f50',
@@ -185,7 +186,7 @@ export default {
   justify-content: space-between;
   margin-top: 20px;
   gap: 20px;
-  background-color: #e8f1f2;
+  background-color: #8f91911a;
   padding: 20px;
   border-radius: 15px;
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
@@ -198,38 +199,55 @@ export default {
   flex: 1;
   background-color: #ffffff;
   border-radius: 15px;
-  padding: 20px;
+  padding: 35px 20px;
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
-.add-todo-form {
+.header {
+  color: #2b2222b8 !important;
+  font-weight: 600;
+  font-size: 18px;
+  display: flex;
+  padding: 14px 0;
+  border-bottom: 2px solid #cfcece70;
+  border-top: 2px solid #cfcece70;
+  justify-content: center;
+}
+
+.input-container {
   display: flex;
   align-items: center;
+  border-radius: 5px;
+  overflow: hidden;
+  padding: 4px 12px 4px 8px;
+  border-radius: 25px;
+  border: 2px solid #969ea442;
   margin-bottom: 8px;
 }
 
 .add-input {
-  margin-right: 2px;
   flex: 1;
-  padding: 10px 12px;
-  border-radius: 25px;
-  border: 2px solid #4d9de0;
-  background-color: #f0f8ff;
+  border: none;
+  padding: 10px;
+  outline: none;
+  font-size: 12px;
 }
 
 .add-todo-button {
-  white-space: nowrap;
-  padding: 10px 18px;
-  background-color: #4d9de0; /* 기존 테마의 파란색 계열로 변경 */
+  outline: none;
+  width: 67px;
+  height: 25px;
+  color: #544545;
+  border: 1px solid #1d13132e;
+  font-size: 11px;
+  border-radius: 20px;
+  background-color: #a4a4a426;
   border: none;
-  border-radius: 25px;
-  cursor: pointer;
-  font-weight: bold;
-  color: #fff; /* 텍스트 색상을 흰색으로 설정 */
+  border-radius: 16px;
 }
 
 .add-todo-button:hover {
-  background-color: #3c7bb0; /* 호버 시 조금 더 진한 파란색으로 */
+  background-color: #d7d9db86;
 }
 
 /* 투두 항목 스타일 */
@@ -240,7 +258,7 @@ export default {
 }
 
 .todo-item {
-  padding: 10px;
+  padding: 12px 10px;
   border-bottom: 1px solid #e0e0e0;
   display: flex;
   align-items: center;
@@ -285,6 +303,7 @@ export default {
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
+/* 
 .no-selection {
   text-align: center;
   color: #888;
@@ -296,7 +315,48 @@ export default {
 }
 
 .no-selection p {
-  font-size: 18px;
+  border-radius: 5px;
+  padding: 10px 8px 12px 8px;
+  border-radius: 25px;
+  border: 2px solid #969ea442;
+  margin-bottom: 8px;
+  font-size: 14px;
   font-weight: bold;
+} */
+
+.no-selection {
+  position: relative;
+}
+
+.no-selection img {
+  max-width: 200px;
+  margin-bottom: 20px;
+}
+
+.no-selection p {
+  position: relative;
+  top: 10em;
+  text-align: center;
+  padding: 10px 8px 12px 8px;
+  border-radius: 25px;
+  border: 2px solid #969ea442;
+  font-size: 14px;
+  font-weight: bold;
+  color: #464040;
+  background-color: #ffffff;
+}
+
+.no-selection p::after {
+  content: '';
+  position: absolute;
+  bottom: -12px; /* 말풍선의 아래쪽에 위치하도록 */
+  left: 50%; /* 가운데 정렬 */
+  transform: translateX(-50%);
+  border-width: 12px 10px 0 10px; /* 꼬리의 크기 */
+  border-style: solid;
+  background-color: white;
+  border-color: #969ea442 transparent transparent transparent; /* 말풍선의 색과 일치 */
+  display: block;
+  width: 0;
 }
 </style>

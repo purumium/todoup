@@ -139,6 +139,11 @@ export default {
 @import url('https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.15/main.min.css');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.15/daygrid.min.css');
 
+.w-100 {
+  width: 100% !important;
+  height: 610px !important;
+}
+
 .calendar-img {
   width: 65px;
   height: 65px;
@@ -269,7 +274,7 @@ export default {
 }
 
 /* 오늘 날짜 숫자를 감싸는 동그란 원을 만들고 빨간색으로 채우기 */
-.fc-day-today .fc-daygrid-day-number {
+/* .fc-day-today .fc-daygrid-day-number {
   background-color: red !important;
   color: white !important;
   border-radius: 50% !important;
@@ -280,5 +285,21 @@ export default {
   text-align: center !important;
   top: 4px !important;
   left: -3px !important;
+} */
+
+.fc-day-today .fc-daygrid-day-number {
+  width: 22px !important;
+  height: 24px !important;
+  line-height: 15px !important;
+}
+
+.fc .fc-daygrid-day-number {
+  padding: 4px;
+  position: relative;
+  z-index: 4;
+  border-radius: 50% !important;
+  width: 22px !important;
+  height: 24px !important;
+  line-height: 15px !important;
 }
 </style>

@@ -68,12 +68,13 @@
     </div>
   </div>
   <div v-else class="no-selection">
-    <img src="@/assets/avatar_test.png" alt="No selection" />
     <p>할 일을 선택해주세요</p>
+    <img :src="`/avatar/${profileImg}`" alt="No selection" />
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import axios from 'axios';
 import categories from '@/assets/categories.json';
 
@@ -85,6 +86,9 @@ export default {
     },
   },
   computed: {
+    ...mapGetters({
+      profileImg: 'user/getProfileImg', // Vuex의 profileImg 상태를 컴포넌트에 매핑
+    }),
     formattedStartDate() {
       return this.formatDate(this.todo.start_date);
     },
@@ -290,14 +294,18 @@ export default {
 }
 
 .icon-button {
-  width: auto;
-  padding: 8px 12px;
-  background-color: transparent;
-  color: #4d9de0;
-  border: none;
-  border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
+  outline: none;
+  width: 70px;
+  height: 35px;
+  color: #544545;
+  border: 1px solid #1d13132e;
+  font-size: 11px;
+  border-radius: 20px;
+  background-color: #a4a4a41a;
+  border: none;
+  border-radius: 16px;
+  margin-left: 12px;
 }
 
 .icon-button:hover {
@@ -306,5 +314,41 @@ export default {
 
 .form-group > label {
   margin-bottom: 2px;
+}
+
+.no-selection {
+  position: relative;
+}
+
+.no-selection img {
+  max-width: 200px;
+  margin-bottom: 20px;
+}
+
+.no-selection p {
+  position: relative;
+  top: 10em;
+  text-align: center;
+  padding: 10px 8px 12px 8px;
+  border-radius: 25px;
+  border: 2px solid #969ea442;
+  font-size: 14px;
+  font-weight: bold;
+  color: #464040;
+  background-color: #ffffff;
+}
+
+.no-selection p::after {
+  content: '';
+  position: absolute;
+  bottom: -12px; /* 말풍선의 아래쪽에 위치하도록 */
+  left: 50%; /* 가운데 정렬 */
+  transform: translateX(-50%);
+  border-width: 12px 10px 0 10px; /* 꼬리의 크기 */
+  border-style: solid;
+  background-color: white;
+  border-color: #969ea442 transparent transparent transparent; /* 말풍선의 색과 일치 */
+  display: block;
+  width: 0;
 }
 </style>

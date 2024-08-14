@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="w-100">
     <div class="d-flex justify-content-between align-items-center todo-calendar-top">
       <div class="todo-calendar">TODO 캘린더</div>
       <div class="add-todo-wrap">
-        <button type="button" class="px-2 add-todo" @click="$router.push('/todo/create')">
+        <button type="button" class="px-2 add-todo" @click="handleAddTodo">
           <font-awesome-icon :icon="['fas', 'check-double']" /> TODO 추가
         </button>
       </div>
@@ -38,7 +38,7 @@ export default {
         dateClick: this.handleMoveToTodo,
         eventClick: this.handleEventClick, // 이벤트 클릭 시 호출될 핸들러
         events: [], // 초기 events 배열
-        height: 525,
+        height: 550,
         locale: koLocale,
         dayCellContent: (args) => ({ html: args.dayNumberText.replace('일', '') }),
         datesSet: this.handleDatesSet, // 캘린더 날짜가 변경될 때 호출
@@ -55,6 +55,19 @@ export default {
     ...mapState('todo', {
       todos: 'todo_info', // Vuex의 todo_info 상태를 todos로 매핑
     }),
+  },
+
+  watch: {
+    userId: {
+      handler(newValue) {
+        if (!newValue) {
+          this.setExampleEvents();
+        } else {
+          this.fetchTodos();
+        }
+      },
+      immediate: true, // 컴포넌트 생성 시에도 watcher를 즉시 호출
+    },
   },
   created() {
     this.setInitialMonth(); // 초기 월과 연도 설정
@@ -81,11 +94,40 @@ export default {
       this.$router.push(`/todo/${info.dateStr}`);
     },
     handleEventClick(info) {
-      const date = new Date(info.event.start); // Date 객체 생성
-      date.setDate(date.getDate() + 1); // 1일 추가
-      const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
-      const todoId = info.event.extendedProps.todoId;
-      this.$router.push(`/todo/${dateStr}?selectedTodoId=${todoId}`);
+      if (!this.userId) {
+        this.$swal
+          .fire({
+            text: '로그인이 필요합니다.',
+            icon: 'warning',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#f39c12',
+          })
+          .then(() => {
+            this.$router.push('/login');
+          });
+      } else {
+        const date = new Date(info.event.start); // Date 객체 생성
+        date.setDate(date.getDate() + 1); // 1일 추가
+        const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
+        const todoId = info.event.extendedProps.todoId;
+        this.$router.push(`/todo/${dateStr}?selectedTodoId=${todoId}`);
+      }
+    },
+    handleAddTodo() {
+      if (!this.userId) {
+        this.$swal
+          .fire({
+            text: '로그인이 필요합니다.',
+            icon: 'warning',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#f39c12',
+          })
+          .then(() => {
+            this.$router.push('/login');
+          });
+      } else {
+        this.$router.push('/todo/create');
+      }
     },
     async loadCalendarData() {
       const kor_time = new Date();
@@ -119,6 +161,8 @@ export default {
         } catch (error) {
           console.error('Error fetching todos:', error);
         }
+      } else {
+        this.setExampleEvents(); // 로그인하지 않은 경우 예시 이벤트 설정
       }
     },
 
@@ -132,6 +176,31 @@ export default {
           todoId: todo.todo_id,
         };
       });
+    },
+    setExampleEvents() {
+      const today = new Date();
+      const exampleEvents = [
+        {
+          title: 'TO DO UP 사용해보기!',
+          start: new Date(today.getFullYear(), today.getMonth(), 5).toISOString().split('T')[0],
+          end: new Date(today.getFullYear(), today.getMonth(), 7).toISOString().split('T')[0],
+          completed: false,
+        },
+        {
+          title: 'TO DO 추가!',
+          start: new Date(today.getFullYear(), today.getMonth(), 10).toISOString().split('T')[0],
+          end: new Date(today.getFullYear(), today.getMonth(), 10).toISOString().split('T')[0],
+          completed: false,
+        },
+        {
+          title: 'TO DO 달성하고 레벨업하기!',
+          start: new Date(today.getFullYear(), today.getMonth(), 15).toISOString().split('T')[0],
+          end: new Date(today.getFullYear(), today.getMonth(), 17).toISOString().split('T')[0],
+          completed: false,
+        },
+      ];
+
+      this.calendarOptions.events = exampleEvents;
     },
     formatEndDate(endDate) {
       // 종료 날짜를 다음 날로 설정하여 이벤트 범위에 포함되도록 함
@@ -159,6 +228,11 @@ export default {
 </script>
 
 <style>
+.w-100 {
+  width: 100% !important;
+  height: 610px !important;
+}
+
 .todo-calendar-top {
   color: #2b2222b8 !important;
   font-weight: 600;
@@ -203,8 +277,8 @@ export default {
   justify-content: space-between;
   padding: 2px;
   border-radius: 4px;
-  background-color: #d4efdf;
-  border: 1px solid #f1f2f3;
+  background-color: #fddd0a36;
+  border: 1px solid #cfb50952;
   width: 100%;
   white-space: nowrap;
   overflow: hidden;
@@ -215,7 +289,7 @@ export default {
 
 .todo-event.completed {
   color: #333;
-  background-color: #e0e0e0;
+  background-color: #e0e0e096;
   text-decoration: line-through;
   border: 1px solid #f1f2f3;
 }
@@ -230,14 +304,55 @@ export default {
 }
 
 .fc-daygrid-more-link.fc-more-link {
-  color: #333;
-  margin-top: 2px;
-  font-size: 10px;
-  font-weight: 500;
+  color: #3333338c;
+  margin-top: 1px;
+  font-size: 9px;
+  font-weight: 600;
 }
 
 .fc-h-event {
   background-color: #d4efdf !important;
   border: none !important;
+}
+
+.fc .fc-daygrid-day-bottom {
+  font-size: 0.85em !important;
+  margin: 0px 2px !important;
+  position: absolute !important;
+  top: -20px !important;
+}
+
+.fc .fc-daygrid-day-frame {
+  min-height: 74px !important;
+  position: relative !important;
+}
+
+.fc .fc-popover-title {
+  font-size: 12px !important;
+  margin: 6px 10px !important;
+  font-weight: 600 !important;
+}
+
+.fc .fc-more-popover .fc-popover-body {
+  min-width: 186px !important;
+  padding: 8px 8px;
+}
+
+.fc-theme-standard .fc-popover {
+  max-height: 180px !important;
+  overflow-y: auto !important;
+  background: var(--fc-page-bg-color) !important;
+  border: 1px solid var(--fc-border-color) !important;
+}
+
+.fc .fc-popover {
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 6px !important;
+  position: absolute !important;
+  z-index: 9999 !important;
+  min-height: 180px !important;
+}
+
+.root {
+  --fc-today-bg-color: rgb(238 231 100 / 15%);
 }
 </style>
