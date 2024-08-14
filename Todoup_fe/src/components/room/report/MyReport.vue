@@ -5,19 +5,18 @@
     </div>
     <div v-else class="report-container">
       <div class="full-width">
-        <monthly-points-report :login-id="loginId" />
+        <monthly-points-report :login-id="loginUserInfo.userId" />
       </div>
       <div class="full-width">
-        <todo-completion-rate-report :login-id="loginId" />
+        <todo-completion-rate-report :login-id="loginUserInfo.userId" />
       </div>
       <div class="half-width-container">
-        <category-registration-report :login-id="loginId" />
-        <category-completion-report :login-id="loginId" />
+        <category-registration-report :login-id="loginUserInfo.userId" />
+        <category-completion-report :login-id="loginUserInfo.userId" />
       </div>
       <div class="full-width">
-        <monthly-diary-report :login-id="loginId" />
+        <monthly-diary-report :login-id="loginUserInfo.userId" />
       </div>
-      <!-- 추가 리포트 컴포넌트들 -->
     </div>
   </div>
 </template>
@@ -39,8 +38,8 @@ export default {
     MonthlyDiaryReport,
   },
   props: {
-    loginId: {
-      type: String,
+    loginUserInfo: {
+      type: Object,
       required: true,
     },
     ownerId: {
@@ -50,7 +49,7 @@ export default {
   },
   computed: {
     isMyRoom() {
-      return this.loginId === this.ownerId;
+      return this.loginUserInfo.userId === this.ownerId;
     },
   },
 };
