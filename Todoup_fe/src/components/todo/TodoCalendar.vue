@@ -284,7 +284,7 @@ export default {
 }
 
 .fc-h-event {
-  background-color: #d4efdf !important;
+  background-color: #ffffff !important;
   border: none !important;
 }
 

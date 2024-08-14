@@ -1,4 +1,5 @@
 import Swal from 'sweetalert2';
+import router from '@/router'; // Vue Router를 import (경로는 프로젝트에 맞게 설정)
 
 const store = {
   namespaced: true,
@@ -11,7 +12,7 @@ const store = {
   mutations: {
     login(state, payload) {
       state.user_info = payload;
-      state.profileImg = `${state.user_info.avatarType}_level${state.user_info.lv}.png`; // 로그인 시에 아바타 세팅
+      state.profileImg = `${state.user_info.avatarType}_level${state.user_info.lv}`; // 로그인 시에 아바타 세팅
     },
     logout(state) {
       state.user_info = {};
@@ -38,8 +39,9 @@ const store = {
       context.commit('login', payload);
     },
     logout(context) {
-      localStorage.removeItem('user_info');
+      localStorage.removeItem('user_info', 'profileImg');
       context.commit('logout');
+      router.push('/'); // 로그아웃 후 "/" 경로로 이동
     },
     logfail(context, payload) {
       context.commit('logfail', payload);
@@ -59,7 +61,7 @@ const store = {
 
         if (newLevel <= 5) {
           // 레벨 올라갈 때, 프로필 이미지 변경
-          newProfileImg = `${avatarType}_level${newLevel}.png`;
+          newProfileImg = `${avatarType}_level${newLevel}`;
         }
       }
       // 레벨 다운
@@ -68,10 +70,10 @@ const store = {
         newPoints += 100; // 포인트가 0미만이면, 레벨 down, 포인트 보정
 
         // 레벨 다운 시 프로필 이미지를 avatar_type에 따라 변경
-        newProfileImg = `${avatarType}_level${newLevel}.png`;
+        newProfileImg = `${avatarType}_level${newLevel}`;
       } else if (newPoints < 0 && newLevel === 1) {
         newPoints = 0; // 포인트가 0미만이고 레벨이 1일때, 포인트를 0으로 설저
-        newProfileImg = `${avatarType}_level1.png`; // 레벨 1 이미지
+        newProfileImg = `${avatarType}_level1`; // 레벨 1 이미지
       }
       commit('updatePointsAndLevel', { newPoints, newLevel });
       commit('updateProfileImg', newProfileImg);
