@@ -1,7 +1,9 @@
 <template>
   <div class="todo-section">
-    <div>Today's TODO</div>
-
+    <div class="d-flex align-items-center justify-content-between">
+      <span>Today's TODO</span>
+      <font-awesome-icon @click="goToTodayTodo" :icon="['fas', 'arrow-up-right-from-square']" />
+    </div>
     <ul class="todo-list" v-if="userInfo.userId && todoInfo.length > 0">
       <li v-for="(todo, idx) in todayTodos" :key="idx">
         <input type="checkbox" :checked="todo.completed" @change="toggleCompletion(todo)" />
@@ -129,6 +131,16 @@ export default {
           confirmButtonColor: '#429f50',
         });
       }
+    },
+    goToTodayTodo() {
+      const kor_time = new Date();
+      const todayDate =
+        kor_time.getFullYear() +
+        '-' +
+        (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1) +
+        '-' +
+        kor_time.getDate();
+      this.$router.push(`/todo/${todayDate}`);
     },
   },
 };
