@@ -125,28 +125,53 @@ export default {
       return result;
     },
     deleteDiary() {
-      const userId = this.userId;
-      axios
-        .delete(`/api/diary/delete/${this.diaryDate}`, {
-          params: { userId },
+      // alert창
+      this.$swal
+        .fire({
+          text: `${this.diaryDate}의 일기를 삭제하시겠습니까?`,
+          icon: 'info',
+          showCancelButton: true, // 취소버튼 추가
+          confirmButtonText: '확인',
+          cancelButtonText: '취소',
+          confirmButtonColor: '#429f50',
         })
-        .then((response) => {
-          this.$swal.fire({
-            text: response.data, // 서버에서 반환된 메시지
-            icon: 'info',
-            confirmButtonText: '확인',
-            confirmButtonColor: '#429f50',
-          });
-          this.$router.push('/diary'); // 다이어리 캘린더로 이동
-        })
-        .catch((error) => {
-          this.$swal.fire({
-            text: error.response.data, // 서버에서 반환된 오류 메시지
-            icon: 'error',
-            confirmButtonText: '확인',
-            confirmButtonColor: '#429f50',
-          });
-          this.$router.push('/diary'); // 다이어리 캘린더로 이동
+        .then((result) => {
+          if (result.isConfirmed) {
+            const userId = this.userId;
+            axios
+              .delete(`/api/diary/delete/${this.diaryDate}`, {
+                params: { userId },
+              })
+              .then((response) => {
+                // 포인트를 down 로직 추가
+                let pointsToAdd = 0;
+                if (response.data) {
+                  pointsToAdd = -5; // 삭제시 -5 포인트
+                }
+                this.$store.dispatch('user/updatePoints', pointsToAdd);
+
+                // alert창
+                this.$swal.fire({
+                  text: response.data, // 서버에서 반환된 메시지
+                  icon: 'info',
+                  confirmButtonText: '확인',
+                  confirmButtonColor: '#429f50',
+                });
+
+                this.$router.push('/diary'); // 다이어리 캘린더로 이동
+              })
+              .catch((error) => {
+                this.$swal.fire({
+                  text: error.response.data, // 서버에서 반환된 오류 메시지
+                  icon: 'error',
+                  confirmButtonText: '확인',
+                  confirmButtonColor: '#429f50',
+                });
+              });
+          } else {
+            // "취소" 버튼을 누른 경우 아무 작업도 하지 않음
+            this.$swal.fire('취소', '삭제가 취소되었습니다.', 'info');
+          }
         });
     },
     editDiary() {

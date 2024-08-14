@@ -1,6 +1,7 @@
 package com.kosa.todoup.service;
 
 import com.kosa.todoup.dto.DiaryDTO;
+import com.kosa.todoup.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,9 @@ public class DiaryService {
     @Autowired
     private DiaryMapper diaryMapper;
 
+    @Autowired
+    private UserMapper userMapper;
+
     private final String uploadDir = "C:/uploads/";  // 절대경로 지정
 
     @Transactional // 트랜잭션을 활성화
@@ -32,9 +36,15 @@ public class DiaryService {
         } else {
             diary.setImageUrl(null); // imgFile이 없으면, 이미지 경로를 null로 설정
         }
-        System.out.println("service : 완성된 diary => " + diary.toString());
+        int result = diaryMapper.insertDiaryByDate(diary);
 
-        diaryMapper.insertDiaryByDate(diary);
+        // insert가 성공한 경우, 포인트와 레벨 업데이트
+        int pointsChange = 0;
+        if (result != 0) {
+            pointsChange = 5;
+        }
+        userMapper.updateUserPoints(diary.getUserId(), pointsChange); // 포인트 업데이트
+        userMapper.updateUserLevel(diary.getUserId()); // 포인트와 레벨을 확인하여 레벨 업데이트
     }
 
     public List<DiaryDTO> getEmotionByMonth(String yearMonth, long userId) {
@@ -51,7 +61,15 @@ public class DiaryService {
 
     @Transactional // 트랜잭션을 활성화
     public void deleteDiaryByDate(String date, long userId) {
-        diaryMapper.deleteDiaryByDate(date, userId);
+        int result = diaryMapper.deleteDiaryByDate(date, userId);
+
+        // delete가 성공한 경우, 포인트와 레벨 업데이트
+        int pointsChange = 0;
+        if (result != 0) {
+            pointsChange = -5;
+        }
+        userMapper.updateUserPoints(userId, pointsChange); // 포인트 업데이트
+        userMapper.updateUserLevel(userId); // 포인트와 레벨을 확인하여 레벨 업데이트
     }
 
     @Transactional // 트랜잭션을 활성화
@@ -62,8 +80,7 @@ public class DiaryService {
         } else {
             diary.setImageUrl(null); // imgFile이 없으면, 이미지 경로를 null로 설정
         }
-        System.out.println("service : updateDiaryByDate => " + diary.toString());
-
+        
         diaryMapper.updateDiaryByDate(diary);
     }
 
@@ -86,8 +103,7 @@ public class DiaryService {
             fileExtension = originalFileName.substring(dotIndex);
             originalFileName = originalFileName.substring(0, dotIndex);
         }
-
-
+        
         // 고유한 파일 이름 생성(중복 방지)
         String newFileName = timeStamp + "_" + originalFileName + fileExtension;
 
