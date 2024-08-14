@@ -7,6 +7,10 @@ const modalStore = {
     followUsers: [], // 팔로우한 사용자를 저장할 상태
     followedUsers: [], // 나를 팔로우한 사용자들
     allUsers: [], // 모든 유저들
+    selectedUserId: null, // 선택된 유저 아이디를 저장할 상태
+    selectedAvatar: null,
+    selectedLv: null,
+    profileImg: '',
   },
   mutations: {
     SET_FOLLOWING_USERS(state, users) {
@@ -18,6 +22,12 @@ const modalStore = {
     SET_ALL_USERS(state, users) {
       state.allUsers = users; // 모든 유저를 상태에 저장
     },
+    SET_SELECTED_USER_ID(state, userId, avatar, selectedLv) {
+      state.selectedUserId = userId; // 선택된 유저 아이디를 상태에 저장
+      state.selectedAvatar = avatar;
+      state.selectedLv = selectedLv;
+      state.profileImg = `${state.selectedAvatar}_level${state.selectedLv}.png`;
+    },
     TOGGLE_MODAL(state) {
       state.isModalVisible = !state.isModalVisible;
     },
@@ -27,6 +37,7 @@ const modalStore = {
         state.followUsers = []; // 모달을 닫을 때 팔로우 사용자 목록 초기화
         state.followedUsers = []; // 모달을 닫을 때 나를 팔로우하는 사용자 목록 초기화
         state.allUsers = []; // 모달을 닫을 때 모든 유저 목록 초기화
+        state.selectedUserId = null; // 선택된 유저 아이디 초기화
       }
     },
   },
@@ -34,7 +45,6 @@ const modalStore = {
     async fetchAllUsers({ commit }, userId) {
       try {
         const response = await axios.get('/api/allusers', { params: { userId } });
-
         commit('SET_ALL_USERS', response.data);
         commit('TOGGLE_MODAL');
       } catch (e) {
@@ -44,7 +54,6 @@ const modalStore = {
     async fetchFollowedUsers({ commit }, userId) {
       try {
         const response = await axios.get(`/api/following`, { params: { userId } });
-
         commit('SET_FOLLOWING_USERS', response.data);
         commit('TOGGLE_MODAL');
       } catch (e) {
@@ -54,28 +63,23 @@ const modalStore = {
     async fetchFollowers({ commit }, userId) {
       try {
         const response = await axios.get(`/api/followers`, { params: { userId } });
-
         commit('SET_FOLLOWED_USERS', response.data);
         commit('TOGGLE_MODAL');
       } catch (e) {
         console.error('Error fetching followers:', e);
       }
     },
-    // 팔로잉 요청들 followUser
     async followUser(context, { userId, followId }) {
       try {
         await axios.post(`/api/add/following`, {
           userId: userId,
           followId: followId,
         });
-
-        // await dispatch('fetchFollowedUsers', userId); // 팔로우 후 팔로우 사용자 목록 갱신
       } catch (e) {
-        console.error('Error followers user:', e);
+        console.error('Error following user:', e);
       }
     },
     async unfollowUser(context, { userId, followId }) {
-      // payload를 구조분해하여 가져옴
       try {
         await axios.delete(`/api/cancel/following`, {
           params: {
@@ -101,23 +105,17 @@ const modalStore = {
         return false;
       }
     },
-    // --------------------------------------- //
     async followersUser(context, { userId, followId }) {
       try {
         await axios.post(`/api/add/followers`, {
           userId: userId,
           followId: followId,
         });
-
-        // await dispatch('fetchFollowedUsers', userId); // 팔로우 후 팔로우 사용자 목록 갱신
       } catch (e) {
-        console.error('Error followers user:', e);
+        console.error('Error following user:', e);
       }
     },
-
     async unfollowersUser(context, { userId, followId }) {
-      // payload를 구조분해하여 가져옴
-
       try {
         await axios.delete(`/api/cancel/followers`, {
           params: {
@@ -137,20 +135,24 @@ const modalStore = {
             followId: followId,
           },
         });
-
         return response.data; // API에서 받은 true 또는 false 값 반환
       } catch (error) {
         console.error('Error checking follow status:', error);
         return false;
       }
     },
-    async created() {
-      for (let i = 0; i < this.followUsers.length; i++) {
-        const user = this.followUsers[i];
-        user.checked = await this.checkIfFollowing(this.userInfo.userId, user.followId);
+    setSelectedUserId({ commit }, userId) {
+      commit('SET_SELECTED_USER_ID', userId); // 유저 아이디 설정
+    },
+    goToAvatarRoom({ state }) {
+      const userId = state.selectedUserId;
+      if (userId) {
+        // Vue Router를 사용하여 라우팅
+        this.$router.push(`/room/${userId}/avatarroom`);
+      } else {
+        console.error('No userId is selected');
       }
     },
-
     setModalVisible({ commit }, visible) {
       commit('SET_MODAL_VISIBLE', visible);
     },
@@ -159,6 +161,7 @@ const modalStore = {
     isModalVisible: (state) => state.isModalVisible,
     followUsers: (state) => state.followUsers, // followUsers 상태를 반환하는 게터
     allUsers: (state) => state.allUsers, // allUsers 상태를 반환하는 게터
+    selectedUserId: (state) => state.selectedUserId, // 선택된 유저 아이디 반환
   },
 };
 
