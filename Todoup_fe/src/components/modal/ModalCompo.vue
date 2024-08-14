@@ -1,5 +1,8 @@
 <template>
   <div v-if="isModalVisible" class="modal-overlay" @click="handleCloseModal">
+    <div class="modal-Xcontainer">
+      <font-awesome-icon class="modal-Xbox" icon="square-xmark" style="color: #ffff" @click="handleCloseModal" />
+    </div>
     <div class="modal-content" @click.stop>
       <div class="input-group flex-nowrap">
         <input
@@ -259,11 +262,24 @@ export default {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
 
+.modal-Xcontainer {
+  width: 600px;
+  height: 50px;
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.modal-Xbox {
+  height: 30px;
+  cursor: pointer;
+}
 .modal-content {
   background-color: white;
   padding: 20px;
