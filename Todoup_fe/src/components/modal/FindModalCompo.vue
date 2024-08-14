@@ -37,9 +37,6 @@ export default {
       required: true,
     },
   },
-  created() {
-    console.log('this.type', this.type, 'this.level', this.level);
-  },
   computed: {
     buttonText() {
       return this.checked ? '언팔로우' : '팔로우';
