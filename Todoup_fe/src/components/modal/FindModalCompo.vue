@@ -1,7 +1,7 @@
 <template>
   <div class="friend-item">
     <div class="friend-leftBox">
-      <img class="item-img" @click="onImageClick" :scr="`/avatar/${this.type}_level${this.level}.png`" />
+      <img class="item-img" @click="onImageClick" :src="`/avatar/${this.type}_level${this.level}.png`" />
       <div>{{ nickname }}</div>
     </div>
     <div class="friend-rightBox">
@@ -36,6 +36,9 @@ export default {
       type: String,
       required: true,
     },
+  },
+  created() {
+    console.log('this.type', this.type, 'this.level', this.level);
   },
   computed: {
     buttonText() {
@@ -113,5 +116,9 @@ button {
 .unfollow-button {
   background-color: #cf4848;
   color: white;
+}
+.item-img {
+  background-size: cover;
+  background-position: center;
 }
 </style>
