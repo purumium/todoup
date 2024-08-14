@@ -47,7 +47,6 @@ export default {
   align-items: center;
   width: 100%;
   height: 100%;
-  border: 1px solid blue; /* 구분을 위해 테두리 추가 */
 }
 
 .avatar-wrapper.is-friend-room {
@@ -66,6 +65,5 @@ export default {
 }
 
 .guest-book {
-  border: 1px solid green; /* 구분을 위해 테두리 추가 */
 }
 </style>

@@ -1,13 +1,15 @@
 <template>
   <div>
-    <h3>{{ nickName }}님의 방</h3>
-    <div class="room-btn-group">
-      <router-link :to="`/room/${ownerId}/avatarroom`">
-        <button>AVATARROOM</button>
-      </router-link>
-      <router-link v-if="isMyRoom" :to="`/room/${ownerId}/report`">
-        <button>REPORT</button>
-      </router-link>
+    <div class="d-flex align-items-center justify-content-between">
+      <h3>{{ nickName }}님의 방</h3>
+      <div class="room-btn-group">
+        <router-link :to="`/room/${ownerId}/avatarroom`">
+          <button>AVATARROOM</button>
+        </router-link>
+        <router-link v-if="isMyRoom" :to="`/room/${ownerId}/report`">
+          <button>REPORT</button>
+        </router-link>
+      </div>
     </div>
     <router-view :login-id="loginId" :owner-id="ownerId"></router-view>
   </div>
