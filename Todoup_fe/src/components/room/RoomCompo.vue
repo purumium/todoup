@@ -11,7 +11,14 @@
         </router-link>
       </div>
     </div>
-    <router-view :login-id="loginId" :owner-id="ownerId"></router-view>
+    <!-- loginUserInfo와 ownerUserInfo를 함께 전달 -->
+    <router-view
+      :login-id="loginId"
+      :owner-id="ownerId"
+      :login-user-info="loginUserInfo"
+      :login-user-profile-img="loginUserProfileImg"
+      :owner-user-info="ownerUserInfo"
+    ></router-view>
   </div>
 </template>
 
@@ -28,9 +35,16 @@ export default {
   },
   computed: {
     ...mapState('user', {
-      loginId: (state) => String(state.user_info.userId), // 화살표 함수: Vuex의 user_info.userId를 loginId로 매핑 // ownerId와 맞춰서 String
-      nickName: (state) => String(state.user_info.nickName),
+      loginId: (state) => String(state.user_info.userId),
+      loginUserInfo: (state) => state.user_info, // 로그인 유저의 전체 정보
+      loginUserProfileImg: (state) => '/avatar/' + state.profileImg + '.png',
+      nickName: (state) => state.user_info.nickName,
     }),
+    ownerUserInfo() {
+      // 여기에 친구(혹은 방 소유자) 정보를 가져오는 로직을 추가할 수 있습니다.
+      // 예를 들어, API 호출 등을 통해 가져올 수 있습니다.
+      return this.isMyRoom ? this.loginUserInfo : {}; // 나중에 로직 변경 가능
+    },
     isMyRoom() {
       return this.loginId === this.ownerId;
     },

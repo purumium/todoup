@@ -3,8 +3,22 @@
     <back-ground>
       <template #avatar>
         <div class="avatar-wrapper" :class="{ 'is-friend-room': !isMyRoom }">
-          <avatar-character :character-id="loginId" class="avatar" />
-          <avatar-character v-if="!isMyRoom" :character-id="ownerId" class="avatar friend-avatar" />
+          <avatar-character
+            v-if="loginUserInfo"
+            :profile-img="loginUserProfileImg"
+            :lv="loginUserInfo.lv"
+            :points="loginUserInfo.points"
+            :nick-name="loginUserInfo.nickName"
+            class="avatar"
+          />
+          <avatar-character
+            v-if="!isMyRoom && ownerUserInfo"
+            :profile-img="ownerUserInfo.profileImg"
+            :lv="ownerUserInfo.lv"
+            :points="ownerUserInfo.points"
+            :nick-name="ownerUserInfo.nickName"
+            class="avatar friend-avatar"
+          />
         </div>
       </template>
       <template #guestbook>
@@ -30,6 +44,18 @@ export default {
     ownerId: {
       type: String,
       required: true,
+    },
+    loginUserInfo: {
+      type: Object,
+      required: true,
+    },
+    loginUserProfileImg: {
+      type: String,
+      required: true,
+    },
+    ownerUserInfo: {
+      type: Object,
+      required: false, // 친구 방일 때만 필요
     },
   },
   computed: {
