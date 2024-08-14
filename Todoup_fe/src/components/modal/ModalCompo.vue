@@ -4,59 +4,63 @@
       <font-awesome-icon class="modal-Xbox" icon="square-xmark" style="color: #ffff" @click="handleCloseModal" />
     </div>
     <div class="modal-content" @click.stop>
-      <div class="input-group flex-nowrap">
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Username"
-          aria-label="Username"
-          aria-describedby="addon-wrapping"
-          v-model="username"
-        />
-      </div>
       <div class="modal-body">
         <!-- followUsers가 있을 때 -->
+
         <template v-if="followUsers.length > 0">
-          <find-modal-compo
-            v-for="(user, idx) in followUsers"
-            :key="idx"
-            :userid="user.userId"
-            :followid="user.followId"
-            :nickname="user.followNickname"
-            :level="user.followUserLv"
-            :imgUrl="user.imgUrl"
-            :checked="isFollowArr[idx]"
-            @update:checked="handleCheckedChange(idx, $event)"
-          ></find-modal-compo>
+          <div class="input-group flex-nowrap">
+            <input type="text" class="form-control" placeholder="Username" v-model="username" />
+          </div>
+          <div class="find-modal-box">
+            <find-modal-compo
+              v-for="(user, idx) in filteredUsers(followUsers)"
+              :key="idx"
+              :userid="user.userId"
+              :followid="user.followId"
+              :nickname="user.followNickname"
+              :level="user.followUserLv"
+              :imgUrl="user.imgUrl"
+              :checked="isFollowArr[idx]"
+              @update:checked="handleCheckedChange(idx, $event)"
+            ></find-modal-compo>
+          </div>
         </template>
 
-        <!-- followedUsers가 있을 때 -->
         <template v-else-if="followedUsers.length > 0">
-          <find-modal-compo
-            v-for="(user, idx) in followedUsers"
-            :key="idx"
-            :userid="user.userId"
-            :followid="user.followId"
-            :nickname="user.userNickname"
-            :level="user.lv"
-            :imgUrl="user.imgUrl"
-            :checked="isFolledArr[idx]"
-            @update:checked="CheckedChange(idx, $event)"
-          ></find-modal-compo>
+          <div class="input-group flex-nowrap">
+            <input type="text" class="form-control" placeholder="Username" v-model="username" />
+          </div>
+          <div class="find-modal-box">
+            <find-modal-compo
+              v-for="(user, idx) in filteredUsers(followedUsers)"
+              :key="idx"
+              :userid="user.userId"
+              :followid="user.followId"
+              :nickname="user.userNickname"
+              :level="user.lv"
+              :imgUrl="user.imgUrl"
+              :checked="isFolledArr[idx]"
+              @update:checked="CheckedChange(idx, $event)"
+            ></find-modal-compo>
+          </div>
         </template>
 
-        <!-- allUsers가 있을 때 -->
         <template v-else-if="allUsers.length > 0">
-          <find-modal-compo
-            v-for="(user, idx) in allUsers"
-            :key="idx"
-            :userid="user.userId"
-            :nickname="user.userNickname"
-            :level="user.lv"
-            :imgUrl="user.imgUrl"
-            :checked="AllUserArr[idx]"
-            @update:checked="CheckedAllUsers(idx, $event)"
-          ></find-modal-compo>
+          <div class="input-group flex-nowrap">
+            <input type="text" class="form-control" placeholder="Username" v-model="username" />
+          </div>
+          <div class="find-modal-box">
+            <find-modal-compo
+              v-for="(user, idx) in filteredUsers(allUsers)"
+              :key="idx"
+              :userid="user.userId"
+              :nickname="user.userNickname"
+              :level="user.lv"
+              :imgUrl="user.imgUrl"
+              :checked="AllUserArr[idx]"
+              @update:checked="CheckedAllUsers(idx, $event)"
+            ></find-modal-compo>
+          </div>
         </template>
       </div>
     </div>
@@ -96,7 +100,6 @@ export default {
         await this.initializeFollowStatus();
         // Initialize completed, now show the modal
         this.setModalVisible(true);
-        console.log(this.isFolledArr);
       }
     },
   },
@@ -111,6 +114,10 @@ export default {
       'unfollowersUser',
       'fetchAllUsers',
     ]),
+    filteredUsers(users) {
+      const searchTerm = this.username.toLowerCase();
+      return users.filter((user) => (user.followNickname || user.userNickname).toLowerCase().includes(searchTerm));
+    },
     async openModal() {
       this.setModalVisible(false); // 초기화 동안 모달이 보이지 않도록 설정
       await this.initializeFollowStatus(); // 상태 초기화
@@ -146,10 +153,6 @@ export default {
           this.AllUserArr[i] = isAllUserArr;
         }
       }
-
-      console.log('isAllUserArr:', this.AllUserArr);
-      console.log('isFolledArr:', this.isFolledArr); // 확인용
-      console.log('isFollowArr:', this.isFollowArr); // 확인용
     },
     handleCheckedChange(index) {
       this.isFollowArr[index] = !this.isFollowArr[index];
@@ -162,14 +165,12 @@ export default {
     },
     async handleCloseModal() {
       await this.applyChanges(); // 모달이 닫힐 때 변경사항 적용
+      this.username = ''; // username 초기화
       this.setModalVisible(false);
     },
 
     async applyChanges() {
       const currentUserId = this.userInfo.userId;
-      console.log('currentUserIdcurrentUserIdcurrentUserIdcurrentUserId', currentUserId);
-      console.log('this.followUsers.length', this.followUsers.length);
-      console.log('this.followedUsers.lengthssssssssssss', this.followedUsers.length);
       if (this.followUsers.length > 0) {
         await this.applyFollowUsersChanges(currentUserId);
       } else if (this.followedUsers.length > 0) {
@@ -183,18 +184,15 @@ export default {
         const followId = this.allUsers[i].userId;
         const shouldFollow = this.AllUserArr[i];
 
-        console.log('이게 실행됩니다.');
         if (shouldFollow) {
           try {
             await this.followersUser({ userId: currentUserId, followId: followId });
-            console.log('Follow AllUsersChanges successful', currentUserId, followId);
           } catch (error) {
             console.error(`AllUsersChanges Failed to follow user ${currentUserId}:`, error);
           }
         } else {
           try {
             await this.unfollowersUser({ userId: currentUserId, followId: followId });
-            console.log('Unfollow AllUsersChanges successful', currentUserId, followId);
           } catch (error) {
             console.error(`AllUsersChanges Failed to unfollow user ${currentUserId}:`, error);
           }
@@ -206,19 +204,15 @@ export default {
         const followId = this.followUsers[i].followId;
         const shouldFollow = this.isFollowArr[i];
 
-        console.log('followId', followId);
-        console.log('currentUserId', currentUserId);
         if (shouldFollow) {
           try {
             await this.followUser({ userId: currentUserId, followId: currentUserId });
-            console.log('Follow user successful', currentUserId, followId);
           } catch (error) {
             console.error(`Failed to follow user ${followId}:`, error);
           }
         } else {
           try {
             await this.unfollowUser({ userId: currentUserId, followId: followId });
-            console.log('Unfollow user successful', currentUserId, followId);
           } catch (error) {
             console.error(`Failed to unfollow user ${followId}:`, error);
           }
@@ -231,18 +225,15 @@ export default {
         const followId = this.followedUsers[i].userId;
         const shouldFollow = this.isFolledArr[i];
 
-        console.log('이게 실행됩니다.');
         if (shouldFollow) {
           try {
             await this.followersUser({ userId: currentUserId, followId: followId });
-            console.log('Follow follower successful', currentUserId, followId);
           } catch (error) {
             console.error(`Failed to follow user ${currentUserId}:`, error);
           }
         } else {
           try {
             await this.unfollowersUser({ userId: currentUserId, followId: followId });
-            console.log('Unfollow follower successful', currentUserId, followId);
           } catch (error) {
             console.error(`Failed to unfollow user ${currentUserId}:`, error);
           }
@@ -291,7 +282,17 @@ export default {
 }
 
 .modal-body {
-  max-height: 300px;
+  max-height: 100%;
   overflow-y: auto;
+  flex-direction: column;
+  display: flex;
+  justify-content: space-between;
+}
+.input-group {
+  position: fixed;
+  max-width: 540px;
+}
+.find-modal-box {
+  margin-top: 50px;
 }
 </style>
