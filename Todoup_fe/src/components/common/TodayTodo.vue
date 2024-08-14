@@ -1,10 +1,10 @@
 <template>
-  <div class="todo-section">
+  <div class="todo-section" v-if="userInfo.userId">
     <div class="d-flex align-items-center justify-content-between">
       <span>Today's TODO</span>
       <font-awesome-icon @click="goToTodayTodo" :icon="['fas', 'arrow-up-right-from-square']" />
     </div>
-    <ul class="todo-list" v-if="userInfo.userId && todoInfo.length > 0">
+    <ul class="todo-list" v-if="todoInfo.length > 0">
       <li v-for="(todo, idx) in todayTodos" :key="idx">
         <input type="checkbox" :checked="todo.completed" @change="toggleCompletion(todo)" />
 
@@ -13,22 +13,42 @@
         </span>
       </li>
     </ul>
-
     <ul class="todo-list rainbow" v-else>
       <li class="todo-empty"><span class="text-rainbow">조회된 데이터가 없습니다.!</span></li>
+    </ul>
+  </div>
+  <div class="todo-section" v-else>
+    <div class="d-flex align-items-center justify-content-between">
+      <span>Today's TODO</span>
+      <font-awesome-icon @click="goToTodayTodo" :icon="['fas', 'arrow-up-right-from-square']" />
+    </div>
+    <ul class="todo-list rainbow">
+      <li class="text-example" v-for="(todo, idx) in todoList" :key="idx">
+        <input type="checkbox" v-model="todo.checked" />
+        <span :class="{ 'check-line-through': todo.checked }">
+          {{ todo.text }}
+        </span>
+      </li>
     </ul>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-import { mapState /* , mapActions */, mapGetters } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 export default {
   name: 'TodayTodo',
   data() {
     return {
-      todoList: [],
+      todoList: [
+        { text: '오늘 하루 잘 살기', checked: true },
+        { text: '★ 회원 가입하기 ★', checked: false },
+        { text: '로그인 하기', checked: false },
+        { text: "Today's TODO 작성하기", checked: true },
+        { text: '성장일기 쓰기', checked: false },
+        { text: '행복하기', checked: true },
+      ],
     };
   },
   computed: {
@@ -43,49 +63,8 @@ export default {
       todayTodos: 'todayTodos', // Vuex의 todayTodos getter를 todayTodos로 매핑
     }),
   },
-  /* watch: {
-    userInfo: {
-      handler(newValue) {
-        if (!newValue.userId) {
-          this.loadExampleTodos(); // 예시 데이터를 불러옴
-        } else {
-          this.loadTodayTodos();
-        }
-      },
-      immediate: true, // 컴포넌트 생성 시에도 watcher를 즉시 호출
-    },
-  },
-  created() {
-    if (!this.userInfo.userId) {
-      this.loadExampleTodos();
-    } else {
-      this.loadTodayTodos();
-    }
-    console.log('오늘정보: ', this.todayInfo);
-  }, */
+
   methods: {
-    /*     async loadTodayTodos() {
-      try {
-        const response = await axios.get('/api/todo/today', {
-          params: { userId: this.userInfo.userId },
-        });
-        this.todoList = response.data.map((todo) => ({
-          todo_id: todo.todo_id,
-          title: todo.title, // title을 text로 변환
-          completed: todo.completed != 1 ? false : true, // 체크박스 상태를 초기화
-        }));
-      } catch (error) {
-        console.error("Error loading today's todos:", error);
-      }
-    }, */
-    loadExampleTodos() {
-      const exampleTodos = [
-        { title: 'TO DO UP 사용해보기!', completed: true },
-        { title: 'TO DO 추가!', completed: false },
-        { title: 'TO DO 달성하고 레벨업하기!', completed: false },
-      ];
-      this.todoList = exampleTodos;
-    },
     async toggleCompletion(todo) {
       if (!this.userInfo.userId) {
         this.$swal
@@ -123,6 +102,7 @@ export default {
           confirmButtonColor: '#429f50',
         });
         this.$store.commit('todo/TODO_COMPLETION', todo.todo_id, !todo.completed);
+
         this.$store.commit('todo/TODAY_COMPLETION', todo.todo_id, !todo.completed);
       } catch (error) {
         console.error('Error toggling completion status:', error);
@@ -134,6 +114,7 @@ export default {
         });
       }
     },
+
     goToTodayTodo() {
       const kor_time = new Date();
       const todayDate =
@@ -182,8 +163,13 @@ export default {
 .text-rainbow {
   background-image: linear-gradient(90deg, red, orange, yellow, green, blue, navy, purple);
   -webkit-background-clip: text;
-  color: transparent;
+  color: #635a5a; /*무지개가 그립다면 transparent로 바꿔주세요. */
   font-weight: bold;
+}
+.text-example {
+  list-style-type: none;
+  font-size: 15px;
+  margin-bottom: 8px;
 }
 
 li {

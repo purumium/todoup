@@ -30,7 +30,7 @@
         <todo-detail v-if="selectedTodo" :todo="selectedTodo" @todo-deleted="handleTodoDeleted"></todo-detail>
         <div v-else class="no-selection">
           <p>할 일을 선택해주세요</p>
-          <img :src="`/avatar/${profileImg}.png`" alt="No selection" />
+          <img :src="`/avatar/${profileImg}`" alt="No selection" />
         </div>
       </div>
     </div>
@@ -89,15 +89,6 @@ export default {
       return this.todos.filter((todo) => todo.start_date.split(' ')[0] === date);
     },
   },
-  /*   created() {
-    this.getTodos();
-  }, */
-  /*watch: {
-    '$route.params.date'(newDate) {
-      this.date = newDate;
-      this.getTodos();
-    },
-  }, */
 
   methods: {
     isToday() {
@@ -108,50 +99,9 @@ export default {
         (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1) +
         '-' +
         kor_time.getDate();
-      console.log('istoday? ', this.date == today);
       return this.date == today;
     },
-    /* async getTodos() {
-      try {
-        const userId = this.userId;
-        const response = await axios.get(`/api/todo/date/${this.date}`, {
-          params: { userId },
-        });
-        this.todos = response.data;
 
-        const kor_time = new Date();
-        const today =
-          kor_time.getFullYear() +
-          '-' +
-          (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1) +
-          '-' +
-          kor_time.getDate();
-
-        const todayTodos = this.todos.filter((todo) => todo.start_date.split(' ')[0] === today);
-        console.log(todayTodos);
-        if (todayTodos.length > 0) {
-          this.$store.commit('todo/SET_TODOS', todayTodos);
-        }
-        const selectedTodoId = this.$route.query.selectedTodoId;
-        if (selectedTodoId) {
-          this.selectedTodo = this.todos.find((todo) => todo.todo_id === parseInt(selectedTodoId));
-        }
-      } catch (error) {
-        console.error('Error getting todos:', error);
-      }
-    }, */
-
-    /*     getTodos() {
-      const kor_time = new Date();
-      const today =
-        kor_time.getFullYear() +
-        '-' +
-        (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1) +
-        '-' +
-        kor_time.getDate();
-      const todolist =
-        this.date == today ? this.todays : this.todos.filter((todo) => todo.start_date.split(' ')[0] === this.date);
-    }, */
     async toggleCompletion(todo) {
       try {
         const userId = this.userId;

@@ -71,7 +71,6 @@ export default {
         this.loadCalendarData();
         this.fetchTodos();
       },
-      deep: true,
     },
   },
   methods: {
