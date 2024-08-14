@@ -21,8 +21,8 @@
       <div class="todo-detail-container">
         <todo-detail v-if="selectedTodo" :todo="selectedTodo" @todo-deleted="handleTodoDeleted"></todo-detail>
         <div v-else class="no-selection">
-          <img src="@/assets/avatar_test.png" alt="No selection" />
-          <p>할일을 선택해주세요</p>
+          <p>할 일을 선택해주세요</p>
+          <img :src="`/avatar/${profileImg}`" alt="No selection" />
         </div>
       </div>
     </div>
@@ -32,7 +32,7 @@
 <script>
 import axios from 'axios';
 import TodoDetail from './TodoDetail.vue';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 export default {
   components: { TodoDetail },
@@ -55,6 +55,9 @@ export default {
     ...mapState('user', {
       userId: (state) => state.user_info.userId,
       points: (state) => state.user_info.points,
+    }),
+    ...mapGetters({
+      profileImg: 'user/getProfileImg', // Vuex의 profileImg 상태를 컴포넌트에 매핑
     }),
     formattedDate() {
       const date = new Date(this.date);
@@ -280,6 +283,7 @@ export default {
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
+/* 
 .no-selection {
   text-align: center;
   color: #888;
@@ -291,7 +295,48 @@ export default {
 }
 
 .no-selection p {
-  font-size: 18px;
+  border-radius: 5px;
+  padding: 10px 8px 12px 8px;
+  border-radius: 25px;
+  border: 2px solid #969ea442;
+  margin-bottom: 8px;
+  font-size: 14px;
   font-weight: bold;
+} */
+
+.no-selection {
+  position: relative;
+}
+
+.no-selection img {
+  max-width: 200px;
+  margin-bottom: 20px;
+}
+
+.no-selection p {
+  position: relative;
+  top: 10em;
+  text-align: center;
+  padding: 10px 8px 12px 8px;
+  border-radius: 25px;
+  border: 2px solid #969ea442;
+  font-size: 14px;
+  font-weight: bold;
+  color: #464040;
+  background-color: #ffffff;
+}
+
+.no-selection p::after {
+  content: '';
+  position: absolute;
+  bottom: -12px; /* 말풍선의 아래쪽에 위치하도록 */
+  left: 50%; /* 가운데 정렬 */
+  transform: translateX(-50%);
+  border-width: 12px 10px 0 10px; /* 꼬리의 크기 */
+  border-style: solid;
+  background-color: white;
+  border-color: #969ea442 transparent transparent transparent; /* 말풍선의 색과 일치 */
+  display: block;
+  width: 0;
 }
 </style>

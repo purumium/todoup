@@ -284,6 +284,31 @@ export default {
   position: relative !important;
 }
 
+.fc .fc-popover-title {
+  font-size: 12px !important;
+  margin: 6px 10px !important;
+  font-weight: 600 !important;
+}
+
+.fc .fc-more-popover .fc-popover-body {
+  min-width: 186px !important;
+  padding: 8px 8px;
+}
+
+.fc-theme-standard .fc-popover {
+  max-height: 180px !important;
+  overflow-y: auto !important;
+  background: var(--fc-page-bg-color) !important;
+  border: 1px solid var(--fc-border-color) !important;
+}
+
+.fc .fc-popover {
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 6px !important;
+  position: absolute !important;
+  z-index: 9999 !important;
+  min-height: 180px !important;
+}
+
 .root {
   --fc-today-bg-color: rgb(238 231 100 / 15%);
 }
