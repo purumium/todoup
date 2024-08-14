@@ -37,9 +37,6 @@ export default {
       required: true,
     },
   },
-  created() {
-    console.log('this.type', this.type, 'this.level', this.level);
-  },
   computed: {
     buttonText() {
       return this.checked ? '언팔로우' : '팔로우';
@@ -59,11 +56,10 @@ export default {
       // 유저 아이디를 Vuex 스토어에 저장
       this.setSelectedUserId(this.userId);
 
-      // 모달을 먼저 닫고
-      this.setModalVisible(false);
-
       // 라우팅을 컴포넌트에서 직접 처리
       this.$router.push(`/room/${this.userId}/avatarroom`);
+      // 모달을 먼저 닫고
+      this.setModalVisible(false);
     },
   },
 };
