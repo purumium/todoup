@@ -36,6 +36,10 @@ export default {
       type: String,
       required: true,
     },
+    points: {
+      type: String,
+      required: true,
+    },
   },
   computed: {
     buttonText() {
@@ -47,14 +51,34 @@ export default {
   },
 
   methods: {
-    ...mapActions('modal', ['setSelectedUserId', 'setModalVisible']), // Vuex 액션을 컴포넌트 메서드로 바인딩
+    ...mapActions('modal', [
+      'setSelectedUserId',
+      'setSelectedUserLv',
+      'setSelectedUserType',
+      'setSelectedUserPoint',
+      'setSelectedUserNickname',
+      'setModalVisible',
+    ]), // Vuex 액션을 컴포넌트 메서드로 바인딩
 
     toggleCheck() {
       this.$emit('update:checked', !this.checked);
     },
     onImageClick() {
       // 유저 아이디를 Vuex 스토어에 저장
+      console.log('User ID:', this.userId);
       this.setSelectedUserId(this.userId);
+
+      console.log('User Level:', this.level);
+      this.setSelectedUserLv(this.level);
+
+      console.log('User Type:', this.type);
+      this.setSelectedUserType(this.type);
+
+      console.log('User Points:', this.points);
+      this.setSelectedUserPoint(this.points);
+
+      console.log('User Nickname:', this.nickname);
+      this.setSelectedUserNickname(this.nickname);
 
       // 라우팅을 컴포넌트에서 직접 처리
       this.$router.push(`/room/${this.userId}/avatarroom`);
