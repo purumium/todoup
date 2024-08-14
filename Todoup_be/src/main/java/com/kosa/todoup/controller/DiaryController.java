@@ -76,7 +76,7 @@ public class DiaryController {
         }
     }
 
-    @PutMapping("/update")
+    @PostMapping("/update")
     public ResponseEntity<String> updateDiaryByDate( @ModelAttribute DiaryDTO diary,
                                                      @RequestParam(value="imgFile", required = false) MultipartFile imgFile) {
         System.out.println("updateDiaryByDate : " + diary.toString());

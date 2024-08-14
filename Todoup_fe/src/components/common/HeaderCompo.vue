@@ -2,11 +2,11 @@
   <div class="header-header">
     <img src="../../assets/logo.png" width="340" @click="goToHome" />
     <div class="header-rightBox" v-if="!userInfo.userId">
+      <div class="header-InBox" @click="goToSignup">
+        <img src="@/assets/logo/signup-icon.png" class="fontBox" />
+      </div>
       <div class="header-InBox" @click="goToLogin">
         <img src="@/assets/logo/login-icon.png" class="fontBox" />
-      </div>
-      <div class="header-InBox" @click="goToTodo">
-        <img src="@/assets/logo/todo-icon.png" class="fontBox" />
       </div>
     </div>
     <div class="header-rightBox" v-if="userInfo.userId">

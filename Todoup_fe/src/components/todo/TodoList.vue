@@ -1,11 +1,13 @@
 <template>
   <div>
-    <h4 class="header">{{ formattedDate }} TODO</h4>
+    <h4 class="header">{{ formattedDate }}의 TODO</h4>
     <div class="todo-container">
       <div class="todo-list">
         <form @submit.prevent="addTodo" class="add-todo-form">
-          <input class="add-input" v-model="newTodo.title" type="text" placeholder="할 일을 작성해주세요" required />
-          <button type="submit" class="add-todo-button">추가</button>
+          <div class="input-container">
+            <input class="add-input" v-model="newTodo.title" type="text" placeholder="할 일을 작성해주세요" required />
+            <button type="submit" class="add-todo-button">추가</button>
+          </div>
         </form>
         <ul class="todo-ul">
           <li v-for="todo in todos" :key="todo.todoId" @click="selectTodo(todo)" class="todo-item">
@@ -40,7 +42,7 @@ export default {
       todos: [],
       selectedTodo: null,
       newTodo: {
-        user_id: 6,
+        user_id: this.userId,
         title: '',
         memo: '',
         category: '기타',
@@ -66,6 +68,13 @@ export default {
   created() {
     this.getTodos();
   },
+  watch: {
+    '$route.params.date'(newDate) {
+      this.date = newDate;
+      this.getTodos();
+    },
+  },
+
   methods: {
     async getTodos() {
       try {
@@ -74,6 +83,11 @@ export default {
           params: { userId },
         });
         this.todos = response.data;
+
+        const today = new Date().toISOString().split('T')[0];
+        const todayTodos = this.todos.filter((todo) => todo.start_date.split(' ')[0] === today);
+        this.$store.commit('todo/SET_TODOS', todayTodos);
+
         const selectedTodoId = this.$route.query.selectedTodoId;
         if (selectedTodoId) {
           this.selectedTodo = this.todos.find((todo) => todo.todo_id === parseInt(selectedTodoId));
@@ -97,17 +111,10 @@ export default {
         const pointsToAdd = newCompletionStatus ? 5 : -5; // 완료시 +5 포인트, 취소시 -5 포인트
         //const newPoints = this.points + pointsToAdd;
         this.$store.dispatch('user/updatePoints', pointsToAdd);
-
-        this.$swal.fire({
-          text: 'TODO의 완료 상태가 변경되었습니다.',
-          icon: 'success',
-          confirmButtonText: '확인',
-          confirmButtonColor: '#429f50',
-        });
       } catch (error) {
         console.error('Error toggling completion status:', error);
         this.$swal.fire({
-          text: 'TODO의 완료 상태가 변경에 실패하었습니다.',
+          text: 'TODO의 완료 상태 변경에 실패하었습니다.',
           icon: 'error',
           confirmButtonText: '확인',
           confirmButtonColor: '#429f50',
@@ -155,7 +162,7 @@ export default {
   justify-content: space-between;
   margin-top: 20px;
   gap: 20px;
-  background-color: #e8f1f2;
+  background-color: #8f91911a;
   padding: 20px;
   border-radius: 15px;
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
@@ -168,38 +175,55 @@ export default {
   flex: 1;
   background-color: #ffffff;
   border-radius: 15px;
-  padding: 20px;
+  padding: 35px 20px;
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
-.add-todo-form {
+.header {
+  color: #2b2222b8 !important;
+  font-weight: 600;
+  font-size: 18px;
+  display: flex;
+  padding: 14px 0;
+  border-bottom: 2px solid #cfcece70;
+  border-top: 2px solid #cfcece70;
+  justify-content: center;
+}
+
+.input-container {
   display: flex;
   align-items: center;
+  border-radius: 5px;
+  overflow: hidden;
+  padding: 4px 12px 4px 8px;
+  border-radius: 25px;
+  border: 2px solid #969ea442;
   margin-bottom: 8px;
 }
 
 .add-input {
-  margin-right: 2px;
   flex: 1;
-  padding: 10px 12px;
-  border-radius: 25px;
-  border: 2px solid #4d9de0;
-  background-color: #f0f8ff;
+  border: none;
+  padding: 10px;
+  outline: none;
+  font-size: 12px;
 }
 
 .add-todo-button {
-  white-space: nowrap;
-  padding: 10px 18px;
-  background-color: #4d9de0; /* 기존 테마의 파란색 계열로 변경 */
+  outline: none;
+  width: 67px;
+  height: 25px;
+  color: #544545;
+  border: 1px solid #1d13132e;
+  font-size: 11px;
+  border-radius: 20px;
+  background-color: #a4a4a426;
   border: none;
-  border-radius: 25px;
-  cursor: pointer;
-  font-weight: bold;
-  color: #fff; /* 텍스트 색상을 흰색으로 설정 */
+  border-radius: 16px;
 }
 
 .add-todo-button:hover {
-  background-color: #3c7bb0; /* 호버 시 조금 더 진한 파란색으로 */
+  background-color: #d7d9db86;
 }
 
 /* 투두 항목 스타일 */
@@ -210,7 +234,7 @@ export default {
 }
 
 .todo-item {
-  padding: 10px;
+  padding: 12px 10px;
   border-bottom: 1px solid #e0e0e0;
   display: flex;
   align-items: center;

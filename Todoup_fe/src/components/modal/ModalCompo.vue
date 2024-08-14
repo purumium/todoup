@@ -12,6 +12,7 @@
         />
       </div>
       <div class="modal-body">
+        <!-- followUsers가 있을 때 -->
         <template v-if="followUsers.length > 0">
           <find-modal-compo
             v-for="(user, idx) in followUsers"
@@ -19,13 +20,15 @@
             :userid="user.userId"
             :followid="user.followId"
             :nickname="user.followNickname"
-            :level="user.lv"
+            :level="user.followUserLv"
             :imgUrl="user.imgUrl"
             :checked="isFollowArr[idx]"
             @update:checked="handleCheckedChange(idx, $event)"
           ></find-modal-compo>
         </template>
-        <template v-else>
+
+        <!-- followedUsers가 있을 때 -->
+        <template v-else-if="followedUsers.length > 0">
           <find-modal-compo
             v-for="(user, idx) in followedUsers"
             :key="idx"
@@ -36,6 +39,20 @@
             :imgUrl="user.imgUrl"
             :checked="isFolledArr[idx]"
             @update:checked="CheckedChange(idx, $event)"
+          ></find-modal-compo>
+        </template>
+
+        <!-- allUsers가 있을 때 -->
+        <template v-else-if="allUsers.length > 0">
+          <find-modal-compo
+            v-for="(user, idx) in allUsers"
+            :key="idx"
+            :userid="user.userId"
+            :nickname="user.userNickname"
+            :level="user.lv"
+            :imgUrl="user.imgUrl"
+            :checked="AllUserArr[idx]"
+            @update:checked="CheckedAllUsers(idx, $event)"
           ></find-modal-compo>
         </template>
       </div>
@@ -53,7 +70,8 @@ export default {
     return {
       username: '',
       isFollowArr: [], // 팔로우 상태를 저장할 배열
-      isFolledArr: [],
+      isFolledArr: [], // 나를 팔로우한 사람들 배열
+      AllUserArr: [], // 모든 유저들 배열
     };
   },
   computed: {
@@ -63,6 +81,7 @@ export default {
     ...mapState('modal', {
       followUsers: 'followUsers',
       followedUsers: 'followedUsers',
+      allUsers: 'allUsers',
     }),
     ...mapGetters('modal', {
       isModalVisible: 'isModalVisible',
@@ -87,6 +106,7 @@ export default {
       'checkIfFollowers',
       'followersUser',
       'unfollowersUser',
+      'fetchAllUsers',
     ]),
     async openModal() {
       this.setModalVisible(false); // 초기화 동안 모달이 보이지 않도록 설정
@@ -96,30 +116,46 @@ export default {
 
     async initializeFollowStatus() {
       const currentUserId = this.userInfo.userId;
-      // this.isFollowArr = []; // 초기화
 
-      for (let i = 0; i < this.followUsers.length; i++) {
-        const user = this.followUsers[i];
-        const isFollowing = await this.checkIfFollowing({ userId: currentUserId, followId: user.followId });
-        this.isFollowArr[i] = isFollowing; // isFollowArr 배열에 true/false 값을 추가
+      // followUsers 체크
+      if (this.followUsers.length > 0) {
+        for (let i = 0; i < this.followUsers.length; i++) {
+          const user = this.followUsers[i];
+          const isFollowing = await this.checkIfFollowing({ userId: currentUserId, followId: user.followId });
+          this.isFollowArr[i] = isFollowing; // isFollowArr 배열에 true/false 값을 추가
+        }
       }
-      for (let i = 0; i < this.followedUsers.length; i++) {
-        const user = this.followedUsers[i];
-        console.log('currentUserId', currentUserId, 'user', this.followedUsers[i].userId);
-        const isFollowed = await this.checkIfFollowers({ userId: user.userId, followId: currentUserId });
-        this.isFolledArr[i] = isFollowed; // isFollowArr 배열에 true/false 값을 추가
+
+      // followedUsers 체크
+      if (this.followedUsers.length > 0) {
+        for (let i = 0; i < this.followedUsers.length; i++) {
+          const user = this.followedUsers[i];
+          const isFollowed = await this.checkIfFollowers({ userId: user.userId, followId: currentUserId });
+          this.isFolledArr[i] = isFollowed; // isFollowArr 배열에 true/false 값을 추가
+        }
       }
-      console.log('isFolledArrasdasdasdas:', this.isFolledArr); // 확인용
+
+      // allUsers 체크
+      if (this.allUsers.length > 0) {
+        for (let i = 0; i < this.allUsers.length; i++) {
+          const user = this.allUsers[i];
+          const isAllUserArr = await this.checkIfFollowers({ userId: user.userId, followId: currentUserId });
+          this.AllUserArr[i] = isAllUserArr;
+        }
+      }
+
+      console.log('isAllUserArr:', this.AllUserArr);
+      console.log('isFolledArr:', this.isFolledArr); // 확인용
       console.log('isFollowArr:', this.isFollowArr); // 확인용
     },
-
     handleCheckedChange(index) {
-      // followUsers 배열이 렌더링된 경우
-      console.log('handleCheckedChange : 첫 번째');
       this.isFollowArr[index] = !this.isFollowArr[index];
     },
     CheckedChange(index) {
       this.isFolledArr[index] = !this.isFolledArr[index];
+    },
+    CheckedAllUsers(index) {
+      this.AllUserArr[index] = !this.AllUserArr[index];
     },
     async handleCloseModal() {
       await this.applyChanges(); // 모달이 닫힐 때 변경사항 적용
@@ -135,16 +171,37 @@ export default {
         await this.applyFollowUsersChanges(currentUserId);
       } else if (this.followedUsers.length > 0) {
         await this.applyFollowedUsersChanges(currentUserId);
+      } else {
+        await this.applyAllUsersChanges(currentUserId);
       }
     },
+    async applyAllUsersChanges(currentUserId) {
+      for (let i = 0; i < this.allUsers.length; i++) {
+        const followId = this.allUsers[i].userId;
+        const shouldFollow = this.AllUserArr[i];
 
+        console.log('이게 실행됩니다.');
+        if (shouldFollow) {
+          try {
+            await this.followersUser({ userId: currentUserId, followId: followId });
+            console.log('Follow AllUsersChanges successful', currentUserId, followId);
+          } catch (error) {
+            console.error(`AllUsersChanges Failed to follow user ${currentUserId}:`, error);
+          }
+        } else {
+          try {
+            await this.unfollowersUser({ userId: currentUserId, followId: followId });
+            console.log('Unfollow AllUsersChanges successful', currentUserId, followId);
+          } catch (error) {
+            console.error(`AllUsersChanges Failed to unfollow user ${currentUserId}:`, error);
+          }
+        }
+      }
+    },
     async applyFollowUsersChanges(currentUserId) {
       for (let i = 0; i < this.followUsers.length; i++) {
         const followId = this.followUsers[i].followId;
         const shouldFollow = this.isFollowArr[i];
-
-        // const user = this.followUsers[i];
-        // const result = await this.checkIfFollowing({ userId: user.followId, followId: currentUserId });
 
         console.log('followId', followId);
         console.log('currentUserId', currentUserId);
@@ -170,10 +227,7 @@ export default {
       for (let i = 0; i < this.followedUsers.length; i++) {
         const followId = this.followedUsers[i].userId;
         const shouldFollow = this.isFolledArr[i];
-        console.log('내가', currentUserId);
-        console.log('shouldFollow======================', this.followedUsers[i].userId);
-        // const user = this.followedUsers[i];
-        // const result = await this.checkIfFollowers({ userId: currentUserId, followId: user.followId });
+
         console.log('이게 실행됩니다.');
         if (shouldFollow) {
           try {
