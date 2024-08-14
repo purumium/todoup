@@ -36,13 +36,14 @@ export default {
       userInfo: 'user_info', // Vuex의 user_info 상태를 userInfo로 매핑
     }),
     ...mapState('todo', {
-      todoInfo: 'todo_info', // Vuex의 todo_info 상태를 todoInfo로 매핑
+      todoInfo: 'todo_info',
+      todayInfo: 'today_info', // Vuex의 todo_info 상태를 todoInfo로 매핑
     }),
     ...mapGetters('todo', {
       todayTodos: 'todayTodos', // Vuex의 todayTodos getter를 todayTodos로 매핑
     }),
   },
-  watch: {
+  /* watch: {
     userInfo: {
       handler(newValue) {
         if (!newValue.userId) {
@@ -60,9 +61,10 @@ export default {
     } else {
       this.loadTodayTodos();
     }
-  },
+    console.log('오늘정보: ', this.todayInfo);
+  }, */
   methods: {
-    async loadTodayTodos() {
+    /*     async loadTodayTodos() {
       try {
         const response = await axios.get('/api/todo/today', {
           params: { userId: this.userInfo.userId },
@@ -75,7 +77,7 @@ export default {
       } catch (error) {
         console.error("Error loading today's todos:", error);
       }
-    },
+    }, */
     loadExampleTodos() {
       const exampleTodos = [
         { title: 'TO DO UP 사용해보기!', completed: true },
@@ -121,7 +123,7 @@ export default {
           confirmButtonColor: '#429f50',
         });
         this.$store.commit('todo/TODO_COMPLETION', todo.todo_id, !todo.completed);
-        this.$router.push('/');
+        this.$store.commit('todo/TODAY_COMPLETION', todo.todo_id, !todo.completed);
       } catch (error) {
         console.error('Error toggling completion status:', error);
         this.$swal.fire({

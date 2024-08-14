@@ -9,8 +9,16 @@
             <button type="submit" class="add-todo-button">추가</button>
           </div>
         </form>
-        <ul class="todo-ul">
-          <li v-for="todo in todayTodos" :key="todo.todo_id" @click="selectTodo(todo)" class="todo-item">
+        <ul class="todo-ul" v-if="isToday()">
+          <li v-for="todo in todays" :key="todo.todo_id" @click="selectTodo(todo)" class="todo-item">
+            <input type="checkbox" :checked="todo.completed" @change="toggleCompletion(todo)" class="todo-checkbox" />
+            <p class="todo-title mb-0" :class="{ completed: todo.completed }">
+              {{ todo.title }}
+            </p>
+          </li>
+        </ul>
+        <ul class="todo-ul" v-else>
+          <li v-for="todo in filteredTodos" :key="todo.start_date" @click="selectTodo(todo)" class="todo-item">
             <input type="checkbox" :checked="todo.completed" @change="toggleCompletion(todo)" class="todo-checkbox" />
             <p class="todo-title mb-0" :class="{ completed: todo.completed }">
               {{ todo.title }}
@@ -52,16 +60,21 @@ export default {
     };
   },
   computed: {
-    ...mapState('user', {
-      userId: (state) => state.user_info.userId,
-      points: (state) => state.user_info.points,
-    }),
-
-    ...mapState('todo', {
-      todos: 'todo_info', // Vuex의 todo_info 상태를 todos로 매핑
-    }),
+    ...mapState(
+      'user',
+      {
+        userId: (state) => state.user_info.userId,
+        points: (state) => state.user_info.points,
+      },
+      'todo',
+      {
+        todoInfo: 'todo_info', // Vuex의 todo_info 상태를 todos로 매핑
+      }
+    ),
     ...mapGetters({
       profileImg: 'user/getProfileImg', // Vuex의 profileImg 상태를 컴포넌트에 매핑
+      todays: 'todo/todayTodos',
+      todos: 'todo/allTodos',
     }),
     formattedDate() {
       const date = new Date(this.date);
@@ -71,10 +84,14 @@ export default {
         day: 'numeric',
       });
     },
+    filteredTodos() {
+      const date = this.$route.params.date;
+      return this.todos.filter((todo) => todo.start_date.split(' ')[0] === date);
+    },
   },
-  created() {
+  /*   created() {
     this.getTodos();
-  },
+  }, */
   /*watch: {
     '$route.params.date'(newDate) {
       this.date = newDate;
@@ -83,6 +100,17 @@ export default {
   }, */
 
   methods: {
+    isToday() {
+      const kor_time = new Date();
+      const today =
+        kor_time.getFullYear() +
+        '-' +
+        (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1) +
+        '-' +
+        kor_time.getDate();
+      console.log('istoday? ', this.date == today);
+      return this.date == today;
+    },
     /* async getTodos() {
       try {
         const userId = this.userId;
@@ -113,9 +141,17 @@ export default {
       }
     }, */
 
-    getTodos() {
-      this.todayTodos = this.todos.filter((todo) => todo.start_date.split(' ')[0] === this.date);
-    },
+    /*     getTodos() {
+      const kor_time = new Date();
+      const today =
+        kor_time.getFullYear() +
+        '-' +
+        (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1) +
+        '-' +
+        kor_time.getDate();
+      const todolist =
+        this.date == today ? this.todays : this.todos.filter((todo) => todo.start_date.split(' ')[0] === this.date);
+    }, */
     async toggleCompletion(todo) {
       try {
         const userId = this.userId;
@@ -150,16 +186,30 @@ export default {
       this.selectedTodo = null;
     },
     async addTodo() {
+      const kor_time = new Date();
+      const today =
+        kor_time.getFullYear() +
+        '-' +
+        (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1) +
+        '-' +
+        kor_time.getDate();
+
       try {
         this.newTodo.user_id = this.userId;
         this.newTodo.start_date = this.date;
         this.newTodo.end_date = this.date;
+
         const response = await axios.post('/api/todo/insert', this.newTodo);
         const createdTodoId = response.data;
         const todo = { todo_id: createdTodoId, ...this.newTodo, completed: false };
-        console.log('추가된 값: ', todo);
+
         this.$store.commit('todo/ADD_TODO', todo);
-        const newlyAddedTodo = this.todayTodos.find((todo) => todo.todo_id === createdTodoId);
+        if (this.date === today) {
+          this.$store.commit('todo/ADD_TODAY', todo);
+        }
+
+        const newlyAddedTodo = this.todos.find((todo) => todo.todo_id === createdTodoId);
+
         this.selectTodo(newlyAddedTodo);
         this.newTodo.title = '';
         this.newTodo.memo = '';

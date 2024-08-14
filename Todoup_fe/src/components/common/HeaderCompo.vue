@@ -35,9 +35,6 @@ export default {
       userInfo: 'user_info', // Vuex의 user_info 상태를 userInfo로 매핑
     }),
   },
-  created() {
-    console.log('userinfo:', this.userInfo.userId);
-  },
   methods: {
     goToHome() {
       this.$router.push('/');
