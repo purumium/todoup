@@ -56,19 +56,19 @@ export default {
       todos: 'todo_info', // Vuex의 todo_info 상태를 todos로 매핑
     }),
   },
-  watch: {
-    userId: {
-      handler(newValue) {
-        if (!newValue) {
-          this.$router.push('/');
-        }
-      },
-      immediate: true, // 컴포넌트 생성 시에도 watcher를 즉시 호출
-    },
-  },
   created() {
     this.setInitialMonth(); // 초기 월과 연도 설정
+    this.loadCalendarData();
     this.fetchTodos(); // 초기 데이터를 가져옴
+  },
+  watch: {
+    todos: {
+      handler() {
+        this.fetchTodos();
+      },
+      immediate: true, // 객체 내부의 값들도 감지하려면 deep 옵션을 true로 설정
+      deep: true,
+    },
   },
   methods: {
     setInitialMonth() {
@@ -87,35 +87,51 @@ export default {
       const todoId = info.event.extendedProps.todoId;
       this.$router.push(`/todo/${dateStr}?selectedTodoId=${todoId}`);
     },
-    async fetchTodos() {
+    async loadCalendarData() {
+      const kor_time = new Date();
+      const month =
+        kor_time.getFullYear() +
+        '-' +
+        (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1);
       if (this.userId) {
         try {
           const userId = this.userId;
-          const response = await axios.get(`/api/todo/month/${this.currentMonth}`, {
+          const response = await axios.get(`/api/todo/month/${month}`, {
             params: { userId },
           });
-          const todos = response.data;
+          this.$store.commit('todo/SET_TODOS', response.data);
+          console.log('VueX Date: ', this.$store.state.todo);
+          console.log('todostore', this.todos);
+          /*const kor_time = new Date();
+          const today =
+            kor_time.getFullYear() +
+            '-' +
+            (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1) +
+            '-' +
+            kor_time.getDate();
 
-          const today = new Date().toISOString().split('T')[0];
           const todayTodos = todos.filter((todo) => todo.start_date.split(' ')[0] === today);
-          this.$store.commit('todo/SET_TODOS', todayTodos);
-          console.log('calendar Vuex: ', todayTodos);
-          console.log('After committing to Vuex - Vuex State:', this.$store.state.todo.todo_info);
-
+          if (todayTodos) {
+            this.$store.commit('todo/SET_TODOS', todayTodos);
+          }*/
+          this.fetchTodos();
           // todos 배열을 FullCalendar의 events 배열 형식에 맞게 변환
-          this.calendarOptions.events = todos.map((todo) => {
-            return {
-              title: todo.title,
-              start: todo.start_date, // 시작 날짜 설정
-              end: this.formatEndDate(todo.end_date), // 종료 날짜 설정 (포함되지 않으므로 다음 날로 설정)
-              completed: todo.completed, // 완료 여부 추가
-              todoId: todo.todo_id,
-            };
-          });
         } catch (error) {
           console.error('Error fetching todos:', error);
         }
       }
+    },
+
+    fetchTodos() {
+      this.calendarOptions.events = this.todos.map((todo) => {
+        return {
+          title: todo.title,
+          start: todo.start_date, // 시작 날짜 설정
+          end: this.formatEndDate(todo.end_date), // 종료 날짜 설정 (포함되지 않으므로 다음 날로 설정)
+          completed: todo.completed, // 완료 여부 추가
+          todoId: todo.todo_id,
+        };
+      });
     },
     formatEndDate(endDate) {
       // 종료 날짜를 다음 날로 설정하여 이벤트 범위에 포함되도록 함

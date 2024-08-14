@@ -55,6 +55,7 @@ public class TodoController {
     @PostMapping("/completion/{todoId}")
     public ResponseEntity<?> toggleCompletion(@RequestParam("userId") long userId, @PathVariable long todoId, @RequestParam int completed) {
         try {
+            System.out.println("체크박스 컨트롤러 실행");
             todoService.toggleTodoCompletion(userId, todoId, completed);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
