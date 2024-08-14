@@ -39,7 +39,7 @@ const store = {
       context.commit('login', payload);
     },
     logout(context) {
-      localStorage.removeItem('user_info');
+      sessionStorage.clear();
       context.commit('logout');
       router.push('/');
     },

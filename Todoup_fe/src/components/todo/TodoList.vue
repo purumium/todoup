@@ -10,7 +10,7 @@
           </div>
         </form>
         <ul class="todo-ul">
-          <li v-for="todo in todos" :key="todo.todoId" @click="selectTodo(todo)" class="todo-item">
+          <li v-for="todo in todayTodos" :key="todo.todo_id" @click="selectTodo(todo)" class="todo-item">
             <input type="checkbox" :checked="todo.completed" @change="toggleCompletion(todo)" class="todo-checkbox" />
             <p class="todo-title mb-0" :class="{ completed: todo.completed }">
               {{ todo.title }}
@@ -21,8 +21,8 @@
       <div class="todo-detail-container">
         <todo-detail v-if="selectedTodo" :todo="selectedTodo" @todo-deleted="handleTodoDeleted"></todo-detail>
         <div v-else class="no-selection">
-          <img src="@/assets/avatar_test.png" alt="No selection" />
-          <p>할일을 선택해주세요</p>
+          <p>할 일을 선택해주세요</p>
+          <img :src="`/avatar/${profileImg}`" alt="No selection" />
         </div>
       </div>
     </div>
@@ -32,14 +32,14 @@
 <script>
 import axios from 'axios';
 import TodoDetail from './TodoDetail.vue';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 export default {
   components: { TodoDetail },
   data() {
     return {
       date: this.$route.params.date,
-      todos: [],
+      todayTodos: [],
       selectedTodo: null,
       newTodo: {
         user_id: this.userId,
@@ -56,6 +56,13 @@ export default {
       userId: (state) => state.user_info.userId,
       points: (state) => state.user_info.points,
     }),
+
+    ...mapState('todo', {
+      todos: 'todo_info', // Vuex의 todo_info 상태를 todos로 매핑
+    }),
+    ...mapGetters({
+      profileImg: 'user/getProfileImg', // Vuex의 profileImg 상태를 컴포넌트에 매핑
+    }),
     formattedDate() {
       const date = new Date(this.date);
       return date.toLocaleDateString('ko-KR', {
@@ -68,15 +75,15 @@ export default {
   created() {
     this.getTodos();
   },
-  watch: {
+  /*watch: {
     '$route.params.date'(newDate) {
       this.date = newDate;
       this.getTodos();
     },
-  },
+  }, */
 
   methods: {
-    async getTodos() {
+    /* async getTodos() {
       try {
         const userId = this.userId;
         const response = await axios.get(`/api/todo/date/${this.date}`, {
@@ -84,10 +91,19 @@ export default {
         });
         this.todos = response.data;
 
-        const today = new Date().toISOString().split('T')[0];
-        const todayTodos = this.todos.filter((todo) => todo.start_date.split(' ')[0] === today);
-        this.$store.commit('todo/SET_TODOS', todayTodos);
+        const kor_time = new Date();
+        const today =
+          kor_time.getFullYear() +
+          '-' +
+          (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1) +
+          '-' +
+          kor_time.getDate();
 
+        const todayTodos = this.todos.filter((todo) => todo.start_date.split(' ')[0] === today);
+        console.log(todayTodos);
+        if (todayTodos.length > 0) {
+          this.$store.commit('todo/SET_TODOS', todayTodos);
+        }
         const selectedTodoId = this.$route.query.selectedTodoId;
         if (selectedTodoId) {
           this.selectedTodo = this.todos.find((todo) => todo.todo_id === parseInt(selectedTodoId));
@@ -95,6 +111,10 @@ export default {
       } catch (error) {
         console.error('Error getting todos:', error);
       }
+    }, */
+
+    getTodos() {
+      this.todayTodos = this.todos.filter((todo) => todo.start_date.split(' ')[0] === this.date);
     },
     async toggleCompletion(todo) {
       try {
@@ -136,8 +156,10 @@ export default {
         this.newTodo.end_date = this.date;
         const response = await axios.post('/api/todo/insert', this.newTodo);
         const createdTodoId = response.data;
-        await this.getTodos();
-        const newlyAddedTodo = this.todos.find((todo) => todo.todo_id === createdTodoId);
+        const todo = { todo_id: createdTodoId, ...this.newTodo, completed: false };
+        console.log('추가된 값: ', todo);
+        this.$store.commit('todo/ADD_TODO', todo);
+        const newlyAddedTodo = this.todayTodos.find((todo) => todo.todo_id === createdTodoId);
         this.selectTodo(newlyAddedTodo);
         this.newTodo.title = '';
         this.newTodo.memo = '';
@@ -280,6 +302,7 @@ export default {
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
+/* 
 .no-selection {
   text-align: center;
   color: #888;
@@ -291,7 +314,48 @@ export default {
 }
 
 .no-selection p {
-  font-size: 18px;
+  border-radius: 5px;
+  padding: 10px 8px 12px 8px;
+  border-radius: 25px;
+  border: 2px solid #969ea442;
+  margin-bottom: 8px;
+  font-size: 14px;
   font-weight: bold;
+} */
+
+.no-selection {
+  position: relative;
+}
+
+.no-selection img {
+  max-width: 200px;
+  margin-bottom: 20px;
+}
+
+.no-selection p {
+  position: relative;
+  top: 10em;
+  text-align: center;
+  padding: 10px 8px 12px 8px;
+  border-radius: 25px;
+  border: 2px solid #969ea442;
+  font-size: 14px;
+  font-weight: bold;
+  color: #464040;
+  background-color: #ffffff;
+}
+
+.no-selection p::after {
+  content: '';
+  position: absolute;
+  bottom: -12px; /* 말풍선의 아래쪽에 위치하도록 */
+  left: 50%; /* 가운데 정렬 */
+  transform: translateX(-50%);
+  border-width: 12px 10px 0 10px; /* 꼬리의 크기 */
+  border-style: solid;
+  background-color: white;
+  border-color: #969ea442 transparent transparent transparent; /* 말풍선의 색과 일치 */
+  display: block;
+  width: 0;
 }
 </style>
