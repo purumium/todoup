@@ -57,7 +57,7 @@ export default {
     }),
   },
 
-  watch: {
+  /*   watch: {
     userId: {
       handler(newValue) {
         if (!newValue) {
@@ -68,7 +68,7 @@ export default {
       },
       immediate: true, // 컴포넌트 생성 시에도 watcher를 즉시 호출
     },
-  },
+  }, */
   created() {
     this.setInitialMonth(); // 초기 월과 연도 설정
     this.loadCalendarData();

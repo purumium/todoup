@@ -59,10 +59,9 @@ export default {
 
     ...mapState('todo', {
       todos: 'todo_info', // Vuex의 todo_info 상태를 todos로 매핑
-
+    }),
     ...mapGetters({
       profileImg: 'user/getProfileImg', // Vuex의 profileImg 상태를 컴포넌트에 매핑
-
     }),
     formattedDate() {
       const date = new Date(this.date);
