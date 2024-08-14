@@ -208,7 +208,7 @@ export default {
 .todo-calendar-top {
   color: #2b2222b8 !important;
   font-weight: 600;
-  font-size: 22px;
+  font-size: 16px;
   display: flex;
   padding: 7px 0;
   border-bottom: 2px solid #cfcece70;
@@ -227,7 +227,7 @@ export default {
 
 .add-todo {
   position: relative;
-  top: 4.2em;
+  top: 3.8em;
   width: 105px;
   height: 30px;
   background-color: #e5e5e51f;

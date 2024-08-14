@@ -1,149 +1,3 @@
-<!-- <template>
-  <div class="todo-section">
-    <div class="d-flex align-items-center justify-content-between">
-      <span>Today's TODO</span>
-      <font-awesome-icon @click="goToTodayTodo" :icon="['fas', 'arrow-up-right-from-square']" />
-    </div>
-    <ul class="todo-list" v-if="userInfo.userId && todoList.length > 0">
-      <li v-for="(todo, idx) in todoList" :key="idx">
-        <input type="checkbox" v-model="todo.checked" />
-        <span :class="{ 'check-line-through': todo.checked }">
-          {{ todo.text }}
-        </span>
-      </li>
-    </ul>
-
-    <ul class="todo-list rainbow" v-if="!userInfo.userId || todoList.length == 0">
-      <li class="todo-empty"><span class="text-rainbow">조회된 데이터가 없습니다.!</span></li>
-    </ul>
-    <div>
-      <h1>sdfsdf{{ todoInfo[0] }}</h1>
-    </div>
-  </div>
-</template>
-
-<script>
-import axios from 'axios';
-import { mapState } from 'vuex';
-
-export default {
-  name: 'TodayTodo',
-  computed: {
-    ...mapState('user', {
-      userInfo: 'user_info', // Vuex의 user_info 상태를 userInfo로 매핑
-    }),
-    ...mapState('todo', {
-      todoInfo: 'todos',
-    }),
-  },
-  mounted() {
-    console.log('todayTodo: ', this.todoInfo);
-  },
-
-  data() {
-    return {
-      todoList: [],
-    };
-  },
-  watch: {
-    userInfo: {
-      handler(newValue) {
-        if (!newValue.userId) {
-          this.todayList();
-        }
-      },
-      immediate: true, // 컴포넌트 생성 시에도 watcher를 즉시 호출
-    },
-  },
-  created() {
-    this.todayList();
-  },
-  methods: {
-    async todayList() {
-      try {
-        const response = await axios.get('/api/todo/today', {
-          params: { userId: this.userInfo.userId },
-        });
-        this.todoList = response.data.map((todo) => ({
-          todo_id: todo.todo_id,
-          text: todo.title, // title을 text로 변환
-          checked: todo.completed != 1 ? false : true, // 체크박스 상태를 초기화
-        }));
-      } catch (error) {
-        console.log('에러');
-      }
-    },
-    getTodayDate() {
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 1을 더해줍니다.
-      const day = String(today.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
-    },
-    goToTodayTodo() {
-      const todayDate = this.getTodayDate();
-      this.$router.push(`/todo/${todayDate}`);
-    },
-  },
-};
-</script>
-
-<style scoped>
-.todo-section {
-  margin-top: 25px;
-  border: 2px solid #635e5e21;
-  border-radius: 11px;
-}
-
-.todo-section div {
-  border-bottom: 2px solid #635e5e21;
-  padding: 13px 20px;
-  font-size: 19px;
-  font-weight: 600;
-  color: #635a5a;
-}
-
-.todo-section:last-child {
-  cursor: pointer;
-}
-
-.todo-list {
-  max-height: 190px;
-  height: 190px;
-  overflow-y: auto;
-  padding: 18px 25px;
-}
-.todo-empty {
-  width: 230px;
-  position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.text-rainbow {
-  background-image: linear-gradient(90deg, red, orange, yellow, green, blue, navy, purple);
-  -webkit-background-clip: text;
-  color: transparent;
-
-  font-weight: bold;
-}
-
-li {
-  list-style-type: none;
-  font-size: 18px;
-  margin-bottom: 8px;
-}
-
-li input[type='checkbox'] {
-  margin-right: 10px;
-}
-.check-line-through {
-  text-decoration: line-through;
-}
-</style>
- -->
-
 <template>
   <div class="todo-section">
     <div>Today's TODO</div>
@@ -157,7 +11,7 @@ li input[type='checkbox'] {
     </ul>
 
     <ul class="todo-list rainbow" v-else>
-      <li class="todo-empty"><span class="text-rainbow">조회된 데이터가 없습니다.!</span></li>
+      <li class="todo-empty"><span>조회된 데이터가 없습니다.!</span></li>
     </ul>
   </div>
 </template>
@@ -267,18 +121,18 @@ export default {
 
 .todo-section div {
   border-bottom: 2px solid #635e5e21;
-  padding: 13px 20px;
-  font-size: 19px;
+  padding: 12px 20px;
+  font-size: 16px;
   font-weight: 600;
   color: #635a5a;
 }
 
 .todo-list {
   font-weight: 500;
-  max-height: 190px;
-  height: 190px;
+  max-height: 163px;
+  height: 163px;
   overflow-y: auto;
-  padding: 18px 25px;
+  padding: 15px 25px 13px 24px;
 }
 
 .todo-empty {

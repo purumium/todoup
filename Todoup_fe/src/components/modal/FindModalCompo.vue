@@ -1,7 +1,7 @@
 <template>
   <div class="friend-item">
     <div class="friend-leftBox">
-      <img class="item-img" @click="onImageClick" :src="`/avatar/${this.type}_level${this.level}.png`" />
+      <img class="item-img" @click="onImageClick" :src="`/avatar/${this.type}_level${this.level}_title.png`" />
       <div>{{ nickname }}</div>
     </div>
     <div class="friend-rightBox">
@@ -68,35 +68,48 @@ export default {
 <style scoped>
 .friend-item {
   display: flex;
+  border: 1px solid #80808033;
+  background-color: #c1baba14;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
+  padding: 9px 16px 7px 15px;
+  margin-bottom: 11px;
+  border-radius: 20px;
 }
+
 .item-img {
-  width: 70px;
-  height: 70px;
+  border: 2px solid #8080801a;
+  width: 80px;
+  height: 75px;
   border-radius: 100%;
-  margin-right: 20px;
-  cursor: pointer; /* 클릭 가능한 상태로 변경 */
+  margin-right: 11px;
+  cursor: pointer;
+  padding: 8px;
 }
+
 .friend-leftBox {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
+
 .friend-rightBox {
   justify-content: space-between;
   display: flex;
   align-items: center;
 }
+
 .friend-rightBox > div {
-  font-size: 14px;
+  font-size: 9px;
   font-weight: 500;
   white-space: nowrap;
-  margin-right: 28px;
+  margin-right: 40px;
+  border: 1px solid #cecbcb;
+  border-radius: 20px;
+  padding: 2px 10px;
+  letter-spacing: 1px;
 }
+
 button {
   cursor: pointer;
   padding: 6px 12px;
@@ -105,16 +118,33 @@ button {
   border: none;
   outline: none;
 }
+
 .follow-button {
-  background-color: #3a84d8;
-  color: white;
+  background-color: #e5e7e9ab;
+  color: #313030;
+  border-radius: 20px;
+  font-size: 12px;
 }
+
 .unfollow-button {
-  background-color: #cf4848;
-  color: white;
+  background-color: #fcf07387;
+  color: #313030;
+  border-radius: 20px;
+  font-size: 12px;
 }
+
 .item-img {
   background-size: cover;
   background-position: center;
+}
+
+.input-group > .form-control,
+.input-group > .form-floating,
+.input-group > .form-select {
+  position: relative;
+  width: 76%;
+  min-width: 0;
+  border-radius: 20px;
+  border: 1px solid #80808059;
 }
 </style>
