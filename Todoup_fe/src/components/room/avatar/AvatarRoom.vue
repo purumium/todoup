@@ -5,7 +5,7 @@
         <div class="avatar-wrapper" :class="{ 'is-friend-room': !isMyRoom }">
           <avatar-character
             v-if="loginUserInfo"
-            :profile-img="loginUserProfileImg"
+            :profile-img="loginUserInfo.profileImg"
             :lv="loginUserInfo.lv"
             :points="loginUserInfo.points"
             :nick-name="loginUserInfo.nickName"
@@ -22,7 +22,7 @@
         </div>
       </template>
       <template #guestbook>
-        <guest-book :login-id="loginId" :owner-id="ownerId" />
+        <guest-book :login-id="loginUserInfo.userId" :owner-id="ownerId" />
       </template>
     </back-ground>
   </div>
@@ -37,30 +37,22 @@ export default {
   name: 'AvataRoom',
   components: { BackGround, AvatarCharacter, GuestBook },
   props: {
-    loginId: {
-      type: String,
+    loginUserInfo: {
+      type: Object,
       required: true,
+    },
+    ownerUserInfo: {
+      type: Object,
+      required: false,
     },
     ownerId: {
       type: String,
       required: true,
     },
-    loginUserInfo: {
-      type: Object,
-      required: true,
-    },
-    loginUserProfileImg: {
-      type: String,
-      required: true,
-    },
-    ownerUserInfo: {
-      type: Object,
-      required: false, // 친구 방일 때만 필요
-    },
   },
   computed: {
     isMyRoom() {
-      return this.loginId === this.ownerId;
+      return this.loginUserInfo.userId === this.ownerId;
     },
   },
 };

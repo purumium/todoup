@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="d-flex align-items-center justify-content-between">
-      <h3>{{ nickName }}님의 방</h3>
+      <h3>{{ roomOwnerNickName }}님의 방</h3>
       <div class="room-btn-group">
         <router-link :to="`/room/${ownerId}/avatarroom`">
           <button>AVATARROOM</button>
@@ -13,12 +13,11 @@
     </div>
     <!-- loginUserInfo와 ownerUserInfo를 함께 전달 -->
     <router-view
-      :login-id="loginId"
-      :owner-id="ownerId"
       :login-user-info="loginUserInfo"
-      :login-user-profile-img="loginUserProfileImg"
-      :owner-user-info="ownerUserInfo"
-    ></router-view>
+      :owner-user-info="isMyRoom ? null : ownerUserInfo"
+      :owner-id="ownerId"
+    >
+    </router-view>
   </div>
 </template>
 
@@ -35,38 +34,29 @@ export default {
   },
   computed: {
     ...mapState('user', {
-      loginId: (state) => String(state.user_info.userId),
-      loginUserInfo: (state) => state.user_info, // 로그인 유저의 전체 정보
-      loginUserProfileImg: (state) => '/avatar/' + state.profileImg + '.png',
-      nickName: (state) => state.user_info.nickName,
+      loginUserInfo: (state) => ({
+        userId: String(state.user_info.userId),
+        lv: state.user_info.lv,
+        points: state.user_info.points,
+        nickName: state.user_info.nickName,
+        profileImg: `/avatar/${state.profileImg}.png`,
+      }),
     }),
-    ownerUserInfo() {
-      // 여기에 친구(혹은 방 소유자) 정보를 가져오는 로직을 추가할 수 있습니다.
-      // 예를 들어, API 호출 등을 통해 가져올 수 있습니다.
-      return this.isMyRoom ? this.loginUserInfo : {}; // 나중에 로직 변경 가능
-    },
-    // chan's code
-    //   loginId: (state) => String(state.user_info.userId), // Vuex의 user_info.userId를 loginId로 매핑
-    //   nickName: (state) => String(state.user_info.nickName),
-    // }),
-    // ...mapState('modal', {
-    //   selectedUserId: (state) => state.selectedUserId,
-    //   selectedUserLv: (state) => state.selectedUserLv,
-    //   selectedUserType: (state) => state.selectedUserType,
-    //   selectedUserPoint: (state) => state.selectedUserPoint,
-    //   selectedUserNickname: (state) => state.selectedUserNickname,
-    // }),
+    ...mapState('modal', {
+      ownerUserInfo: (state) => ({
+        userId: String(state.selectedUserId),
+        lv: state.selectedUserLv,
+        points: state.selectedUserPoint,
+        nickName: state.selectedUserNickname,
+        profileImg: `/avatar/${state.selectedUserType}_level${state.selectedUserLv}.png`,
+      }),
+    }),
     isMyRoom() {
-      return this.loginId === this.ownerId;
+      return this.loginUserInfo.userId === this.ownerId;
     },
-  },
-  mounted() {
-    // 컴포넌트가 마운트될 때 콘솔에 Vuex 상태를 출력합니다.
-    console.log('Selected User ID:', this.selectedUserId);
-    console.log('Selected User Level:', this.selectedUserLv);
-    console.log('Selected User Type:', this.selectedUserType);
-    console.log('Selected User Point:', this.selectedUserPoint);
-    console.log('Selected User Nickname:', this.selectedUserNickname);
+    roomOwnerNickName() {
+      return this.isMyRoom ? this.loginUserInfo.nickName : this.ownerUserInfo.nickName;
+    },
   },
 };
 </script>
