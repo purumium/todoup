@@ -2,8 +2,7 @@
   <div class="profile-section">
     <div class="profile-top">
       <div class="profile-image-container">
-        <!-- <img src="@/assets/profile.png" alt="Profile" @click="goToRoom" /> -->
-        <img v-if="userInfo.userId" :src="`/avatar/${profileImg}`" alt="Profile" @click="goToRoom" />
+        <img v-if="userInfo.userId" :src="`/avatar/${profileImg}_title.png`" alt="Profile" @click="goToRoom" />
         <img v-else src="/avatar/defaultAvatar.png" alt="Profile" @click="goToRoom" />
         <div v-if="showMessage" class="message-bubble">{{ pointsUpMessage }}</div>
       </div>
@@ -190,20 +189,13 @@ export default {
   margin-left: 9px;
 }
 
-.profile-image-container {
-  /* position: relative; */
-}
-
 .profile-top img {
-  /* border: 1px solid #8080803d;
-  border-radius: 70%;
-  width: 130px;
-  margin-right: 20px; */
   border: 1px solid #8080803d;
   border-radius: 70%;
-  width: 110px;
-  height: 100px;
+  width: 120px;
+  height: 122px;
   margin-right: 20px;
+  padding: 7px;
 }
 
 .message-bubble {
