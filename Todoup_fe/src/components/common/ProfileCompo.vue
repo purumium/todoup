@@ -60,6 +60,9 @@ export default {
       return this.userInfo.points % 100;
     },
   },
+  created() {
+    console.log(this.profileImg);
+  },
   methods: {
     ...mapActions('modal', {
       loadFollowedUsers: 'fetchFollowedUsers',

@@ -10,7 +10,7 @@
           </div>
         </form>
         <ul class="todo-ul">
-          <li v-for="todo in todos" :key="todo.todoId" @click="selectTodo(todo)" class="todo-item">
+          <li v-for="todo in todayTodos" :key="todo.todo_id" @click="selectTodo(todo)" class="todo-item">
             <input type="checkbox" :checked="todo.completed" @change="toggleCompletion(todo)" class="todo-checkbox" />
             <p class="todo-title mb-0" :class="{ completed: todo.completed }">
               {{ todo.title }}
@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       date: this.$route.params.date,
-      todos: [],
+      todayTodos: [],
       selectedTodo: null,
       newTodo: {
         user_id: this.userId,
@@ -56,6 +56,10 @@ export default {
       userId: (state) => state.user_info.userId,
       points: (state) => state.user_info.points,
     }),
+
+    ...mapState('todo', {
+      todos: 'todo_info', // Vuex의 todo_info 상태를 todos로 매핑
+    }),
     ...mapGetters({
       profileImg: 'user/getProfileImg', // Vuex의 profileImg 상태를 컴포넌트에 매핑
     }),
@@ -71,15 +75,15 @@ export default {
   created() {
     this.getTodos();
   },
-  watch: {
+  /*watch: {
     '$route.params.date'(newDate) {
       this.date = newDate;
       this.getTodos();
     },
-  },
+  }, */
 
   methods: {
-    async getTodos() {
+    /* async getTodos() {
       try {
         const userId = this.userId;
         const response = await axios.get(`/api/todo/date/${this.date}`, {
@@ -87,10 +91,19 @@ export default {
         });
         this.todos = response.data;
 
-        const today = new Date().toISOString().split('T')[0];
-        const todayTodos = this.todos.filter((todo) => todo.start_date.split(' ')[0] === today);
-        this.$store.commit('todo/SET_TODOS', todayTodos);
+        const kor_time = new Date();
+        const today =
+          kor_time.getFullYear() +
+          '-' +
+          (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1) +
+          '-' +
+          kor_time.getDate();
 
+        const todayTodos = this.todos.filter((todo) => todo.start_date.split(' ')[0] === today);
+        console.log(todayTodos);
+        if (todayTodos.length > 0) {
+          this.$store.commit('todo/SET_TODOS', todayTodos);
+        }
         const selectedTodoId = this.$route.query.selectedTodoId;
         if (selectedTodoId) {
           this.selectedTodo = this.todos.find((todo) => todo.todo_id === parseInt(selectedTodoId));
@@ -98,6 +111,10 @@ export default {
       } catch (error) {
         console.error('Error getting todos:', error);
       }
+    }, */
+
+    getTodos() {
+      this.todayTodos = this.todos.filter((todo) => todo.start_date.split(' ')[0] === this.date);
     },
     async toggleCompletion(todo) {
       try {
@@ -139,8 +156,10 @@ export default {
         this.newTodo.end_date = this.date;
         const response = await axios.post('/api/todo/insert', this.newTodo);
         const createdTodoId = response.data;
-        await this.getTodos();
-        const newlyAddedTodo = this.todos.find((todo) => todo.todo_id === createdTodoId);
+        const todo = { todo_id: createdTodoId, ...this.newTodo, completed: false };
+        console.log('추가된 값: ', todo);
+        this.$store.commit('todo/ADD_TODO', todo);
+        const newlyAddedTodo = this.todayTodos.find((todo) => todo.todo_id === createdTodoId);
         this.selectTodo(newlyAddedTodo);
         this.newTodo.title = '';
         this.newTodo.memo = '';

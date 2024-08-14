@@ -15,12 +15,24 @@ export default {
     REMOVE_TODO(state, todoId) {
       state.todo_info = state.todo_info.filter((todo) => todo.todo_id != todoId); // 해당 할 일을 상태에서 제거
     },
+    TODO_COMPLETION(state, { todoId, completed }) {
+      const todo = state.todo_info.find((t) => t.todo_id === todoId);
+      if (todo) {
+        todo.completed = completed;
+      }
+    },
   },
 
   getters: {
     allTodos: (state) => state.todo_info, // 모든 todos를 반환하는 getter
     todayTodos: (state) => {
-      const today = new Date().toISOString().split('T')[0];
+      const kor_time = new Date();
+      const today =
+        kor_time.getFullYear() +
+        '-' +
+        (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1) +
+        '-' +
+        kor_time.getDate();
       return state.todo_info.filter((todo) => todo.start_date.split(' ')[0] === today); // 오늘의 todos만 반환하는 getter
     },
   },
