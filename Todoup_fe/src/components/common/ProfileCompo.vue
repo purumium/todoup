@@ -59,6 +59,9 @@ export default {
       return this.userInfo.points % 100;
     },
   },
+  created() {
+    console.log(this.profileImg);
+  },
   methods: {
     ...mapActions('modal', {
       loadFollowedUsers: 'fetchFollowedUsers',
@@ -130,7 +133,16 @@ export default {
       if (this.userInfo && this.userInfo.userId) {
         this.$router.push(`/room/${this.userInfo.userId}/avatarroom`);
       } else {
-        console.error('User ID is not available.');
+        this.$swal
+          .fire({
+            text: '로그인이 필요합니다.',
+            icon: 'warning',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#f39c12',
+          })
+          .then(() => {
+            this.$router.push('/login');
+          });
       }
     },
     showUserId() {

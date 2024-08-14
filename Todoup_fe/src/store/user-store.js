@@ -1,5 +1,5 @@
+import router from '@/router';
 import Swal from 'sweetalert2';
-import router from '@/router'; // Vue Router를 import (경로는 프로젝트에 맞게 설정)
 
 const store = {
   namespaced: true,
@@ -39,9 +39,9 @@ const store = {
       context.commit('login', payload);
     },
     logout(context) {
-      localStorage.removeItem('user_info', 'profileImg');
+      sessionStorage.clear();
       context.commit('logout');
-      router.push('/'); // 로그아웃 후 "/" 경로로 이동
+      router.push('/');
     },
     logfail(context, payload) {
       context.commit('logfail', payload);

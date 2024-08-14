@@ -1,6 +1,6 @@
 <template>
   <div class="guestbook-container" ref="guestbookContainer" @scroll="handleScroll">
-    <h2>{{ ownerId }}'s GuestBook</h2>
+    <!-- <h2>{{ ownerId }}'s GuestBook</h2> -->
     <!-- 방명록 입력창: 친구의 방일 경우에만 표시 -->
     <div v-if="!isMyRoom" class="new-message-form">
       <textarea
@@ -20,18 +20,49 @@
     <div v-for="(message, index) in messages" :key="index" class="bubble">
       <div v-if="!message.isEditing">
         <p class="message-content">{{ message.content }}</p>
-        <small>Written by: {{ message.writerId }}</small>
-        <small class="date">&emsp; {{ formatRelativeDate(message.regDateAt) }}</small>
-        <button v-if="isAuthor(message.writerId)" @click="editMessage(index)">수정</button>
-        <button v-if="isAuthor(message.writerId)" @click="confirmDeleteMessageAsWriter(message.guestbookId, index)">
-          삭제
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex justify-content-between">
+            <small>Written by: {{ message.writerId }}</small>
+            <small class="date">&emsp; {{ formatRelativeDate(message.regDateAt) }}</small>
+          </div>
+          <div class="button-wrapper d=flex align-items-center">
+            <button type="button" class="icon-button" v-if="isAuthor(message.writerId)" @click="editMessage(index)">
+              <font-awesome-icon icon="edit" /> 수정
+            </button>
+            <button
+              type="button"
+              class="icon-button"
+              v-if="isAuthor(message.writerId)"
+              @click="confirmDeleteMessageAsWriter(message.guestbookId, index)"
+            >
+              <font-awesome-icon icon="trash-alt" /> 삭제
+            </button>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="icon-button"
+          v-if="isMyRoom"
+          @click="confirmDeleteMessageAsOwner(message.guestbookId, index)"
+        >
+          <font-awesome-icon icon="trash-alt" /> 삭제
         </button>
-        <button v-if="isMyRoom" @click="confirmDeleteMessageAsOwner(message.guestbookId, index)">삭제</button>
       </div>
-      <div v-else>
-        <textarea v-model="message.content" @keydown.enter.prevent="submitEdit(index, message.guestbookId)"></textarea>
-        <button @click="submitEdit(index, message.guestbookId)">저장</button>
-        <button @click="cancelEdit(index)">취소</button>
+      <div v-else class="d-flex align-items-end">
+        <textarea
+          class="edit-textarea"
+          v-model="message.content"
+          @keydown.enter.prevent="submitEdit(index, message.guestbookId)"
+        ></textarea>
+        <div class="button-wrapper">
+          <button type="button" class="icon-button" @click="submitEdit(index, message.guestbookId)">
+            <font-awesome-icon icon="save" /> 저장
+          </button>
+          <button type="button" class="icon-button" @click="cancelEdit(index)">
+            <font-awesome-icon icon="times" /> 취소
+          </button>
+        </div>
       </div>
     </div>
     <div v-if="loading" class="loading-indicator">Loading...</div>
@@ -288,9 +319,11 @@ export default {
   align-items: flex-start; /* 왼쪽 정렬 */
   width: 90%; /* 나중에 제대로 맞추기 */
   padding-left: 10px;
-  height: 300px; /* 원하는 높이 설정 */
+  padding-bottom: 10px;
+  height: 260px; /* 원하는 높이 설정 */
   overflow-y: auto; /* 세로 스크롤바 활성화 */
   padding-right: 15px; /* 스크롤바가 콘텐츠에 겹치지 않도록 여유 공간 추가 */
+  box-sizing: border-box;
 }
 
 /* 스크롤 관련 css */
@@ -307,6 +340,45 @@ export default {
   background-color: #f1f1f1; /* 스크롤바 트랙의 색상 설정 */
 }
 
+.new-message-form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 4rem;
+  margin-bottom: 1rem;
+  width: 500px;
+  padding-bottom: 0;
+  border: 2px solid #635e5e21;
+  border-radius: 20px;
+  background-color: #f1f2f3;
+}
+
+.new-message-form > textarea {
+  width: 100%;
+  height: 100px;
+  padding: 12px 10px;
+  border: none;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  background-color: inherit;
+  margin: 0;
+  border: 2px solid #635e5e21;
+}
+
+.new-message-form > button {
+  color: #5b5b5b;
+  border: 2px solid #635e5e21;
+  border-radius: 0 20px 20px 0;
+  background-color: #f1f2f3;
+  height: 100px;
+  margin: 0;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
 .loading-indicator {
   text-align: center;
   padding: 10px;
@@ -315,20 +387,24 @@ export default {
 }
 
 .message-content {
-  white-space: pre-wrap;
+  box-sizing: content-box;
+  white-space: normal;
+  word-wrap: break-word; /* 긴 단어를 줄바꿈 */
+  word-break: break-word; /* 단어 자체를 줄바꿈 */
+  overflow-wrap: break-word; /* 텍스트가 부모를 넘지 않도록 줄바꿈 */
 }
 
 .bubble {
   position: relative;
-  background: white;
+  background: #f1f2f3;
   border-radius: 15px;
   padding: 10px 20px;
-  color: #333;
-  max-width: 500px;
+  color: #5b5b5b;
+  width: 380px;
   text-align: left;
   font-size: 1em;
   margin: 10px 0; /* 방명록 간 간격 */
-  border: 1px solid #ccc;
+  border: 1px solid #f9f9f9;
 }
 
 .bubble::after {
@@ -336,7 +412,7 @@ export default {
   position: absolute;
   border-style: solid;
   border-width: 10px 10px 10px 0;
-  border-color: transparent white transparent transparent;
+  border-color: transparent #f9f9f9 transparent transparent;
   display: block;
   width: 0;
   z-index: 1;
@@ -347,20 +423,56 @@ export default {
 .bubble small {
   color: #888;
   font-size: 0.85em;
-  margin-top: 10px;
+  white-space: nowrap;
 }
 
 /* 방명록이 없을 때 표시할 카드 스타일 */
 .no-guestbook-card {
-  position: relative;
-  background: #f9f9f9;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f2f3;
   border-radius: 15px;
   padding: 20px;
   color: #888;
   max-width: 500px;
   text-align: center;
   font-size: 1em;
-  margin: 20px 0; /* 위아래 간격 */
+  margin: auto 0; /* 위아래 간격 */
   border: 1px solid #ccc;
+}
+.no-guestbook-card > p {
+  margin: 0;
+}
+
+.edit-textarea {
+  width: 250px;
+  height: 50px;
+}
+
+.button-wrapper {
+  margin-left: 30px;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.icon-button {
+  width: 50px;
+  height: 30px;
+  cursor: pointer;
+  outline: none;
+  color: #544545;
+  font-size: 11px;
+  border-radius: 20px;
+  background: none;
+  border: none;
+  border-radius: 16px;
+  margin-left: 5px;
+  padding: 0;
+}
+
+.icon-button:hover {
+  color: #888;
 }
 </style>
