@@ -15,10 +15,12 @@
           </div>
           <div class="todo-dates">
             <span class="todo-date">
-              <font-awesome-icon icon="calendar-alt" /> 시작날짜 &nbsp; {{ formattedStartDate }}
+              <font-awesome-icon icon="calendar-alt" /> 시작날짜 &nbsp;&nbsp;&nbsp;&nbsp;
+              {{ formattedStartDate }}
             </span>
             <span class="todo-date">
-              <font-awesome-icon icon="calendar-alt" /> 종료날짜 &nbsp; {{ formattedEndDate }}
+              <font-awesome-icon icon="calendar-alt" /> 종료날짜 &nbsp;&nbsp;&nbsp;&nbsp;
+              {{ formattedEndDate }}
             </span>
           </div>
           <p v-if="todo.memo !== todo.title" class="todo-memo">{{ todo.memo }}</p>
@@ -37,15 +39,15 @@
     </div>
 
     <div v-else>
-      <div class="form-group mb-3">
+      <div class="form-group margin-b-3">
         <label for="title">제목</label>
         <input type="text" id="title" v-model="title" class="form-control" required />
       </div>
-      <div class="form-group mb-3">
+      <div class="form-group margin-b-3">
         <label for="memo">메모</label>
         <textarea id="memo" v-model="memo" class="form-control"></textarea>
       </div>
-      <div class="form-group mb-3">
+      <div class="form-group margin-b-3">
         <label for="category">카테고리</label>
         <select id="category" v-model="category" class="form-select" required>
           <option v-for="category in categories" :key="category.id" :value="category.name">
@@ -53,11 +55,11 @@
           </option>
         </select>
       </div>
-      <div class="form-group mb-3">
+      <div class="form-group margin-b-3">
         <label for="startDate">시작날짜</label>
         <input type="date" id="startDate" v-model="start_date" class="form-control" required />
       </div>
-      <div class="form-group mb-3">
+      <div class="form-group margin-b-3">
         <label for="endDate">종료날짜</label>
         <input type="date" id="endDate" v-model="end_date" class="form-control" />
       </div>
@@ -69,7 +71,7 @@
   </div>
   <div v-else class="no-selection">
     <p>할 일을 선택해주세요</p>
-    <img :src="`/avatar/${profileImg}`" alt="No selection" />
+    <img :src="`/avatar/${profileImg}.png`" alt="No selection" />
   </div>
 </template>
 
@@ -253,8 +255,8 @@ export default {
 <style scoped>
 .todo-detail {
   color: #333;
-  width: 267px;
-  height: 450px;
+  width: 260px;
+  height: 440px;
   padding: 15px;
   box-sizing: border-box;
   overflow-y: auto;
@@ -267,6 +269,7 @@ export default {
 
 .todo-title {
   font-size: 22px;
+  overflow: none !important;
   color: #333;
   font-weight: bold;
   margin-bottom: 20px;
@@ -275,8 +278,13 @@ export default {
 }
 
 .todo-memo {
+  border: 1px solid #80808061;
   margin-top: 20px;
-  padding: 0 0 16px;
+  height: 115px;
+  max-height: 115px;
+  overflow-y: auto;
+  border-radius: 7px;
+  padding: 10px;
   font-size: 16px;
   color: #555;
   white-space: normal;
@@ -285,7 +293,8 @@ export default {
 
 .todo-meta {
   display: flex;
-  gap: 14px;
+  justify-content: space-between;
+  gap: 16px;
 }
 
 .todo-status.completed {
@@ -310,20 +319,24 @@ export default {
 }
 
 .todo-dates {
-  font-size: 16px;
+  font-size: 14px;
   color: #555;
   display: flex;
   flex-direction: column;
   gap: 12px;
   font-weight: 500;
-  margin-top: 30px;
+  margin-top: 12px;
+  border: 1px solid #8080804a;
+  padding: 10px;
+  border-radius: 10px;
 }
 
 .button-group {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   margin-top: 20px;
+  gap: 15px;
 }
 
 .icon-button {
@@ -342,7 +355,7 @@ export default {
 }
 
 .icon-button:hover {
-  color: #2a6b9d;
+  color: #0800002e;
 }
 
 .form-group > label {
@@ -383,5 +396,84 @@ export default {
   border-color: #969ea442 transparent transparent transparent; /* 말풍선의 색과 일치 */
   display: block;
   width: 0;
+}
+
+.todo-add-title {
+  color: #2b2222b8 !important;
+  font-weight: 600;
+  font-size: 22px;
+  padding: 10px 0;
+  text-align: center;
+  border-bottom: 2px solid #cfcece70;
+  border-top: 2px solid #cfcece70;
+}
+
+.margin-b-3 {
+  margin-bottom: 7px !important;
+}
+
+.form-control {
+  border-radius: 20px;
+  display: block;
+  width: 230px;
+  padding: 4px 17px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: rgb(36, 34, 34);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: var(--bs-body-bg);
+  background-clip: padding-box;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  transition:
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+}
+
+.mbb-3 {
+  margin-bottom: 1.3rem !important;
+}
+
+.create-btn {
+  width: 113px;
+  height: 38px;
+  padding: 4px;
+  background-color: #e5e5e51f;
+  color: #544545;
+  border: 2px solid #1d13132e;
+  font-weight: 600;
+  font-size: 13px;
+  border-radius: 20px;
+}
+
+.form-select {
+  width: 100%;
+  padding: 5px 21px;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--bs-body-color);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: var(--bs-body-bg);
+  background-image: var(--bs-form-select-bg-img), var(--bs-form-select-bg-icon, none);
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+  border-radius: 20px;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  transition:
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+}
+
+label {
+  padding: 5px 6px 3px 5px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #2b2222b8 !important;
 }
 </style>

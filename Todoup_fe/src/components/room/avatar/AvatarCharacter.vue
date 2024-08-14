@@ -1,7 +1,7 @@
 <!-- MyAvatar.vue -->
 <template>
   <div class="avatar-section">
-    <h2>{{ characterId }}'s Avatar</h2>
+    <p class="avatar-title">{{ characterId }}'s Avatar</p>
     <!-- 아바타 내용 -->
     <div class="avatar-img">
       <img src="@/assets/avatar_test.png" alt="Avatar" />
@@ -24,8 +24,15 @@ export default {
 <style scoped>
 /* 스타일 정의 */
 .avatar-section {
-  border: 1px solid black;
   display: flex;
   flex-direction: column;
+  margin-top: 3rem;
+}
+.avatar-title {
+  font-size: 20px;
+  margin-bottom: 0;
+}
+.avatar-img > img {
+  height: 210px;
 }
 </style>
