@@ -19,7 +19,7 @@ export default {
 .background {
   position: relative;
   width: 100%;
-  /* height: 100vh; */
+  height: 515px;
   background-image: url('@/assets/supermario_background.jpg');
   background-size: cover;
   background-position: center;
@@ -33,12 +33,10 @@ export default {
   justify-content: center;
   align-items: center;
   height: 50%; /* 위쪽 절반을 차지 */
-  border: 1px solid red; /* 구분을 위해 테두리 추가 */
 }
 
 .guest-book {
   height: 50%; /* 아래쪽 절반을 차지 */
-  border: 1px solid green; /* 구분을 위해 테두리 추가 */
   display: flex;
   justify-content: end;
   align-items: center;
