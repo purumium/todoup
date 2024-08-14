@@ -1,9 +1,10 @@
 <template>
   <div v-if="isModalVisible" class="modal-overlay" @click="handleCloseModal">
-    <div class="modal-Xcontainer">
-      <font-awesome-icon class="modal-Xbox" icon="square-xmark" style="color: #ffff" @click="handleCloseModal" />
-    </div>
     <div class="modal-content" @click.stop>
+      <div class="modal-Xcontainer">
+        <p class="modal-title">{{ modalTitle }}</p>
+        <font-awesome-icon class="modal-Xbox" i :icon="['fas', 'x']" @click="handleCloseModal" />
+      </div>
       <div class="modal-body">
         <!-- followUsers가 있을 때 -->
 
@@ -79,6 +80,7 @@ export default {
       isFollowArr: [], // 팔로우 상태를 저장할 배열
       isFolledArr: [], // 나를 팔로우한 사람들 배열
       AllUserArr: [], // 모든 유저들 배열
+      modalTitle: 'title', // 동적으로 변경할 타이틀
     };
   },
   computed: {
@@ -256,29 +258,31 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 100;
 }
 
 .modal-Xcontainer {
-  width: 600px;
-  height: 50px;
+  width: 100%;
   margin-bottom: 5px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
+  z-index: 201;
 }
 .modal-Xbox {
-  height: 30px;
+  font-size: 12px;
   cursor: pointer;
+  z-index: 202;
 }
 .modal-content {
   background-color: white;
-  padding: 20px;
+  padding: 10px 20px 20px;
   width: 600px;
   height: 380px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: relative;
+  z-index: 200;
 }
 
 .modal-body {
@@ -294,5 +298,10 @@ export default {
 }
 .find-modal-box {
   margin-top: 50px;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 500;
 }
 </style>
