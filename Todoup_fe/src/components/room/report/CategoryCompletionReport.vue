@@ -48,8 +48,8 @@ export default {
       this.chartData = await this.fetchData();
       if (!this.chartData) return;
 
-      const labels = this.chartData.map((item) => item.category);
-      const data = this.chartData.map((item) => item.completed_count);
+      const labels = this.chartData.map((item) => item.CATEGORY);
+      const data = this.chartData.map((item) => item.COMPLETED_COUNT);
 
       const ctx = document.getElementById('categoryCompletionChart').getContext('2d');
       new Chart(ctx, {

@@ -40,8 +40,8 @@ export default {
       const data = await this.fetchReportData();
       if (!data) return;
 
-      const labels = data.map((item) => item.month); // 'month' 컬럼을 사용
-      const diaryCounts = data.map((item) => item.diary_count); // 'diary_count' 컬럼을 사용
+      const labels = data.map((item) => item.MONTH); // 'month' 컬럼을 사용
+      const diaryCounts = data.map((item) => item.DIARY_COUNT); // 'diary_count' 컬럼을 사용
 
       const ctx = document.getElementById('monthlyDiaryChart').getContext('2d');
       new Chart(ctx, {

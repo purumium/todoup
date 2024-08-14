@@ -42,8 +42,8 @@ export default {
       const ctx = document.getElementById('monthlyPointsChart').getContext('2d');
 
       // 예시: 데이터 구조가 { month: '2024-08', points: 50 } 형태라고 가정
-      const labels = data.map((item) => item.month); // 월별 레이블 추출
-      const pointsData = data.map((item) => item.points); // 포인트 데이터 추출
+      const labels = data.map((item) => item.MONTH); // 월별 레이블 추출
+      const pointsData = data.map((item) => item.POINTS); // 포인트 데이터 추출
 
       new Chart(ctx, {
         type: 'bar',

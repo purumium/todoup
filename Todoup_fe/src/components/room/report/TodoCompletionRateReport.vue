@@ -39,8 +39,8 @@ export default {
     async renderChart() {
       const reportData = await this.fetchReportData();
       // 필요한 데이터만 추출
-      const labels = reportData.map((item) => item.month);
-      const completionRates = reportData.map((item) => item.completion_rate);
+      const labels = reportData.map((item) => item.MONTH);
+      const completionRates = reportData.map((item) => item.COMPLETION_RATE);
 
       const ctx = document.getElementById('todoCompletionRateChart').getContext('2d');
       new Chart(ctx, {
