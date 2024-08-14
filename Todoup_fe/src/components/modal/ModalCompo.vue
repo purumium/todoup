@@ -105,15 +105,14 @@ export default {
       } else if (this.allUsers.length > 0) {
         return '친구 찾기';
       } else {
-        this.setModalVisible(false);
         return 'title';
       }
     },
   },
   watch: {
-    async isModalVisible(newValue) {
+    isModalVisible(newValue) {
       if (newValue) {
-        await this.initializeFollowStatus();
+        this.initializeFollowStatus();
         // Initialize completed, now show the modal
         this.setModalVisible(true);
       }
