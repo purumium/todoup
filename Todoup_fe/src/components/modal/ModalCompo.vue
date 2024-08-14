@@ -10,18 +10,19 @@
 
         <template v-if="followUsers.length > 0">
           <div class="input-group flex-nowrap">
-            <input type="text" class="form-control" placeholder="Username" v-model="username" />
+            <input type="text" class="form-control" placeholder="Username" :v-model="username" />
           </div>
           <div class="find-modal-box">
             <find-modal-compo
               v-for="(user, idx) in filteredUsers(followUsers)"
               :key="idx"
-              :userId="user.userId"
-              :followid="user.followId"
+              :userId="user.followId"
+              :followid="user.userId"
               :type="user.followUserAvatarType"
               :nickname="user.followNickname"
               :level="user.followUserLv"
               :imgUrl="user.imgUrl"
+              :points="user.points"
               :checked="isFollowArr[idx]"
               @update:checked="handleCheckedChange(idx, $event)"
             ></find-modal-compo>
@@ -30,7 +31,7 @@
 
         <template v-else-if="followedUsers.length > 0">
           <div class="input-group flex-nowrap">
-            <input type="text" class="form-control" placeholder="Username" v-model="username" />
+            <input type="text" class="form-control" placeholder="Username" :v-model="username" />
           </div>
           <div class="find-modal-box">
             <find-modal-compo
@@ -40,6 +41,7 @@
               :followid="user.followId"
               :type="user.followUserAvatarType"
               :nickname="user.userNickname"
+              :points="user.points"
               :level="user.lv"
               :imgUrl="user.imgUrl"
               :checked="isFolledArr[idx]"
@@ -50,7 +52,7 @@
 
         <template v-else-if="allUsers.length > 0">
           <div class="input-group flex-nowrap">
-            <input type="text" class="form-control" placeholder="Username" v-model="username" />
+            <input type="text" class="form-control" placeholder="Username" :v-model="username" />
           </div>
           <div class="find-modal-box">
             <find-modal-compo
@@ -59,6 +61,7 @@
               :userId="user.userId"
               :nickname="user.userNickname"
               :level="user.lv"
+              :points="user.points"
               :imgUrl="user.imgUrl"
               :type="user.userAvatarType"
               :checked="AllUserArr[idx]"
@@ -105,15 +108,14 @@ export default {
       } else if (this.allUsers.length > 0) {
         return '친구 찾기';
       } else {
-        this.setModalVisible(false);
         return 'title';
       }
     },
   },
   watch: {
-    async isModalVisible(newValue) {
+    isModalVisible(newValue) {
       if (newValue) {
-        await this.initializeFollowStatus();
+        this.initializeFollowStatus();
         // Initialize completed, now show the modal
         this.setModalVisible(true);
       }

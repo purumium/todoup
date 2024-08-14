@@ -45,9 +45,28 @@ export default {
       // 예를 들어, API 호출 등을 통해 가져올 수 있습니다.
       return this.isMyRoom ? this.loginUserInfo : {}; // 나중에 로직 변경 가능
     },
+    // chan's code
+    //   loginId: (state) => String(state.user_info.userId), // Vuex의 user_info.userId를 loginId로 매핑
+    //   nickName: (state) => String(state.user_info.nickName),
+    // }),
+    // ...mapState('modal', {
+    //   selectedUserId: (state) => state.selectedUserId,
+    //   selectedUserLv: (state) => state.selectedUserLv,
+    //   selectedUserType: (state) => state.selectedUserType,
+    //   selectedUserPoint: (state) => state.selectedUserPoint,
+    //   selectedUserNickname: (state) => state.selectedUserNickname,
+    // }),
     isMyRoom() {
       return this.loginId === this.ownerId;
     },
+  },
+  mounted() {
+    // 컴포넌트가 마운트될 때 콘솔에 Vuex 상태를 출력합니다.
+    console.log('Selected User ID:', this.selectedUserId);
+    console.log('Selected User Level:', this.selectedUserLv);
+    console.log('Selected User Type:', this.selectedUserType);
+    console.log('Selected User Point:', this.selectedUserPoint);
+    console.log('Selected User Nickname:', this.selectedUserNickname);
   },
 };
 </script>

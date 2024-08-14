@@ -8,9 +8,11 @@ const modalStore = {
     followedUsers: [], // 나를 팔로우한 사용자들
     allUsers: [], // 모든 유저들
     selectedUserId: null, // 선택된 유저 아이디를 저장할 상태
-    selectedAvatar: null,
-    selectedLv: null,
-    profileImg: '',
+    selectedUserLv: null,
+    selectedUserType: null,
+    selectedUserPoint: null,
+    selectedUserNickname: null,
+    // 아이디 레벨 프이 포인트  닉네임
   },
   mutations: {
     SET_FOLLOWING_USERS(state, users) {
@@ -22,11 +24,20 @@ const modalStore = {
     SET_ALL_USERS(state, users) {
       state.allUsers = users; // 모든 유저를 상태에 저장
     },
-    SET_SELECTED_USER_ID(state, userId, avatar, selectedLv) {
-      state.selectedUserId = userId; // 선택된 유저 아이디를 상태에 저장
-      state.selectedAvatar = avatar;
-      state.selectedLv = selectedLv;
-      state.profileImg = `${state.selectedAvatar}_level${state.selectedLv}.png`;
+    SET_SELECTED_USER_ID(state, userId) {
+      state.selectedUserId = userId;
+    },
+    SET_SELECTED_USER_LV(state, userLv) {
+      state.selectedUserLv = userLv;
+    },
+    SET_SELECTED_USER_TYPE(state, userType) {
+      state.selectedUserType = userType;
+    },
+    SET_SELECTED_USER_POINT(state, userPoint) {
+      state.selectedUserPoint = userPoint;
+    },
+    SET_SELECTED_USER_NICKNAME(state, userNickname) {
+      state.selectedUserNickname = userNickname;
     },
     TOGGLE_MODAL(state) {
       state.isModalVisible = !state.isModalVisible;
@@ -37,7 +48,11 @@ const modalStore = {
         state.followUsers = []; // 모달을 닫을 때 팔로우 사용자 목록 초기화
         state.followedUsers = []; // 모달을 닫을 때 나를 팔로우하는 사용자 목록 초기화
         state.allUsers = []; // 모달을 닫을 때 모든 유저 목록 초기화
-        state.selectedUserId = null; // 선택된 유저 아이디 초기화
+        // state.selectedUserId = null; // 선택된 유저 아이디 초기화
+        // state.selectedUserLv = null; // 완
+        // state.selectedUserType = null; // 완
+        // state.selectedUserPoint = null;
+        // state.selectedUserNickname = null; //완
       }
     },
   },
@@ -143,6 +158,18 @@ const modalStore = {
     },
     setSelectedUserId({ commit }, userId) {
       commit('SET_SELECTED_USER_ID', userId); // 유저 아이디 설정
+    },
+    setSelectedUserLv({ commit }, userLv) {
+      commit('SET_SELECTED_USER_LV', userLv);
+    },
+    setSelectedUserType({ commit }, userType) {
+      commit('SET_SELECTED_USER_TYPE', userType);
+    },
+    setSelectedUserPoint({ commit }, userPoint) {
+      commit('SET_SELECTED_USER_POINT', userPoint);
+    },
+    setSelectedUserNickname({ commit }, userNickname) {
+      commit('SET_SELECTED_USER_NICKNAME', userNickname);
     },
     goToAvatarRoom({ state }) {
       const userId = state.selectedUserId;
