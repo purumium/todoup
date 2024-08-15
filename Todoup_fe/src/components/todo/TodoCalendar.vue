@@ -25,9 +25,31 @@ export default {
   components: {
     'full-calendar': FullCalendar,
   },
-  data() {
-    return {
-      calendarOptions: {
+  computed: {
+    ...mapState('user', {
+      userId: (state) => state.user_info.userId,
+    }),
+    ...mapState('todo', {
+      todos: 'todo_info',
+      todays: 'today_info',
+    }),
+    ...mapGetters('todo', {
+      allTodos: 'allTodos',
+    }),
+    fetchTodos() {
+      return this.todos.map((todo) => {
+        return {
+          title: todo.title,
+          start: todo.start_date,
+          end: this.formatEndDate(todo.end_date),
+          completed: todo.completed,
+          todoId: todo.todo_id,
+        };
+      });
+    },
+    calendarOptions() {
+      // calendarOptions를 computed로 이동
+      return {
         plugins: [dayGridPlugin, interactionPlugin],
         initialView: 'dayGridMonth',
         headerToolbar: {
@@ -36,45 +58,26 @@ export default {
           right: 'prev today next',
         },
         dateClick: this.handleMoveToTodo,
-        eventClick: this.handleEventClick, // 이벤트 클릭 시 호출될 핸들러
-        events: [], // 초기 events 배열
+        eventClick: this.handleEventClick,
+        events: this.fetchTodos, // computed로부터 직접 참조
         height: 550,
         locale: koLocale,
         dayCellContent: (args) => ({ html: args.dayNumberText.replace('일', '') }),
-        datesSet: this.handleDatesSet, // 캘린더 날짜가 변경될 때 호출
-        eventContent: this.renderEventContent, // 이벤트 콘텐츠 커스텀
+        datesSet: this.handleDatesSet,
+        eventContent: this.renderEventContent,
         dayMaxEvents: 2,
-      },
+      };
+    },
+  },
+  data() {
+    return {
       currentMonth: '', // 현재 월과 연도 저장
     };
   },
-  computed: {
-    ...mapState('user', {
-      userId: (state) => state.user_info.userId,
-    }),
-    ...mapState('todo', {
-      todos: 'todo_info',
-      todays: 'today_info', // Vuex의 todo_info 상태를 todos로 매핑
-    }),
-    ...mapGetters('todo', {
-      allTodos: 'allTodos',
-    }),
-  },
-
   created() {
     this.setInitialMonth(); // 초기 월과 연도 설정
-    this.fetchTodos(); // 초기 데이터를 가져옴
+    this.loadCalendarData();
   },
-
-  watch: {
-    todos: {
-      handler() {
-        this.loadCalendarData();
-        this.fetchTodos();
-      },
-    },
-  },
-
   methods: {
     setInitialMonth() {
       const today = new Date();
@@ -121,8 +124,8 @@ export default {
         this.$router.push('/todo/create');
       }
     },
-
     async loadCalendarData() {
+      console.log('실헹');
       if (this.userId) {
         try {
           const userId = this.userId;
@@ -166,46 +169,9 @@ export default {
           console.error('Error fetching todos:', error);
         }
       } else {
-        this.setExampleEvents(); // 로그인하지 않은 경우 예시 이벤트 설정
+        //this.setExampleEvents(); // 로그인하지 않은 경우 예시 이벤트 설정
+        this.$router.push('/example');
       }
-    },
-
-    fetchTodos() {
-      this.calendarOptions.events = this.allTodos.map((todo) => {
-        return {
-          title: todo.title,
-          start: todo.start_date, // 시작 날짜 설정
-          end: this.formatEndDate(todo.end_date), // 종료 날짜 설정 (포함되지 않으므로 다음 날로 설정)
-          completed: todo.completed, // 완료 여부 추가
-          todoId: todo.todo_id,
-        };
-      });
-    },
-
-    setExampleEvents() {
-      const today = new Date();
-      const exampleEvents = [
-        {
-          title: 'TO DO UP 사용해보기!',
-          start: new Date(today.getFullYear(), today.getMonth(), 5).toISOString().split('T')[0],
-          end: new Date(today.getFullYear(), today.getMonth(), 7).toISOString().split('T')[0],
-          completed: false,
-        },
-        {
-          title: 'TO DO 추가!',
-          start: new Date(today.getFullYear(), today.getMonth(), 10).toISOString().split('T')[0],
-          end: new Date(today.getFullYear(), today.getMonth(), 10).toISOString().split('T')[0],
-          completed: false,
-        },
-        {
-          title: 'TO DO 달성하고 레벨업하기!',
-          start: new Date(today.getFullYear(), today.getMonth(), 15).toISOString().split('T')[0],
-          end: new Date(today.getFullYear(), today.getMonth(), 17).toISOString().split('T')[0],
-          completed: false,
-        },
-      ];
-
-      this.calendarOptions.events = exampleEvents;
     },
     formatEndDate(endDate) {
       // 종료 날짜를 다음 날로 설정하여 이벤트 범위에 포함되도록 함
