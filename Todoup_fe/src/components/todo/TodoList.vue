@@ -205,12 +205,12 @@ export default {
 .header {
   color: #2b2222b8 !important;
   font-weight: 600;
-  font-size: 18px;
+  font-size: 16px;
   display: flex;
-  padding: 14px 0;
+  justify-content: center;
+  padding: 7px 0;
   border-bottom: 2px solid #cfcece70;
   border-top: 2px solid #cfcece70;
-  justify-content: center;
 }
 
 .input-container {
@@ -301,27 +301,6 @@ export default {
   padding: 0 10px;
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
-
-/* 
-.no-selection {
-  text-align: center;
-  color: #888;
-}
-
-.no-selection img {
-  max-width: 200px;
-  margin-bottom: 20px;
-}
-
-.no-selection p {
-  border-radius: 5px;
-  padding: 10px 8px 12px 8px;
-  border-radius: 25px;
-  border: 2px solid #969ea442;
-  margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: bold;
-} */
 
 .no-selection {
   position: relative;

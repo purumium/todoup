@@ -60,11 +60,12 @@ export default {
       allTodos: 'allTodos',
     }),
   },
+
   created() {
     this.setInitialMonth(); // 초기 월과 연도 설정
-    this.loadCalendarData();
     this.fetchTodos(); // 초기 데이터를 가져옴
   },
+
   watch: {
     todos: {
       handler() {
@@ -73,6 +74,7 @@ export default {
       },
     },
   },
+
   methods: {
     setInitialMonth() {
       const today = new Date();
@@ -119,7 +121,9 @@ export default {
         this.$router.push('/todo/create');
       }
     },
+    
     async loadCalendarData() {
+
       if (this.userId) {
         try {
           const userId = this.userId;
@@ -150,6 +154,15 @@ export default {
           }
 
           // todos 배열을 FullCalendar의 events 배열 형식에 맞게 변환
+          this.calendarOptions.events = todos.map((todo) => {
+            return {
+              title: todo.title,
+              start: todo.start_date, // 시작 날짜 설정
+              end: this.formatEndDate(todo.end_date), // 종료 날짜 설정 (포함되지 않으므로 다음 날로 설정)
+              completed: todo.completed, // 완료 여부 추가
+              todoId: todo.todo_id,
+            };
+          });
         } catch (error) {
           console.error('Error fetching todos:', error);
         }
@@ -157,6 +170,7 @@ export default {
         this.setExampleEvents(); // 로그인하지 않은 경우 예시 이벤트 설정
       }
     },
+
 
     fetchTodos() {
       this.calendarOptions.events = this.allTodos.map((todo) => {
@@ -169,6 +183,7 @@ export default {
         };
       });
     },
+
     setExampleEvents() {
       const today = new Date();
       const exampleEvents = [
@@ -218,7 +233,6 @@ export default {
   },
 };
 </script>
-
 <style>
 .w-100 {
   width: 100% !important;
@@ -228,7 +242,7 @@ export default {
 .todo-calendar-top {
   color: #2b2222b8 !important;
   font-weight: 600;
-  font-size: 22px;
+  font-size: 16px;
   display: flex;
   padding: 7px 0;
   border-bottom: 2px solid #cfcece70;
@@ -247,7 +261,7 @@ export default {
 
 .add-todo {
   position: relative;
-  top: 4.2em;
+  top: 3.8em;
   width: 105px;
   height: 30px;
   background-color: #e5e5e51f;

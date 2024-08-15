@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="d-flex align-items-center justify-content-between">
-      <h3>{{ nickName }}님의 방</h3>
+    <div class="d-flex justify-content-between room-title">
+      <div>{{ nickName }}님의 방</div>
       <div class="room-btn-group">
         <router-link :to="`/room/${ownerId}/avatarroom`">
           <button>AVATARROOM</button>
@@ -54,16 +54,27 @@ export default {
 </script>
 
 <style scoped>
+.room-title {
+  color: #2b2222b8 !important;
+  font-weight: 600;
+  font-size: 18px;
+  display: flex;
+  padding: 7px 0;
+  border-bottom: 2px solid #cfcece70;
+  border-top: 2px solid #cfcece70;
+  height: 55px;
+  align-items: center;
+}
+
 .room-btn-group {
   display: flex;
   justify-content: end;
   gap: 10px;
-  margin-bottom: 20px;
 }
 
 .room-btn-group button {
   width: 10em;
-  height: 3em;
+  height: 2.5em;
   background-color: #e5e5e51f;
   color: #544545;
   border: 1.5px solid #1d13132e;
