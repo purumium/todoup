@@ -3,12 +3,26 @@
     <back-ground>
       <template #avatar>
         <div class="avatar-wrapper" :class="{ 'is-friend-room': !isMyRoom }">
-          <avatar-character :character-id="loginId" class="avatar" />
-          <avatar-character v-if="!isMyRoom" :character-id="ownerId" class="avatar friend-avatar" />
+          <avatar-character
+            v-if="loginUserInfo"
+            :profile-img="loginUserInfo.profileImg"
+            :lv="loginUserInfo.lv"
+            :points="loginUserInfo.points"
+            :nick-name="loginUserInfo.nickName"
+            class="avatar"
+          />
+          <avatar-character
+            v-if="!isMyRoom && ownerUserInfo"
+            :profile-img="ownerUserInfo.profileImg"
+            :lv="ownerUserInfo.lv"
+            :points="ownerUserInfo.points"
+            :nick-name="ownerUserInfo.nickName"
+            class="avatar friend-avatar"
+          />
         </div>
       </template>
       <template #guestbook>
-        <guest-book :login-id="loginId" :owner-id="ownerId" />
+        <guest-book :login-id="loginUserInfo.userId" :owner-id="ownerId" />
       </template>
     </back-ground>
   </div>
@@ -23,9 +37,13 @@ export default {
   name: 'AvataRoom',
   components: { BackGround, AvatarCharacter, GuestBook },
   props: {
-    loginId: {
-      type: String,
+    loginUserInfo: {
+      type: Object,
       required: true,
+    },
+    ownerUserInfo: {
+      type: Object,
+      required: false,
     },
     ownerId: {
       type: String,
@@ -34,7 +52,7 @@ export default {
   },
   computed: {
     isMyRoom() {
-      return this.loginId === this.ownerId;
+      return this.loginUserInfo.userId === this.ownerId;
     },
   },
 };
@@ -61,9 +79,9 @@ export default {
 }
 
 .friend-avatar {
-  /* 친구 아바타의 추가 스타일이 필요한 경우 여기에 추가 */
-}
-
-.guest-book {
+  width: 45%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

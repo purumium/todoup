@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="d-flex justify-content-between room-title">
-      <div>{{ nickName }}님의 방</div>
+    <div class="d-flex align-items-center justify-content-between room-title">
+      <div>{{ roomOwnerNickName }}님의 방</div>
       <div class="room-btn-group">
         <router-link :to="`/room/${ownerId}/avatarroom`">
           <button>AVATARROOM</button>
@@ -11,7 +11,13 @@
         </router-link>
       </div>
     </div>
-    <router-view :login-id="loginId" :owner-id="ownerId"></router-view>
+    <!-- loginUserInfo와 ownerUserInfo를 함께 전달 -->
+    <router-view
+      :login-user-info="loginUserInfo"
+      :owner-user-info="isMyRoom ? null : ownerUserInfo"
+      :owner-id="ownerId"
+    >
+    </router-view>
   </div>
 </template>
 
@@ -28,27 +34,29 @@ export default {
   },
   computed: {
     ...mapState('user', {
-      loginId: (state) => String(state.user_info.userId), // Vuex의 user_info.userId를 loginId로 매핑
-      nickName: (state) => String(state.user_info.nickName),
+      loginUserInfo: (state) => ({
+        userId: String(state.user_info.userId),
+        lv: state.user_info.lv,
+        points: state.user_info.points,
+        nickName: state.user_info.nickName,
+        profileImg: `/avatar/${state.profileImg}.png`,
+      }),
     }),
     ...mapState('modal', {
-      selectedUserId: (state) => state.selectedUserId,
-      selectedUserLv: (state) => state.selectedUserLv,
-      selectedUserType: (state) => state.selectedUserType,
-      selectedUserPoint: (state) => state.selectedUserPoint,
-      selectedUserNickname: (state) => state.selectedUserNickname,
+      ownerUserInfo: (state) => ({
+        userId: String(state.selectedUserId),
+        lv: state.selectedUserLv,
+        points: state.selectedUserPoint,
+        nickName: state.selectedUserNickname,
+        profileImg: `/avatar/${state.selectedUserType}_level${state.selectedUserLv}.png`,
+      }),
     }),
     isMyRoom() {
-      return this.loginId === this.ownerId;
+      return this.loginUserInfo.userId === this.ownerId;
     },
-  },
-  mounted() {
-    // 컴포넌트가 마운트될 때 콘솔에 Vuex 상태를 출력합니다.
-    console.log('Selected User ID:', this.selectedUserId);
-    console.log('Selected User Level:', this.selectedUserLv);
-    console.log('Selected User Type:', this.selectedUserType);
-    console.log('Selected User Point:', this.selectedUserPoint);
-    console.log('Selected User Nickname:', this.selectedUserNickname);
+    roomOwnerNickName() {
+      return this.isMyRoom ? this.loginUserInfo.nickName : this.ownerUserInfo.nickName;
+    },
   },
 };
 </script>
