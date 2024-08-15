@@ -7,18 +7,18 @@
           <font-awesome-icon class="modal-Xbox" i :icon="['fas', 'x']" @click="handleCloseModal" />
         </span>
       </div>
-      <div class="modal-header">
-        <div class="input-groups flex-nowrap">
-          <span class="input-groups-text">
-            <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
-          </span>
-          <input type="text" class="form-control-input" placeholder="Username" v-model="username" />
-        </div>
-      </div>
+
       <div class="modal-body">
         <!-- followUsers가 있을 때 -->
 
         <template v-if="followUsers.length > 0">
+          <div class="input-groups flex-nowrap">
+            <span class="input-groups-text">
+              <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+            </span>
+            <input type="text" class="form-control-input" placeholder="Username" :v-model="username" />
+          </div>
+
           <div class="find-modal-box">
             <find-modal-compo
               v-for="(user, idx) in filteredUsers(followUsers)"
@@ -29,6 +29,7 @@
               :nickname="user.followNickname"
               :level="user.followUserLv"
               :imgUrl="user.imgUrl"
+              :points="user.points"
               :checked="isFollowArr[idx]"
               @update:checked="handleCheckedChange(idx, $event)"
             ></find-modal-compo>
@@ -36,6 +37,12 @@
         </template>
 
         <template v-else-if="followedUsers.length > 0">
+          <div class="input-groups flex-nowrap">
+            <span class="input-groups-text">
+              <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+            </span>
+            <input type="text" class="form-control-input" placeholder="Username" :v-model="username" />
+          </div>
           <div class="find-modal-box">
             <find-modal-compo
               v-for="(user, idx) in filteredUsers(followedUsers)"
@@ -44,6 +51,7 @@
               :followid="user.followId"
               :type="user.followUserAvatarType"
               :nickname="user.userNickname"
+              :points="user.points"
               :level="user.lv"
               :imgUrl="user.imgUrl"
               :checked="isFolledArr[idx]"
@@ -53,6 +61,13 @@
         </template>
 
         <template v-else-if="allUsers.length > 0">
+          <div class="input-groups flex-nowrap">
+            <span class="input-groups-text">
+              <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+            </span>
+            <input type="text" class="form-control-input" placeholder="Username" :v-model="username" />
+          </div>
+
           <div class="find-modal-box">
             <find-modal-compo
               v-for="(user, idx) in filteredUsers(allUsers)"
@@ -60,6 +75,7 @@
               :userId="user.userId"
               :nickname="user.userNickname"
               :level="user.lv"
+              :points="user.points"
               :imgUrl="user.imgUrl"
               :type="user.userAvatarType"
               :checked="AllUserArr[idx]"
@@ -303,14 +319,6 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.modal-header {
-  position: sticky;
-  top: 0;
-  background-color: white;
-  z-index: 10;
-  padding-bottom: 10px;
 }
 
 .modal-body {
