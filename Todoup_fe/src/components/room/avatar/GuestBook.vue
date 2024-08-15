@@ -320,15 +320,15 @@ export default {
   width: 88%;
   padding-left: 10px;
   padding-bottom: 10px;
-  height: 210px;
-  margin-top: 15px;
+  height: 225px;
+  margin-top: 25px;
   overflow-y: auto;
   padding-right: 15px;
   box-sizing: border-box;
 }
 
 .guest-book {
-  height: 47%;
+  height: 50%;
   display: flex;
   overflow: hidden;
   justify-content: end;
@@ -353,7 +353,7 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-top: 0rem;
+  margin-top: 1rem;
   margin-bottom: 0rem;
   font-size: 14px;
   width: 485px;
