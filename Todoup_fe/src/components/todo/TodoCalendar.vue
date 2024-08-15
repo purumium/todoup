@@ -66,14 +66,14 @@ export default {
     this.fetchTodos(); // 초기 데이터를 가져옴
   },
 
-  /*  watch: {
+  watch: {
     todos: {
       handler() {
         this.loadCalendarData();
         this.fetchTodos();
       },
     },
-  }, */
+  },
 
   methods: {
     setInitialMonth() {
