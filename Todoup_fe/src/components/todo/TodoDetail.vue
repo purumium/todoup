@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import axios from 'axios';
 import categories from '@/assets/categories.json';
 
@@ -88,6 +88,9 @@ export default {
     },
   },
   computed: {
+    ...mapState('todo', {
+      todos: 'todo_info', // Vuex의 todo_info 상태를 todos로 매핑
+    }),
     ...mapGetters({
       profileImg: 'user/getProfileImg', // Vuex의 profileImg 상태를 컴포넌트에 매핑
     }),
@@ -126,7 +129,13 @@ export default {
     },
     async deleteTodo() {
       if (!this.todo) return;
-
+      const kor_time = new Date();
+      const today =
+        kor_time.getFullYear() +
+        '-' +
+        (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1) +
+        '-' +
+        kor_time.getDate();
       try {
         // 첫 번째 알림: 삭제 확인 요청
         const result = await this.$swal.fire({
@@ -156,8 +165,11 @@ export default {
             confirmButtonColor: '#429f50',
           });
           this.$store.commit('todo/REMOVE_TODO', this.todo.todo_id);
+          if (this.todo.start_date.split(' ')[0] === today) {
+            this.$store.commit('todo/REMOVE_TODAY', this.todo.todo_id);
+          }
           // 삭제 완료 후 이벤트 발생
-          this.$emit('todo-deleted', this.todo.todo_id);
+          //this.$emit('todo-deleted', this.todo.todo_id);
         }
       } catch (error) {
         console.error('Error deleting todo:', error);
@@ -189,12 +201,10 @@ export default {
         this.start_date = this.formatModDate(this.todo.start_date);
         this.end_date = this.formatModDate(this.todo.end_date);
       }
-      console.log('S.C: ', this.todo_id, '/', this.user_id, this.start_date, this.end_date);
     },
     async modifyTodo() {
       if (!this.todo) return;
 
-      console.log('M.T:', this.todo.todo_id, '/', this.todo.user_id);
       try {
         await axios.patch(`/api/todo/modify/${this.todo.todo_id}`, {
           userId: this.user_id,
@@ -210,6 +220,29 @@ export default {
           confirmButtonText: '확인',
           confirmButtonColor: '#429f50',
         });
+        const newTodo = {
+          todo_id: this.todo_id,
+          user_id: this.user_id,
+          title: this.title,
+          memo: this.memo,
+          category: this.category,
+          start_date: this.formatModDate(this.start_date),
+          end_date: this.formatModDate(this.end_date),
+        };
+
+        this.$store.commit('todo/UPDATE_TODO', newTodo);
+
+        const kor_time = new Date();
+        const today =
+          kor_time.getFullYear() +
+          '-' +
+          (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1) +
+          '-' +
+          kor_time.getDate();
+        if (this.start_time <= today && today <= this.end_time) {
+          this.$store.commit('todo/UPDATE_TODAY', newTodo);
+        }
+
         this.showContent();
       } catch (error) {
         console.log();

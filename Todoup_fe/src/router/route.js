@@ -12,7 +12,7 @@ import AvatarRoom from '@/components/room/avatar/AvatarRoom.vue';
 import MyReport from '@/components/room/report/MyReport.vue';
 import CreateTodo from '@/components/todo/TodoCreate.vue';
 import TodoList from '@/components/todo/TodoList.vue';
-
+import ExampleCalendar from '@/components/todo/ExampleCalendar.vue';
 export default [
   {
     path: '/',
@@ -31,6 +31,11 @@ export default [
                 path: '',
                 component: TodoCalendar,
                 alias: 'todo',
+              },
+              {
+                path: 'example',
+                component: ExampleCalendar,
+                alias: 'example',
               },
               {
                 path: 'todo/create',

@@ -1,27 +1,45 @@
 <template>
-  <div class="todo-section">
-    <div>
+
+  <div class="todo-section" v-if="userInfo.userId">
+    <div class="d-flex align-items-center justify-content-between">
       <span class="today-todo">오늘의 할 일</span>
       <span class="today-date">{{ todayDate }}</span>
+      <font-awesome-icon @click="goToTodayTodo" :icon="['fas', 'arrow-up-right-from-square']" />
     </div>
-    <ul class="todo-list" v-if="todoList.length > 0">
-      <li v-for="(todo, idx) in todoList" :key="idx">
-        <input type="checkbox" v-model="todo.completed" @change="toggleCompletion(todo)" />
+    <ul class="todo-list" v-if="todoInfo.length > 0">
+      <li v-for="(todo, idx) in todayTodos" :key="idx">
+        <input type="checkbox" :checked="todo.completed" @change="toggleCompletion(todo)" />
+
         <span :class="{ 'check-line-through': todo.completed }">
           {{ todo.title }}
         </span>
       </li>
     </ul>
-
     <ul class="todo-list rainbow" v-else>
       <li class="todo-empty"><span>조회된 데이터가 없습니다.!</span></li>
+    </ul>
+  </div>
+  <div class="todo-section" v-else>
+    <div class="d-flex align-items-center justify-content-between">
+      <span>Today's TODO</span>
+      <font-awesome-icon @click="goToTodayTodo" :icon="['fas', 'arrow-up-right-from-square']" />
+    </div>
+    <ul class="todo-list rainbow">
+      <li class="text-example" v-for="(todo, idx) in todoList" :key="idx">
+        <input type="checkbox" v-model="todo.checked" />
+        <span :class="{ 'check-line-through': todo.checked }">
+          {{ todo.text }}
+        </span>
+      </li>
     </ul>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-import { mapState } from 'vuex';
+
+import { mapState, mapGetters } from 'vuex';
+
 
 export default {
   name: 'TodayTodo',
@@ -32,8 +50,17 @@ export default {
     const day = String(today.getDate()).padStart(2, '0');
 
     return {
-      todoList: [],
+
+      todoList: [
+        { text: '오늘 하루 잘 살기', checked: true },
+        { text: '★ 회원 가입하기 ★', checked: false },
+        { text: '로그인 하기', checked: false },
+        { text: "Today's TODO 작성하기", checked: true },
+        { text: '성장일기 쓰기', checked: false },
+        { text: '행복하기', checked: true },
+      ],
       todayDate: `${year}-${month}-${day}`, // "YYYY-MM-DD" 형식의 날짜
+
     };
   },
   computed: {
@@ -41,51 +68,12 @@ export default {
       userInfo: 'user_info', // Vuex의 user_info 상태를 userInfo로 매핑
     }),
     ...mapState('todo', {
-      todoInfo: 'todo_info', // Vuex의 todo_info 상태를 todoInfo로 매핑
+      todoInfo: 'todo_info',
+      todayInfo: 'today_info', // Vuex의 todo_info 상태를 todoInfo로 매핑
     }),
   },
-  watch: {
-    userInfo: {
-      handler(newValue) {
-        if (!newValue.userId) {
-          this.loadExampleTodos(); // 예시 데이터를 불러옴
-        } else {
-          this.loadTodayTodos();
-        }
-      },
-      immediate: true, // 컴포넌트 생성 시에도 watcher를 즉시 호출
-    },
-  },
-  created() {
-    if (!this.userInfo.userId) {
-      this.loadExampleTodos();
-    } else {
-      this.loadTodayTodos();
-    }
-  },
+
   methods: {
-    async loadTodayTodos() {
-      try {
-        const response = await axios.get('/api/todo/today', {
-          params: { userId: this.userInfo.userId },
-        });
-        this.todoList = response.data.map((todo) => ({
-          todo_id: todo.todo_id,
-          title: todo.title, // title을 text로 변환
-          completed: todo.completed != 1 ? false : true, // 체크박스 상태를 초기화
-        }));
-      } catch (error) {
-        console.error("Error loading today's todos:", error);
-      }
-    },
-    loadExampleTodos() {
-      const exampleTodos = [
-        { title: 'TO DO UP 사용해보기!', completed: true },
-        { title: 'TO DO 추가!', completed: false },
-        { title: 'TO DO 달성하고 레벨업하기!', completed: false },
-      ];
-      this.todoList = exampleTodos;
-    },
     async toggleCompletion(todo) {
       if (!this.userInfo.userId) {
         this.$swal
@@ -111,12 +99,39 @@ export default {
           },
         });
         todo.completed = newCompletionStatus;
-        alert('할일 상태 변경');
+
+        // 포인트를 update하는 로직 추가
+        const pointsToAdd = newCompletionStatus ? 5 : -5; // 완료시 +5 포인트, 취소시 -5 포인트
+        //const newPoints = this.points + pointsToAdd;
+        this.$store.dispatch('user/updatePoints', pointsToAdd);
+
+        this.$swal.fire({
+          text: 'TODO의 완료 상태가 변경되었습니다.',
+          icon: 'success',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#429f50',
+        });
+        this.$store.commit('todo/TODO_COMPLETION', todo.todo_id, !todo.completed);
+
+        this.$store.commit('todo/TODAY_COMPLETION', todo.todo_id, !todo.completed);
+
       } catch (error) {
         console.error('Error toggling completion status:', error);
         alert('할일 상태를 업데이트하는 중 오류가 발생했습니다.');
       }
     },
+
+    goToTodayTodo() {
+      const kor_time = new Date();
+      const todayDate =
+        kor_time.getFullYear() +
+        '-' +
+        (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1) +
+        '-' +
+        kor_time.getDate();
+      this.$router.push(`/todo/${todayDate}`);
+    },
+
   },
 };
 </script>
@@ -155,8 +170,13 @@ export default {
 .text-rainbow {
   background-image: linear-gradient(90deg, red, orange, yellow, green, blue, navy, purple);
   -webkit-background-clip: text;
-  color: transparent;
+  color: #635a5a; /*무지개가 그립다면 transparent로 바꿔주세요. */
   font-weight: bold;
+}
+.text-example {
+  list-style-type: none;
+  font-size: 15px;
+  margin-bottom: 8px;
 }
 
 .today-date {

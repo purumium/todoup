@@ -14,12 +14,10 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
 import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import koLocale from '@fullcalendar/core/locales/ko';
-import axios from 'axios';
 
 export default {
   components: {
@@ -48,33 +46,10 @@ export default {
       currentMonth: '', // 현재 월과 연도 저장
     };
   },
-  computed: {
-    ...mapState('user', {
-      userId: (state) => state.user_info.userId,
-    }),
-    ...mapState('todo', {
-      todos: 'todo_info',
-      todays: 'today_info', // Vuex의 todo_info 상태를 todos로 매핑
-    }),
-    ...mapGetters('todo', {
-      allTodos: 'allTodos',
-    }),
-  },
-
   created() {
     this.setInitialMonth(); // 초기 월과 연도 설정
-    this.fetchTodos(); // 초기 데이터를 가져옴
+    this.setExampleEvents();
   },
-
-  watch: {
-    todos: {
-      handler() {
-        this.loadCalendarData();
-        this.fetchTodos();
-      },
-    },
-  },
-
   methods: {
     setInitialMonth() {
       const today = new Date();
@@ -121,68 +96,6 @@ export default {
         this.$router.push('/todo/create');
       }
     },
-    
-    async loadCalendarData() {
-
-      if (this.userId) {
-        try {
-          const userId = this.userId;
-          const response = await axios.get(`/api/todo/month/${this.currentMonth}`, {
-            params: { userId },
-          });
-          this.$store.commit('todo/SET_TODOS', response.data);
-
-          const kor_time = new Date();
-
-          const month =
-            kor_time.getFullYear() +
-            '-' +
-            (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1);
-
-          const today =
-            kor_time.getFullYear() +
-            '-' +
-            (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1) +
-            '-' +
-            kor_time.getDate();
-
-          if (this.currentMonth == month && this.todos.length != 0) {
-            const todayTodos = this.todos.filter(
-              (todo) => todo.start_date.split(' ')[0] <= today && today <= todo.end_date.split(' ')[0]
-            );
-            this.$store.commit('todo/SET_TODAYS', todayTodos);
-          }
-
-          // todos 배열을 FullCalendar의 events 배열 형식에 맞게 변환
-          this.calendarOptions.events = todos.map((todo) => {
-            return {
-              title: todo.title,
-              start: todo.start_date, // 시작 날짜 설정
-              end: this.formatEndDate(todo.end_date), // 종료 날짜 설정 (포함되지 않으므로 다음 날로 설정)
-              completed: todo.completed, // 완료 여부 추가
-              todoId: todo.todo_id,
-            };
-          });
-        } catch (error) {
-          console.error('Error fetching todos:', error);
-        }
-      } else {
-        this.setExampleEvents(); // 로그인하지 않은 경우 예시 이벤트 설정
-      }
-    },
-
-
-    fetchTodos() {
-      this.calendarOptions.events = this.allTodos.map((todo) => {
-        return {
-          title: todo.title,
-          start: todo.start_date, // 시작 날짜 설정
-          end: this.formatEndDate(todo.end_date), // 종료 날짜 설정 (포함되지 않으므로 다음 날로 설정)
-          completed: todo.completed, // 완료 여부 추가
-          todoId: todo.todo_id,
-        };
-      });
-    },
 
     setExampleEvents() {
       const today = new Date();
@@ -219,20 +132,21 @@ export default {
       const year = arg.view.currentStart.getFullYear();
       const month = String(arg.view.currentStart.getMonth() + 1).padStart(2, '0'); // getMonth() + 1으로 올바른 월 얻기
       this.currentMonth = `${year}-${month}`;
-      this.loadCalendarData(); // 월 설정될 때마다 할일 목록 불러오기
+      this.setExampleEvents(); // 월 설정될 때마다 할일 목록 불러오기
     },
     renderEventContent(eventInfo) {
       return {
         html: `
-          <div class="todo-event ${eventInfo.event.extendedProps.completed ? 'completed' : ''}">
-            <span class="todo-title">${eventInfo.event.title}</span>
-          </div>
-        `,
+              <div class="todo-event ${eventInfo.event.extendedProps.completed ? 'completed' : ''}">
+                <span class="todo-title">${eventInfo.event.title}</span>
+              </div>
+            `,
       };
     },
   },
 };
 </script>
+
 <style>
 .w-100 {
   width: 100% !important;
@@ -242,7 +156,7 @@ export default {
 .todo-calendar-top {
   color: #2b2222b8 !important;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 22px;
   display: flex;
   padding: 7px 0;
   border-bottom: 2px solid #cfcece70;
@@ -261,7 +175,7 @@ export default {
 
 .add-todo {
   position: relative;
-  top: 3.8em;
+  top: 4.2em;
   width: 105px;
   height: 30px;
   background-color: #e5e5e51f;
