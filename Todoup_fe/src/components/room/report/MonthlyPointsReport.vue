@@ -92,6 +92,7 @@ h4 {
   font-weight: bold; /* 굵게 */
   color: #333; /* 부드러운 검정색 */
   text-align: center; /* 텍스트 중앙 정렬 */
+  margin-top: 40px; /* 리포트 제목과 간격 */
   margin-bottom: 20px; /* 차트와의 간격 조정 */
   font-family: 'Arial', sans-serif; /* 예쁜 폰트 적용 */
 }
