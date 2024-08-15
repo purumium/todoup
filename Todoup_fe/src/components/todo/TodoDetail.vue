@@ -373,7 +373,7 @@ export default {
 
 .no-selection p {
   position: relative;
-  top: 10em;
+  top: 0.3em;
   text-align: center;
   padding: 10px 8px 12px 8px;
   border-radius: 25px;
