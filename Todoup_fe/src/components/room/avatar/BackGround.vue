@@ -38,8 +38,9 @@ export default {
 }
 
 .guest-book {
-  height: 50%; /* 아래쪽 절반을 차지 */
+  height: 40%;
   display: flex;
+  overflow: hidden;
   justify-content: end;
   align-items: center;
 }
