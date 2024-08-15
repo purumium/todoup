@@ -31,7 +31,7 @@
               :nickname="user.followNickname"
               :level="user.followUserLv"
               :imgUrl="user.imgUrl"
-              :points="user.points"
+              :points="user.followUserPoints"
               :checked="isFollowArr[idx]"
               @update:checked="handleCheckedChange(idx, $event)"
             ></find-modal-compo>

@@ -319,7 +319,7 @@ export default {
 }
 
 .todo-dates {
-  font-size: 14px;
+  font-size: 12px;
   color: #555;
   display: flex;
   flex-direction: column;
@@ -327,7 +327,7 @@ export default {
   font-weight: 500;
   margin-top: 12px;
   border: 1px solid #8080804a;
-  padding: 10px;
+  padding: 10px 20px;
   border-radius: 10px;
 }
 

@@ -30,7 +30,7 @@
         <todo-detail v-if="selectedTodo" :todo="selectedTodo" @todo-deleted="handleTodoDeleted"></todo-detail>
         <div v-else class="no-selection">
           <p>할 일을 선택해주세요</p>
-          <img :src="`/avatar/${profileImg}`" alt="No selection" />
+          <img :src="`/avatar/${profileImg}.png`" alt="No selection" />
         </div>
       </div>
     </div>
@@ -193,9 +193,9 @@ export default {
 
 /* 투두 리스트 스타일 */
 .todo-list {
+  flex: 1;
   overflow-x: none;
   overflow-y: auto;
-  flex: 1;
   background-color: #ffffff;
   border-radius: 15px;
   padding: 35px 20px;
