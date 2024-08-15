@@ -123,9 +123,6 @@ export default {
     },
 
     async loadCalendarData() {
-      console.error('현재', this.currentMonth, '월');
-      console.log('요청전 todos:', this.todos);
-      console.log('요청전 todays:', this.todays);
       if (this.userId) {
         try {
           const userId = this.userId;
@@ -149,14 +146,12 @@ export default {
             kor_time.getDate();
 
           if (this.currentMonth == month && this.todos.length != 0) {
-            console.log(month, '에 실행됨');
             const todayTodos = this.todos.filter(
               (todo) => todo.start_date.split(' ')[0] <= today && today <= todo.end_date.split(' ')[0]
             );
             this.$store.commit('todo/SET_TODAYS', todayTodos);
           }
-          console.log('요청후 todos:', this.todos);
-          console.log('요청후 todays:', this.todays);
+
           // todos 배열을 FullCalendar의 events 배열 형식에 맞게 변환
           this.calendarOptions.events = this.todos.map((todo) => {
             return {
