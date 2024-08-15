@@ -116,6 +116,19 @@ export default {
     },
 
     goToTodayTodo() {
+      if (!this.userInfo.userId) {
+        this.$swal
+          .fire({
+            text: '로그인이 필요합니다.',
+            icon: 'warning',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#f39c12',
+          })
+          .then(() => {
+            this.$router.push('/login');
+          });
+        return;
+      }
       const kor_time = new Date();
       const todayDate =
         kor_time.getFullYear() +
