@@ -120,14 +120,15 @@ export default {
 }
 
 .todo-add-title {
-  margin-bottom: 20px;
   color: #2b2222b8 !important;
   font-weight: 600;
-  font-size: 22px;
-  padding: 10px 0;
-  text-align: center;
+  font-size: 16px;
+  display: flex;
+  padding: 7px 0;
   border-bottom: 2px solid #cfcece70;
   border-top: 2px solid #cfcece70;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .form-control {

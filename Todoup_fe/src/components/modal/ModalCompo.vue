@@ -12,11 +12,13 @@
         <!-- followUsers가 있을 때 -->
 
         <template v-if="followUsers.length > 0">
-          <div class="input-groups flex-nowrap">
-            <span class="input-groups-text">
-              <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
-            </span>
-            <input type="text" class="form-control-input" placeholder="Username" :v-model="username" />
+          <div class="input-groups-container">
+            <div class="input-groups flex-nowrap">
+              <span class="input-groups-text">
+                <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+              </span>
+              <input type="text" class="form-control-input" placeholder="Username" v-model="username" />
+            </div>
           </div>
 
           <div class="find-modal-box">
@@ -37,11 +39,13 @@
         </template>
 
         <template v-else-if="followedUsers.length > 0">
-          <div class="input-groups flex-nowrap">
-            <span class="input-groups-text">
-              <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
-            </span>
-            <input type="text" class="form-control-input" placeholder="Username" :v-model="username" />
+          <div class="input-groups-container">
+            <div class="input-groups flex-nowrap">
+              <span class="input-groups-text">
+                <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+              </span>
+              <input type="text" class="form-control-input" placeholder="Username" v-model="username" />
+            </div>
           </div>
           <div class="find-modal-box">
             <find-modal-compo
@@ -61,11 +65,13 @@
         </template>
 
         <template v-else-if="allUsers.length > 0">
-          <div class="input-groups flex-nowrap">
-            <span class="input-groups-text">
-              <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
-            </span>
-            <input type="text" class="form-control-input" placeholder="Username" :v-model="username" />
+          <div class="input-groups-container">
+            <div class="input-groups flex-nowrap">
+              <span class="input-groups-text">
+                <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+              </span>
+              <input type="text" class="form-control-input" placeholder="Username" v-model="username" />
+            </div>
           </div>
 
           <div class="find-modal-box">
@@ -314,7 +320,7 @@ export default {
 }
 
 .modal-Xcontainer {
-  padding: 12px 0px 22px 9px;
+  padding: 12px 0px 16px 9px;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -334,20 +340,20 @@ export default {
   color: rgba(0, 0, 0, 0.719);
 }
 
-.find-modal-box {
-  margin-top: 20px;
-}
-
 .x-btn {
-  margin-right: 4px;
   font-size: 13px;
   color: #171313e0;
-  padding: 4px 8px;
-  border-radius: 20px;
+  padding: 4px 6px;
+}
+
+.input-groups-container {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 10;
 }
 
 .input-groups {
-  position: relative;
   display: flex;
   align-items: center;
 }
@@ -363,15 +369,18 @@ export default {
 }
 
 .form-control-input {
-  width: 30.3em;
-  height: 35px;
-  padding-left: 45px;
-  padding-right: 15px;
-  background-color: #e5e5e51f;
+  width: 100%;
+  padding: 10px;
+  padding-left: 46px;
   color: #544545;
   border: 1px solid #1d13132e;
   font-size: 14px;
   border-radius: 20px;
-  box-sizing: border-box;
+}
+
+.find-modal-box {
+  max-height: 320px;
+  overflow-y: auto;
+  padding-top: 17px;
 }
 </style>

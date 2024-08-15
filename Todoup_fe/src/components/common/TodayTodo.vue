@@ -1,6 +1,9 @@
 <template>
   <div class="todo-section">
-    <div>Today's TODO</div>
+    <div>
+      <span class="today-todo">오늘의 할 일</span>
+      <span class="today-date">{{ todayDate }}</span>
+    </div>
     <ul class="todo-list" v-if="todoList.length > 0">
       <li v-for="(todo, idx) in todoList" :key="idx">
         <input type="checkbox" v-model="todo.completed" @change="toggleCompletion(todo)" />
@@ -23,8 +26,14 @@ import { mapState } from 'vuex';
 export default {
   name: 'TodayTodo',
   data() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1 필요
+    const day = String(today.getDate()).padStart(2, '0');
+
     return {
       todoList: [],
+      todayDate: `${year}-${month}-${day}`, // "YYYY-MM-DD" 형식의 날짜
     };
   },
   computed: {
@@ -150,9 +159,18 @@ export default {
   font-weight: bold;
 }
 
+.today-date {
+  border: 1px solid #cfb50952;
+  background-color: #fddd0a29;
+  border-radius: 20px;
+  padding: 2px 6px;
+  font-size: 11px;
+  margin-left: 6px;
+}
+
 li {
   list-style-type: none;
-  font-size: 18px;
+  font-size: 15px;
   margin-bottom: 8px;
 }
 
