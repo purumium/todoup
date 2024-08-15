@@ -19,7 +19,7 @@
 
     <div v-for="(message, index) in messages" :key="index" class="bubble">
       <div v-if="!message.isEditing">
-        <p class="message-content">{{ message.content }}</p>
+        <div class="message-content">{{ message.content }}</div>
         <div class="d-flex justify-content-between align-items-center">
           <div class="d-flex justify-content-between">
             <small>Written by: {{ message.writerId }}</small>
@@ -316,14 +316,23 @@ export default {
 .guestbook-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* 왼쪽 정렬 */
-  width: 90%; /* 나중에 제대로 맞추기 */
+  align-items: flex-start;
+  width: 88%;
   padding-left: 10px;
   padding-bottom: 10px;
-  height: 260px; /* 원하는 높이 설정 */
-  overflow-y: auto; /* 세로 스크롤바 활성화 */
-  padding-right: 15px; /* 스크롤바가 콘텐츠에 겹치지 않도록 여유 공간 추가 */
+  height: 210px;
+  margin-top: 15px;
+  overflow-y: auto;
+  padding-right: 15px;
   box-sizing: border-box;
+}
+
+.guest-book {
+  height: 47%;
+  display: flex;
+  overflow: hidden;
+  justify-content: end;
+  align-items: center;
 }
 
 /* 스크롤 관련 css */
@@ -344,25 +353,25 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-top: 4rem;
-  margin-bottom: 1rem;
-  width: 500px;
-  padding-bottom: 0;
-  border: 2px solid #635e5e21;
-  border-radius: 20px;
+  margin-top: 0rem;
+  margin-bottom: 0rem;
+  font-size: 14px;
+  width: 485px;
+  border: 1px solid #635e5e21;
+  border-radius: 22px;
   background-color: #f1f2f3;
 }
 
 .new-message-form > textarea {
   width: 100%;
   height: 100px;
-  padding: 12px 10px;
+  padding: 14px 12px;
   border: none;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
   background-color: inherit;
   margin: 0;
-  border: 2px solid #635e5e21;
+  border: 1px solid #635e5e21;
 }
 
 .new-message-form > button {
@@ -375,6 +384,7 @@ export default {
   padding: 0 20px;
   display: flex;
   align-items: center;
+  font-size: 12px;
   justify-content: center;
   white-space: nowrap;
 }
@@ -389,9 +399,11 @@ export default {
 .message-content {
   box-sizing: content-box;
   white-space: normal;
-  word-wrap: break-word; /* 긴 단어를 줄바꿈 */
-  word-break: break-word; /* 단어 자체를 줄바꿈 */
-  overflow-wrap: break-word; /* 텍스트가 부모를 넘지 않도록 줄바꿈 */
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  font-size: 13px;
+  margin: 3px 0px;
 }
 
 .bubble {
@@ -403,7 +415,7 @@ export default {
   width: 380px;
   text-align: left;
   font-size: 1em;
-  margin: 10px 0; /* 방명록 간 간격 */
+  margin: 14px 0;
   border: 1px solid #f9f9f9;
 }
 
@@ -422,7 +434,7 @@ export default {
 
 .bubble small {
   color: #888;
-  font-size: 0.85em;
+  font-size: 10px;
   white-space: nowrap;
 }
 
@@ -433,13 +445,13 @@ export default {
   align-items: center;
   justify-content: center;
   background: #f1f2f3;
-  border-radius: 15px;
+  border-radius: 30px;
   padding: 20px;
-  color: #888;
-  max-width: 500px;
+  color: #4e4646;
+  max-width: 490px;
   text-align: center;
-  font-size: 1em;
-  margin: auto 0; /* 위아래 간격 */
+  font-size: 14px;
+  margin: 16px -7px;
   border: 1px solid #ccc;
 }
 .no-guestbook-card > p {
@@ -455,21 +467,23 @@ export default {
   margin-left: 30px;
   box-sizing: border-box;
   white-space: nowrap;
+  display: flex;
 }
 
 .icon-button {
   width: 50px;
-  height: 30px;
+  height: 21px;
   cursor: pointer;
   outline: none;
-  color: #544545;
-  font-size: 11px;
+  color: #7e7777;
+  font-size: 8px;
   border-radius: 20px;
   background: none;
-  border: none;
+  border: 1px solid #80808047;
   border-radius: 16px;
   margin-left: 5px;
   padding: 0;
+  float: right;
 }
 
 .icon-button:hover {

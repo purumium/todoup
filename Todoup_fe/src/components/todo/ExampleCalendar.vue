@@ -104,7 +104,7 @@ export default {
           title: 'TO DO UP 사용해보기!',
           start: new Date(today.getFullYear(), today.getMonth(), 5).toISOString().split('T')[0],
           end: new Date(today.getFullYear(), today.getMonth(), 7).toISOString().split('T')[0],
-          completed: false,
+          completed: true,
         },
         {
           title: 'TO DO 추가!',
@@ -156,7 +156,7 @@ export default {
 .todo-calendar-top {
   color: #2b2222b8 !important;
   font-weight: 600;
-  font-size: 22px;
+  font-size: 16px;
   display: flex;
   padding: 7px 0;
   border-bottom: 2px solid #cfcece70;

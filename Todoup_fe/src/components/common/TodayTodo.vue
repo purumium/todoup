@@ -18,7 +18,7 @@
       </li>
     </ul>
     <ul class="todo-list rainbow" v-else>
-      <li class="todo-empty"><span>조회된 데이터가 없습니다.!</span></li>
+      <li class="todo-empty"><span>조회된 데이터가 없습니다!</span></li>
     </ul>
   </div>
   <div class="todo-section" v-else>
@@ -52,13 +52,9 @@ export default {
 
     return {
       todoList: [
-        { text: '오늘 하루 잘 살기', checked: true },
-        { text: '★ 회원 가입하기 ★', checked: false },
-        { text: '행복하기', checked: true },
-        { text: '로그인 하기', checked: false },
-        { text: "Today's TODO 작성하기", checked: true },
-        { text: '성장일기 쓰기', checked: false },
-        { text: '행복하기', checked: true },
+        { text: 'TO DO UP 사용해보기!', checked: true },
+        { text: 'TO DO 추가!', checked: false },
+        { text: 'TO DO 달성하고 레벨업하기!', checked: false },
       ],
       todayDate: `${year}-${month}-${day}`, // "YYYY-MM-DD" 형식의 날짜
     };
