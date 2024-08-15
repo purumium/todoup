@@ -3,15 +3,22 @@
     <div class="modal-content" @click.stop>
       <div class="modal-Xcontainer">
         <p class="modal-title">{{ modalTitle }}</p>
-        <font-awesome-icon class="modal-Xbox" i :icon="['fas', 'x']" @click="handleCloseModal" />
+        <span class="x-btn">
+          <font-awesome-icon class="modal-Xbox" i :icon="['fas', 'x']" @click="handleCloseModal" />
+        </span>
       </div>
+
       <div class="modal-body">
         <!-- followUsers가 있을 때 -->
 
         <template v-if="followUsers.length > 0">
-          <div class="input-group flex-nowrap">
-            <input type="text" class="form-control" placeholder="Username" :v-model="username" />
+          <div class="input-groups flex-nowrap">
+            <span class="input-groups-text">
+              <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+            </span>
+            <input type="text" class="form-control-input" placeholder="Username" :v-model="username" />
           </div>
+
           <div class="find-modal-box">
             <find-modal-compo
               v-for="(user, idx) in filteredUsers(followUsers)"
@@ -30,8 +37,11 @@
         </template>
 
         <template v-else-if="followedUsers.length > 0">
-          <div class="input-group flex-nowrap">
-            <input type="text" class="form-control" placeholder="Username" :v-model="username" />
+          <div class="input-groups flex-nowrap">
+            <span class="input-groups-text">
+              <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+            </span>
+            <input type="text" class="form-control-input" placeholder="Username" :v-model="username" />
           </div>
           <div class="find-modal-box">
             <find-modal-compo
@@ -51,9 +61,13 @@
         </template>
 
         <template v-else-if="allUsers.length > 0">
-          <div class="input-group flex-nowrap">
-            <input type="text" class="form-control" placeholder="Username" :v-model="username" />
+          <div class="input-groups flex-nowrap">
+            <span class="input-groups-text">
+              <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+            </span>
+            <input type="text" class="form-control-input" placeholder="Username" :v-model="username" />
           </div>
+
           <div class="find-modal-box">
             <find-modal-compo
               v-for="(user, idx) in filteredUsers(allUsers)"
@@ -108,7 +122,7 @@ export default {
       } else if (this.allUsers.length > 0) {
         return '친구 찾기';
       } else {
-        return 'title';
+        return '';
       }
     },
   },
@@ -286,48 +300,78 @@ export default {
   z-index: 100;
 }
 
-.modal-Xcontainer {
-  width: 100%;
-  margin-bottom: 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 201;
-}
-.modal-Xbox {
-  font-size: 12px;
-  cursor: pointer;
-  z-index: 202;
-}
 .modal-content {
   background-color: white;
-  padding: 10px 20px 20px;
-  width: 600px;
-  height: 380px;
+  padding: 21px 28px 24px;
+  width: 480px;
+  height: 485px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 200;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-Xcontainer {
+  padding: 12px 0px 22px 9px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .modal-body {
-  max-height: 100%;
+  flex-grow: 1;
   overflow-y: auto;
-  flex-direction: column;
   display: flex;
-  justify-content: space-between;
-}
-.input-group {
-  position: fixed;
-  max-width: 540px;
-}
-.find-modal-box {
-  margin-top: 50px;
+  flex-direction: column;
 }
 
 .modal-title {
   font-size: 22px;
   font-weight: 600;
   color: rgba(0, 0, 0, 0.719);
+}
+
+.find-modal-box {
+  margin-top: 20px;
+}
+
+.x-btn {
+  margin-right: 4px;
+  font-size: 13px;
+  color: #171313e0;
+  padding: 4px 8px;
+  border-radius: 20px;
+}
+
+.input-groups {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-groups-text {
+  position: absolute;
+  padding: 0 8px;
+  border: 0 solid gray;
+  left: 10px; /* 아이콘의 위치를 input의 내부 왼쪽에 고정 */
+  pointer-events: none; /* 아이콘이 클릭되지 않도록 설정 */
+  color: #999;
+  z-index: 2;
+}
+
+.form-control-input {
+  width: 30.3em;
+  height: 35px;
+  padding-left: 45px;
+  padding-right: 15px;
+  background-color: #e5e5e51f;
+  color: #544545;
+  border: 1px solid #1d13132e;
+  font-size: 14px;
+  border-radius: 20px;
+  box-sizing: border-box;
 }
 </style>

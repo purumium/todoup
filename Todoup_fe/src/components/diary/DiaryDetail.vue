@@ -185,7 +185,7 @@ export default {
 <style scoped>
 .w-100 {
   width: 100% !important;
-  height: 610px !important;
+  height: 594px !important;
 }
 
 #diary-detail-container {
@@ -202,7 +202,7 @@ export default {
 
 .diary-table th,
 .diary-table td {
-  padding: 14px 10px;
+  padding: 13px 10px;
 }
 
 .diary-header {

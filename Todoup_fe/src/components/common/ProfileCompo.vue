@@ -11,23 +11,23 @@
           <div>{{ userInfo?.nickName || '김투두' }}</div>
           <div>{{ userInfo?.email || 'todolist@gmail.com' }}</div>
         </div>
-        <!-- 레벨과 포인트 프로그레스바 컨테이너 -->
-        <div class="profile-level-progress">
-          <div class="level-container">
-            <span class="level-icon">🏆</span> LEVEL&nbsp;<span class="level-value">{{ userInfo.lv }}</span>
-          </div>
-          <div class="progress-bar-container">
-            <div class="progress-bar">
-              <div class="progress" :style="{ width: progressWidth + '%' }"></div>
-            </div>
-            <p class="progress-text">
-              <b>{{ userInfo.points % 100 }}</b> / 100 points
-            </p>
-          </div>
-        </div>
       </div>
     </div>
     <div class="profile-bottom">
+      <!-- 레벨과 포인트 프로그레스바 컨테이너 -->
+      <div class="profile-level-progress">
+        <div class="level-container">
+          <span class="level-icon">🏆</span> LEVEL&nbsp;<span class="level-value">{{ userInfo.lv }}</span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar">
+            <div class="progress" :style="{ width: progressWidth + '%' }"></div>
+          </div>
+          <p class="progress-text">
+            <b>{{ userInfo.points % 100 }}</b> / 100 points
+          </p>
+        </div>
+      </div>
       <div class="my-follow-btn">
         <div @click="fetchFollowedUsers(userInfo.userId)">팔로잉</div>
         <div @click="fetchFollowers(userInfo.userId)">팔로워</div>
@@ -174,12 +174,12 @@ export default {
 .profile-section {
   display: flex;
   flex-direction: column;
-  margin-bottom: 40px;
+  margin-bottom: 35px;
   border: 2px solid #635e5e21;
-  padding: 26px 24px 24px 16px;
+  padding: 22px 23px 18px 16px;
   border-radius: 11px;
   width: 360px;
-  height: 270px;
+  height: 325px;
 }
 
 /* 프로필 이미지 및 팔로우 버튼들 */
@@ -280,8 +280,10 @@ export default {
 
 /* 레벨과 포인트 프로그레스바 */
 .profile-level-progress {
-  width: 100%;
-  text-align: left;
+  /* width: 100%;
+  text-align: left; */
+  width: 92%;
+  margin: 18px;
 }
 
 .level-container {

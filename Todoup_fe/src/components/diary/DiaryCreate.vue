@@ -240,12 +240,12 @@ export default {
 <style scoped>
 .w-100 {
   width: 100% !important;
-  height: 610px !important;
+  height: 600px !important;
 }
 
 .diary-wrapper {
   margin: 0 auto;
-  padding: 32px 26px;
+  padding: 25px;
   border: 2px solid #635e5e21;
   border-radius: 12px;
 }
@@ -262,7 +262,7 @@ export default {
 .diary-table th,
 .diary-table td {
   border: 2px solid #635e5e21;
-  padding: 10px;
+  padding: 9px;
   text-align: center;
   font-size: 14px;
   color: #544d4d;
