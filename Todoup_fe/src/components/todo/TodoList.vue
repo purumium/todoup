@@ -154,7 +154,7 @@ export default {
         const todo = { todo_id: createdTodoId, ...this.newTodo, completed: false };
 
         this.$store.commit('todo/ADD_TODO', todo);
-        if (this.date === today) {
+        if (this.date == today) {
           this.$store.commit('todo/ADD_TODAY', todo);
         }
 

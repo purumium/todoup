@@ -239,7 +239,7 @@ export default {
           (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1) +
           '-' +
           kor_time.getDate();
-        if (this.star_time === today) {
+        if (this.start_time <= today && today <= this.end_time) {
           this.$store.commit('todo/UPDATE_TODAY', newTodo);
         }
 

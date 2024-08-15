@@ -142,14 +142,13 @@ export default {
             '-' +
             kor_time.getDate();
 
-          let todayTodos = this.todos;
-          if (this.currentMonth === month) {
-            todayTodos = todayTodos.filter((todo) => todo.start_date.split(' ')[0] === today);
-          }
-
-          if (todayTodos.length !== 0 && this.todays.length == 0) {
+          if (this.currentMonth == month && this.todos.length != 0) {
+            const todayTodos = this.todos.filter(
+              (todo) => todo.start_date.split(' ')[0] <= today && today <= todo.end_date.split(' ')[0]
+            );
             this.$store.commit('todo/SET_TODAYS', todayTodos);
           }
+
           // todos 배열을 FullCalendar의 events 배열 형식에 맞게 변환
         } catch (error) {
           console.error('Error fetching todos:', error);
