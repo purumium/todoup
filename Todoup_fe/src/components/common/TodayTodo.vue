@@ -1,6 +1,6 @@
 <template>
   <div class="todo-section">
-    <div>Today's TODO</div>
+    <div>오늘의 할 일</div>
     <ul class="todo-list" v-if="todoList.length > 0">
       <li v-for="(todo, idx) in todoList" :key="idx">
         <input type="checkbox" v-model="todo.completed" @change="toggleCompletion(todo)" />
