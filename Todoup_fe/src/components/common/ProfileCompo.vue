@@ -180,6 +180,7 @@ export default {
   border-radius: 11px;
   width: 360px;
   height: 325px;
+  box-sizing: border-box;
 }
 
 /* 프로필 이미지 및 팔로우 버튼들 */
@@ -198,10 +199,15 @@ export default {
   padding: 7px;
 }
 
+.profile-image-container {
+  position: relative;
+  cursor: pointer;
+}
+
 .message-bubble {
   position: absolute;
   top: -40px;
-  right: 28px;
+  right: 24px;
   background-color: #429f50;
   color: white;
   padding: 10px 15px;
@@ -221,7 +227,7 @@ export default {
   height: 0;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
-  border-top: 10px solid #429f50; /* 말풍선 색과 동일한 색상으로 설정 */
+  border-top: 10px solid #429f50;
 }
 
 @keyframes fade-in-out {
@@ -276,6 +282,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 /* 레벨과 포인트 프로그레스바 */
