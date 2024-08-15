@@ -63,8 +63,9 @@ export default {
   display: flex;
   justify-content: center; /* 기본 중앙 정렬 */
   align-items: center;
+
   width: 100%;
-  height: 100%;
+  height: 272px;
 }
 
 .avatar-wrapper.is-friend-room {
