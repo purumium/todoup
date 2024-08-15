@@ -1,13 +1,10 @@
 <template>
   <div class="avatar-section">
-    <p class="avatar-title">{{ nickName }}'s Avatar</p>
+    <p class="avatar-title">{{ nickName }} 님</p>
     <div class="avatar-img">
       <img :src="profileImg" alt="Avatar" />
     </div>
     <div class="avatar-info">
-      <p>Level: {{ lv }}</p>
-      <p>Points: {{ points }}</p>
-      <!-- 어떤마음일까 -->
       <div class="profile-level-progress">
         <div class="level-container">
           <span class="level-icon">🏆</span> LEVEL&nbsp;<span class="level-value">{{ lv }}</span>
@@ -21,7 +18,6 @@
           </p>
         </div>
       </div>
-      <!-- 그대와 나 -->
     </div>
   </div>
 </template>
