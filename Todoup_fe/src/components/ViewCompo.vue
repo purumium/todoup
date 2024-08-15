@@ -1,6 +1,6 @@
 <template>
   <div class="w-100">
-    <h3>View</h3>
+    <router-view></router-view>
   </div>
 </template>
 

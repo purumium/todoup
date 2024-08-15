@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kosa.todoup.mapper.DiaryMapper">
+
+    <insert id="insertDiaryByDate" parameterType="DiaryDTO">
+        INSERT INTO
+            diary
+                (user_id, diary_date, emotion, weather, content
+                    <if test="imageUrl != null">
+                        , image_url
+                    </if>
+                )
+        VALUES
+            (#{userId}, #{diaryDate}, #{emotion}, #{weather}, #{content}
+                <if test="imageUrl != null">
+                    , #{imageUrl}
+                </if>
+            )
+    </insert>
+
+
+    <select id="getEmotionByMonth" resultType="DiaryDTO">
+        SELECT
+            TO_CHAR(diary_date, 'YYYY-MM-DD') AS diaryDate,
+            emotion
+        FROM
+            diary
+        WHERE
+            user_id = #{userId}
+        AND
+            TO_CHAR(diary_date, 'YYYY-MM') = #{yearMonth}
+        ORDER BY
+            diaryDate ASC
+    </select>
+
+    <select id="getDiaryByDate" resultType="DiaryDTO" >
+        SELECT
+            user_id AS userId,
+            TO_CHAR(diary_date, 'YYYY-MM-DD') AS diaryDate,
+            weather, emotion, content,
+            image_url AS imageUrl
+        FROM
+            diary
+        WHERE
+            user_id = #{userId}
+        AND
+            TO_CHAR(diary_date, 'YYYY-MM-DD') = #{diaryDate}
+    </select>
+
+    <delete id="deleteDiaryByDate">
+        DELETE
+        FROM
+            diary
+        WHERE
+            user_id = #{userId}
+        AND
+            TO_CHAR(diary_date, 'YYYY-MM-DD') = #{diaryDate}
+    </delete>
+
+    <update id="updateDiaryByDate">
+        UPDATE
+            diary
+        SET
+            weather = #{weather},
+            emotion = #{emotion},
+            content = #{content}
+            <if test="imageUrl != null">
+                ,image_url = #{imageUrl}
+            </if>
+        WHERE
+            user_id = #{userId}
+        AND
+            TO_CHAR(diary_date, 'YYYY-MM-DD') = #{diaryDate}
+    </update>
+
+</mapper>
