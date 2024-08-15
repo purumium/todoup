@@ -121,9 +121,8 @@ export default {
         this.$router.push('/todo/create');
       }
     },
-    
-    async loadCalendarData() {
 
+    async loadCalendarData() {
       if (this.userId) {
         try {
           const userId = this.userId;
@@ -154,7 +153,7 @@ export default {
           }
 
           // todos 배열을 FullCalendar의 events 배열 형식에 맞게 변환
-          this.calendarOptions.events = todos.map((todo) => {
+          this.calendarOptions.events = this.todos.map((todo) => {
             return {
               title: todo.title,
               start: todo.start_date, // 시작 날짜 설정
@@ -170,7 +169,6 @@ export default {
         this.setExampleEvents(); // 로그인하지 않은 경우 예시 이벤트 설정
       }
     },
-
 
     fetchTodos() {
       this.calendarOptions.events = this.allTodos.map((todo) => {

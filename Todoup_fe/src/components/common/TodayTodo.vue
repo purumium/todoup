@@ -1,9 +1,11 @@
 <template>
-
   <div class="todo-section" v-if="userInfo.userId">
     <div class="d-flex align-items-center justify-content-between">
-      <span class="today-todo">오늘의 할 일</span>
-      <span class="today-date">{{ todayDate }}</span>
+      <span class="today-todo">
+        오늘의 할 일
+        <span class="today-date">{{ todayDate }}</span>
+      </span>
+
       <font-awesome-icon @click="goToTodayTodo" :icon="['fas', 'arrow-up-right-from-square']" />
     </div>
     <ul class="todo-list" v-if="todoInfo.length > 0">
@@ -40,7 +42,6 @@ import axios from 'axios';
 
 import { mapState, mapGetters } from 'vuex';
 
-
 export default {
   name: 'TodayTodo',
   data() {
@@ -50,17 +51,16 @@ export default {
     const day = String(today.getDate()).padStart(2, '0');
 
     return {
-
       todoList: [
         { text: '오늘 하루 잘 살기', checked: true },
         { text: '★ 회원 가입하기 ★', checked: false },
+        { text: '행복하기', checked: true },
         { text: '로그인 하기', checked: false },
         { text: "Today's TODO 작성하기", checked: true },
         { text: '성장일기 쓰기', checked: false },
         { text: '행복하기', checked: true },
       ],
       todayDate: `${year}-${month}-${day}`, // "YYYY-MM-DD" 형식의 날짜
-
     };
   },
   computed: {
@@ -70,6 +70,9 @@ export default {
     ...mapState('todo', {
       todoInfo: 'todo_info',
       todayInfo: 'today_info', // Vuex의 todo_info 상태를 todoInfo로 매핑
+    }),
+    ...mapGetters('todo', {
+      todayTodos: 'todayTodos', // Vuex의 todayTodos getter를 todayTodos로 매핑
     }),
   },
 
@@ -114,7 +117,6 @@ export default {
         this.$store.commit('todo/TODO_COMPLETION', todo.todo_id, !todo.completed);
 
         this.$store.commit('todo/TODAY_COMPLETION', todo.todo_id, !todo.completed);
-
       } catch (error) {
         console.error('Error toggling completion status:', error);
         alert('할일 상태를 업데이트하는 중 오류가 발생했습니다.');
@@ -131,7 +133,6 @@ export default {
         kor_time.getDate();
       this.$router.push(`/todo/${todayDate}`);
     },
-
   },
 };
 </script>
