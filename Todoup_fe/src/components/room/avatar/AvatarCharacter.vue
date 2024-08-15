@@ -55,11 +55,6 @@ export default {
   text-align: center;
 }
 
-.avatar-title {
-  font-size: 14px;
-  margin-bottom: 0.5rem;
-}
-
 .avatar-img > img {
   height: 150px;
   /* width: 210px; 추가 */
@@ -67,8 +62,7 @@ export default {
 }
 
 .avatar-info {
-  margin-top: 1rem;
-  font-size: 16px;
+  margin: -5px 23px 0px -2px;
 }
 /* AvatarCharacter 스타일 */
 .avatar-section {
@@ -81,18 +75,15 @@ export default {
 
 .avatar-title {
   font-size: 14px;
-  margin-bottom: 0.5rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+  border-bottom: 2px solid black;
 }
 
 .avatar-img > img {
   height: 150px;
   /* width: 210px; 추가 */
   object-fit: cover; /* 이미지 크기 조정 */
-}
-
-.avatar-info {
-  margin-top: 1rem;
-  font-size: 16px;
 }
 
 /* 프로필 레벨과 포인트 프로그레스바 스타일 */
