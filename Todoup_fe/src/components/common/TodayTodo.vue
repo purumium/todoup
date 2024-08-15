@@ -8,7 +8,7 @@
 
       <font-awesome-icon @click="goToTodayTodo" :icon="['fas', 'arrow-up-right-from-square']" />
     </div>
-    <ul class="todo-list" v-if="todoInfo.length > 0">
+    <ul class="todo-list" v-if="todayTodos.length > 0">
       <li v-for="(todo, idx) in todayTodos" :key="idx">
         <input type="checkbox" :checked="todo.completed" @change="toggleCompletion(todo)" />
 
@@ -66,10 +66,6 @@ export default {
   computed: {
     ...mapState('user', {
       userInfo: 'user_info', // Vuex의 user_info 상태를 userInfo로 매핑
-    }),
-    ...mapState('todo', {
-      todoInfo: 'todo_info',
-      todayInfo: 'today_info', // Vuex의 todo_info 상태를 todoInfo로 매핑
     }),
     ...mapGetters('todo', {
       todayTodos: 'todayTodos', // Vuex의 todayTodos getter를 todayTodos로 매핑
