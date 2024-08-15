@@ -19,7 +19,7 @@ export default {
 .background {
   position: relative;
   width: 100%;
-  height: 515px;
+  height: 520px;
   /* background-image: url(http://localhost:8000/img/supermario_background.c3ac70be.jpg); */
   background-image: url('@/assets/avatar_background.png');
   background-size: cover;

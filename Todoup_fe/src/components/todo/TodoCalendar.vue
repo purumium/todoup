@@ -208,6 +208,7 @@ export default {
   font-weight: 600;
   font-size: 16px;
   display: flex;
+  justify-content: center;
   padding: 7px 0;
   border-bottom: 2px solid #cfcece70;
   border-top: 2px solid #cfcece70;
