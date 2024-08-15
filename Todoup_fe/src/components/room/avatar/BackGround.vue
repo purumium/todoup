@@ -20,12 +20,14 @@ export default {
   position: relative;
   width: 100%;
   height: 515px;
-  background-image: url('@/assets/supermario_background.jpg');
+  /* background-image: url(http://localhost:8000/img/supermario_background.c3ac70be.jpg); */
+  background-image: url('@/assets/avatar_background.png');
   background-size: cover;
   background-position: center;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin-top: 16px;
 }
 
 .avatar-container {

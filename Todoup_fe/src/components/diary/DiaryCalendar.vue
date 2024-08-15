@@ -155,7 +155,7 @@ export default {
 .calendar-title {
   color: #2b2222b8 !important;
   font-weight: 600;
-  font-size: 22px;
+  font-size: 16px;
   display: flex;
   justify-content: center;
   padding: 7px 0;
@@ -176,7 +176,7 @@ export default {
 }
 
 .fc .fc-toolbar.fc-header-toolbar {
-  margin: 0.5em 0 1em 0;
+  margin: 0.5em 0 0.5em 0;
 }
 
 .fc .fc-toolbar-title {

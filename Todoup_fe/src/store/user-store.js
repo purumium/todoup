@@ -39,9 +39,9 @@ const store = {
       context.commit('login', payload);
     },
     logout(context) {
-      sessionStorage.clear();
+      localStorage.removeItem('user_info', 'profileImg');
       context.commit('logout');
-      router.push('/');
+      router.push('/'); // 로그아웃 후 "/" 경로로 이동
     },
     logfail(context, payload) {
       context.commit('logfail', payload);

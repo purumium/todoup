@@ -37,7 +37,7 @@
         WHERE TO_CHAR(START_DATE, 'YYYY-MM') <= #{date}
           AND TO_CHAR(END_DATE, 'YYYY-MM') >= #{date}
           AND USER_ID = #{userId}
-        ORDER BY START_DATE ASC
+        ORDER BY COMPLETED ASC,START_DATE ASC
         ]]>
     </select>
 

@@ -9,8 +9,16 @@
             <button type="submit" class="add-todo-button">추가</button>
           </div>
         </form>
-        <ul class="todo-ul">
-          <li v-for="todo in todayTodos" :key="todo.todo_id" @click="selectTodo(todo)" class="todo-item">
+        <ul class="todo-ul" v-if="isToday()">
+          <li v-for="todo in todays" :key="todo.todo_id" @click="selectTodo(todo)" class="todo-item">
+            <input type="checkbox" :checked="todo.completed" @change="toggleCompletion(todo)" class="todo-checkbox" />
+            <p class="todo-title mb-0" :class="{ completed: todo.completed }">
+              {{ todo.title }}
+            </p>
+          </li>
+        </ul>
+        <ul class="todo-ul" v-else>
+          <li v-for="todo in filteredTodos" :key="todo.start_date" @click="selectTodo(todo)" class="todo-item">
             <input type="checkbox" :checked="todo.completed" @change="toggleCompletion(todo)" class="todo-checkbox" />
             <p class="todo-title mb-0" :class="{ completed: todo.completed }">
               {{ todo.title }}
@@ -22,7 +30,7 @@
         <todo-detail v-if="selectedTodo" :todo="selectedTodo" @todo-deleted="handleTodoDeleted"></todo-detail>
         <div v-else class="no-selection">
           <p>할 일을 선택해주세요</p>
-          <img :src="`/avatar/${profileImg}.png`" alt="No selection" />
+          <img :src="`/avatar/${profileImg}`" alt="No selection" />
         </div>
       </div>
     </div>
@@ -52,16 +60,21 @@ export default {
     };
   },
   computed: {
-    ...mapState('user', {
-      userId: (state) => state.user_info.userId,
-      points: (state) => state.user_info.points,
-    }),
-
-    ...mapState('todo', {
-      todos: 'todo_info', // Vuex의 todo_info 상태를 todos로 매핑
-    }),
+    ...mapState(
+      'user',
+      {
+        userId: (state) => state.user_info.userId,
+        points: (state) => state.user_info.points,
+      },
+      'todo',
+      {
+        todoInfo: 'todo_info', // Vuex의 todo_info 상태를 todos로 매핑
+      }
+    ),
     ...mapGetters({
       profileImg: 'user/getProfileImg', // Vuex의 profileImg 상태를 컴포넌트에 매핑
+      todays: 'todo/todayTodos',
+      todos: 'todo/allTodos',
     }),
     formattedDate() {
       const date = new Date(this.date);
@@ -71,51 +84,24 @@ export default {
         day: 'numeric',
       });
     },
-  },
-  created() {
-    this.getTodos();
-  },
-  /*watch: {
-    '$route.params.date'(newDate) {
-      this.date = newDate;
-      this.getTodos();
+    filteredTodos() {
+      const date = this.$route.params.date;
+      return this.todos.filter((todo) => todo.start_date.split(' ')[0] === date);
     },
-  }, */
+  },
 
   methods: {
-    /* async getTodos() {
-      try {
-        const userId = this.userId;
-        const response = await axios.get(`/api/todo/date/${this.date}`, {
-          params: { userId },
-        });
-        this.todos = response.data;
-
-        const kor_time = new Date();
-        const today =
-          kor_time.getFullYear() +
-          '-' +
-          (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1) +
-          '-' +
-          kor_time.getDate();
-
-        const todayTodos = this.todos.filter((todo) => todo.start_date.split(' ')[0] === today);
-        console.log(todayTodos);
-        if (todayTodos.length > 0) {
-          this.$store.commit('todo/SET_TODOS', todayTodos);
-        }
-        const selectedTodoId = this.$route.query.selectedTodoId;
-        if (selectedTodoId) {
-          this.selectedTodo = this.todos.find((todo) => todo.todo_id === parseInt(selectedTodoId));
-        }
-      } catch (error) {
-        console.error('Error getting todos:', error);
-      }
-    }, */
-
-    getTodos() {
-      this.todayTodos = this.todos.filter((todo) => todo.start_date.split(' ')[0] === this.date);
+    isToday() {
+      const kor_time = new Date();
+      const today =
+        kor_time.getFullYear() +
+        '-' +
+        (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1) +
+        '-' +
+        kor_time.getDate();
+      return this.date == today;
     },
+
     async toggleCompletion(todo) {
       try {
         const userId = this.userId;
@@ -150,16 +136,30 @@ export default {
       this.selectedTodo = null;
     },
     async addTodo() {
+      const kor_time = new Date();
+      const today =
+        kor_time.getFullYear() +
+        '-' +
+        (kor_time.getMonth() + 1 < 10 ? '0' + (kor_time.getMonth() + 1) : kor_time.getMonth() + 1) +
+        '-' +
+        kor_time.getDate();
+
       try {
         this.newTodo.user_id = this.userId;
         this.newTodo.start_date = this.date;
         this.newTodo.end_date = this.date;
+
         const response = await axios.post('/api/todo/insert', this.newTodo);
         const createdTodoId = response.data;
         const todo = { todo_id: createdTodoId, ...this.newTodo, completed: false };
-        console.log('추가된 값: ', todo);
+
         this.$store.commit('todo/ADD_TODO', todo);
-        const newlyAddedTodo = this.todayTodos.find((todo) => todo.todo_id === createdTodoId);
+        if (this.date == today) {
+          this.$store.commit('todo/ADD_TODAY', todo);
+        }
+
+        const newlyAddedTodo = this.todos.find((todo) => todo.todo_id === createdTodoId);
+
         this.selectTodo(newlyAddedTodo);
         this.newTodo.title = '';
         this.newTodo.memo = '';
@@ -205,12 +205,12 @@ export default {
 .header {
   color: #2b2222b8 !important;
   font-weight: 600;
-  font-size: 18px;
+  font-size: 16px;
   display: flex;
-  padding: 14px 0;
+  justify-content: center;
+  padding: 7px 0;
   border-bottom: 2px solid #cfcece70;
   border-top: 2px solid #cfcece70;
-  justify-content: center;
 }
 
 .input-container {
@@ -301,27 +301,6 @@ export default {
   padding: 0 10px;
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
-
-/* 
-.no-selection {
-  text-align: center;
-  color: #888;
-}
-
-.no-selection img {
-  max-width: 200px;
-  margin-bottom: 20px;
-}
-
-.no-selection p {
-  border-radius: 5px;
-  padding: 10px 8px 12px 8px;
-  border-radius: 25px;
-  border: 2px solid #969ea442;
-  margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: bold;
-} */
 
 .no-selection {
   position: relative;
