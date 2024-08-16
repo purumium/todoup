@@ -71,28 +71,40 @@ export default {
       nickname: '',
     };
   },
+
   methods: {
     async doSignUp() {
-      try {
-        const response = await axios.post('/api/signup', {
-          email: this.email,
-          nickName: this.nickname,
-          password: this.password,
-        });
-        this.$swal.fire({
-          text: response.data,
-          icon: 'success',
-          confirmButtonText: '확인',
-          confirmButtonColor: '#429f50',
-        });
-        this.$router.push('/');
-      } catch (error) {
-        this.$swal.fire({
-          text: '회원가입에 실패 : ' + error.response.data,
-          icon: 'error',
-          confirmButtonText: '확인',
-          confirmButtonColor: '#429f50',
-        });
+      if (this.password == this.confirmPassword) {
+        try {
+          const response = await axios.post('/api/signup', {
+            email: this.email,
+            nickName: this.nickname,
+            password: this.password,
+          });
+          this.$swal.fire({
+            text: response.data,
+            icon: 'success',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#429f50',
+          });
+          this.$router.push('/');
+        } catch (error) {
+          this.$swal.fire({
+            text: '회원가입에 실패 : ' + error.response.data,
+            icon: 'error',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#429f50',
+          });
+        }
+      } else {
+        if (this.password != this.confirmPassword) {
+          this.$swal.fire({
+            text: '비밀번호가 일치하지 않습니다.',
+            icon: 'error',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#429f50',
+          });
+        }
       }
     },
   },
