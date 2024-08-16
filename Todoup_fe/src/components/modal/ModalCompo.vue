@@ -1,8 +1,8 @@
 <template>
   <div v-if="isModalVisible" class="modal-overlay" @click="handleCloseModal">
     <div class="modal-content" @click.stop>
-      <div class="modal-Xcontainer" v-if="modalTitle.length < 10">
-        <p class="modal-title" :class="modalTitle.length > 10 ? 'not-found' : ''">{{ modalTitle }}</p>
+      <div class="modal-Xcontainer">
+        <p class="modal-title">{{ modalTitle }}</p>
         <span class="x-btn">
           <font-awesome-icon class="modal-Xbox" i :icon="['fas', 'x']" @click="handleCloseModal" />
         </span>
