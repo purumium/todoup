@@ -100,12 +100,6 @@ export default {
         //const newPoints = this.points + pointsToAdd;
         this.$store.dispatch('user/updatePoints', pointsToAdd);
 
-        this.$swal.fire({
-          text: 'TODO의 완료 상태가 변경되었습니다.',
-          icon: 'success',
-          confirmButtonText: '확인',
-          confirmButtonColor: '#429f50',
-        });
         this.$store.commit('todo/TODO_COMPLETION', todo.todo_id, !todo.completed);
 
         this.$store.commit('todo/TODAY_COMPLETION', todo.todo_id, !todo.completed);
