@@ -313,7 +313,7 @@ export default {
 .modal-content {
   background-color: white;
   padding: 21px 28px 24px;
-  width: 480px;
+  width: 580px;
   height: 485px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
