@@ -8,7 +8,11 @@
         </span>
       </div>
 
-      <div class="modal-body">
+      <div class="modal-body" v-if="modalTitle == ''">
+        <div class="not-found"><span>조회된 데이터가 없습니다!</span></div>
+      </div>
+
+      <div class="modal-body" v-else>
         <!-- followUsers가 있을 때 -->
 
         <template v-if="followUsers.length > 0">
@@ -325,6 +329,16 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.not-found {
+  width: 230px;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .modal-body {
