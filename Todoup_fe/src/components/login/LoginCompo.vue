@@ -76,7 +76,7 @@ export default {
           });
           this.login(userData); // userData를 user-store에 저장
           this.userId = userData.userId; // userId를 data()에 저장
-          console.log('로그인-vuex 스토어에 있는 값입니다.', this.user_info);
+
           this.$router.push('/');
         } else {
           this.$swal.fire({

@@ -36,6 +36,7 @@ export default {
     ...mapGetters('todo', {
       allTodos: 'allTodos',
     }),
+
     fetchTodos() {
       return this.todos.map((todo) => {
         return {
@@ -59,6 +60,7 @@ export default {
         },
         dateClick: this.handleMoveToTodo,
         eventClick: this.handleEventClick,
+        eventOrder: 'completed',
         events: this.fetchTodos, // computed로부터 직접 참조
         height: 550,
         locale: koLocale,
@@ -125,7 +127,6 @@ export default {
       }
     },
     async loadCalendarData() {
-      console.log('실헹');
       if (this.userId) {
         try {
           const userId = this.userId;
@@ -148,23 +149,12 @@ export default {
             '-' +
             kor_time.getDate();
 
-          if (this.currentMonth == month && this.todos.length != 0) {
+          if (this.currentMonth == month) {
             const todayTodos = this.todos.filter(
               (todo) => todo.start_date.split(' ')[0] <= today && today <= todo.end_date.split(' ')[0]
             );
             this.$store.commit('todo/SET_TODAYS', todayTodos);
           }
-
-          // todos 배열을 FullCalendar의 events 배열 형식에 맞게 변환
-          this.calendarOptions.events = this.todos.map((todo) => {
-            return {
-              title: todo.title,
-              start: todo.start_date, // 시작 날짜 설정
-              end: this.formatEndDate(todo.end_date), // 종료 날짜 설정 (포함되지 않으므로 다음 날로 설정)
-              completed: todo.completed, // 완료 여부 추가
-              todoId: todo.todo_id,
-            };
-          });
         } catch (error) {
           console.error('Error fetching todos:', error);
         }

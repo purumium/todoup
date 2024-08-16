@@ -6,6 +6,7 @@
         <img v-else src="/avatar/defaultAvatar.png" alt="Profile" @click="goToRoom" />
         <div v-if="showMessage" class="message-bubble">{{ pointsUpMessage }}</div>
       </div>
+
       <div class="profile-details">
         <div class="my-name">
           <div>{{ userInfo?.nickName || '김투두' }}</div>
@@ -19,12 +20,20 @@
         <div class="level-container">
           <span class="level-icon">🏆</span> LEVEL&nbsp;<span class="level-value">{{ userInfo.lv }}</span>
         </div>
-        <div class="progress-bar-container">
+        <div class="progress-bar-container" v-if="userInfo.lv < 5">
           <div class="progress-bar">
             <div class="progress" :style="{ width: progressWidth + '%' }"></div>
           </div>
           <p class="progress-text">
             <b>{{ userInfo.points % 100 }}</b> / 100 points
+          </p>
+        </div>
+        <div class="progress-bar-container" v-else>
+          <div class="progress-bar">
+            <div class="progress" :style="{ width: Math.min(100, userInfo.points) + '%' }"></div>
+          </div>
+          <p class="progress-text">
+            <b>{{ userInfo.points }}</b> points
           </p>
         </div>
       </div>
