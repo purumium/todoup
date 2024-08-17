@@ -5,6 +5,7 @@ import com.kosa.todoup.dto.UserDTO;
 import com.kosa.todoup.service.UserService;
 import lombok.NoArgsConstructor;
 import org.apache.catalina.User;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -41,4 +42,13 @@ public class UserController {
         return Arrays.asList(userService.loginService(userdto));
     }
 
+    @GetMapping("/checkEmail")
+    public Boolean checkEmail(@RequestParam("email") String email) {
+        return userService.checkEmail(email);
+    }
+
+    @GetMapping("/checkNickname")
+    public Boolean checkNickname(@RequestParam("nickname") String nickname) {
+        return userService.checkNickname(nickname);
+    }
 }
