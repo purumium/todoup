@@ -12,11 +12,26 @@
           placeholder="name@example.com"
           v-model="email"
           @keyup="isValidEmail"
-          :class="email.length == 0 ? '' : checkEmail"
+          :class="
+            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length > 0
+              ? 'is-invalid'
+              : email.length == 0
+                ? ''
+                : checkEmail
+          "
           required
         />
         <label for="floatingEmail">이메일</label>
-        <div class="text-danger" v-text="checkEmail != 'is-invalid' ? '' : '이미 사용 중인 이메일입니다.'"></div>
+        <div
+          class="text-danger"
+          v-text="
+            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length > 0
+              ? '정확한 이메일 주소를 입력해 주세요.'
+              : checkEmail != 'is-invalid'
+                ? ''
+                : '이미 사용 중인 이메일입니다.'
+          "
+        ></div>
       </div>
 
       <div class="form-floating mb-3">
@@ -41,10 +56,22 @@
           id="floatingPassword"
           placeholder=""
           v-model="password"
-          :class="{ 'is-valid': password === confirmPassword && confirmPassword.length > 0 }"
+          :class="
+            password == 0
+              ? ''
+              : password.length < 8
+                ? 'is-invalid'
+                : confirmPassword.length == 0 || password == confirmPassword
+                  ? 'is-valid'
+                  : 'is-invalid'
+          "
           required
         />
         <label for="floatingPassword">비밀번호</label>
+        <div
+          class="text-danger"
+          v-text="password.length == 0 || password.length >= 8 ? '' : '비밀번호를 8글자 이상 입력해 주세요.'"
+        ></div>
       </div>
 
       <div class="form-floating mb-3">
@@ -133,7 +160,12 @@ export default {
       }
     },
     async doSignUp() {
-      if (this.password == this.confirmPassword && this.isValidEmail && this.isValidNickname) {
+      if (
+        this.password.length >= 8 &&
+        this.password == this.confirmPassword &&
+        this.isValidEmail &&
+        this.isValidNickname
+      ) {
         try {
           const response = await axios.post('/api/signup', {
             email: this.email,
