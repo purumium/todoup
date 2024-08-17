@@ -11,7 +11,7 @@
           id="floatingEmail"
           placeholder="name@example.com"
           v-model="email"
-          @blur="isValidEmail"
+          @keyup="isValidEmail"
           :class="checkEmail"
           required
         />
@@ -26,7 +26,7 @@
           id="floatingNickname"
           placeholder=""
           v-model="nickname"
-          @blur="isValidNickname"
+          @keyup="isValidNickname"
           :class="checkNickname"
           required
         />
