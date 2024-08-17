@@ -12,7 +12,7 @@
           placeholder="name@example.com"
           v-model="email"
           @keyup="isValidEmail"
-          :class="checkEmail"
+          :class="email.length == 0 ? '' : checkEmail"
           required
         />
         <label for="floatingEmail">이메일</label>
@@ -27,7 +27,7 @@
           placeholder=""
           v-model="nickname"
           @keyup="isValidNickname"
-          :class="checkNickname"
+          :class="nickname.length == 0 ? '' : checkNickname"
           required
         />
         <label for="floatingNickname">닉네임</label>
