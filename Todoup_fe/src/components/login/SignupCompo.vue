@@ -130,12 +130,7 @@ export default {
         }
         return response.data;
       } catch (error) {
-        this.$swal.fire({
-          text: '회원가입에 실패 : ' + error.response.data,
-          icon: 'error',
-          confirmButtonText: '확인',
-          confirmButtonColor: '#429f50',
-        });
+        this.checkEmail = '';
       }
     },
     async isValidNickname() {
@@ -151,12 +146,7 @@ export default {
         }
         return response.data;
       } catch (error) {
-        this.$swal.fire({
-          text: '회원가입에 실패 : ' + error.response.data,
-          icon: 'error',
-          confirmButtonText: '확인',
-          confirmButtonColor: '#429f50',
-        });
+        this.checkNickname = '';
       }
     },
     async doSignUp() {
