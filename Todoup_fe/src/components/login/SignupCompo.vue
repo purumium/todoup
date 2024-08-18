@@ -11,14 +11,42 @@
           id="floatingEmail"
           placeholder="name@example.com"
           v-model="email"
+          @keyup="isValidEmail"
+          :class="
+            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length > 0
+              ? 'is-invalid'
+              : email.length == 0
+                ? ''
+                : checkEmail
+          "
           required
         />
         <label for="floatingEmail">이메일</label>
+        <div
+          class="text-danger"
+          v-text="
+            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length > 0
+              ? '정확한 이메일 주소를 입력해 주세요.'
+              : checkEmail != 'is-invalid'
+                ? ''
+                : '이미 사용 중인 이메일입니다.'
+          "
+        ></div>
       </div>
 
       <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="floatingNickname" placeholder="" v-model="nickname" required />
+        <input
+          type="text"
+          class="form-control"
+          id="floatingNickname"
+          placeholder=""
+          v-model="nickname"
+          @keyup="isValidNickname"
+          :class="nickname.length == 0 ? '' : checkNickname"
+          required
+        />
         <label for="floatingNickname">닉네임</label>
+        <div class="text-danger" v-text="checkNickname != 'is-invalid' ? '' : '이미 사용 중인 닉네임입니다.'"></div>
       </div>
 
       <div class="form-floating mb-3">
@@ -28,10 +56,22 @@
           id="floatingPassword"
           placeholder=""
           v-model="password"
-          :class="{ 'is-valid': password === confirmPassword && confirmPassword.length > 0 }"
+          :class="
+            password == 0
+              ? ''
+              : password.length < 8
+                ? 'is-invalid'
+                : confirmPassword.length == 0 || password == confirmPassword
+                  ? 'is-valid'
+                  : 'is-invalid'
+          "
           required
         />
         <label for="floatingPassword">비밀번호</label>
+        <div
+          class="text-danger"
+          v-text="password.length == 0 || password.length >= 8 ? '' : '비밀번호를 8글자 이상 입력해 주세요.'"
+        ></div>
       </div>
 
       <div class="form-floating mb-3">
@@ -69,12 +109,53 @@ export default {
       password: '',
       confirmPassword: '',
       nickname: '',
+      checkEmail: '',
+      checkNickname: '',
     };
   },
 
   methods: {
+    async isValidEmail() {
+      try {
+        console.log(this.email);
+        const response = await axios.get('api/checkEmail', {
+          params: { email: this.email },
+        });
+        console.log('응답 : ', response);
+        console.log('응답 데이터: ', response.data);
+        if (response.data) {
+          this.checkEmail = 'is-valid';
+        } else {
+          this.checkEmail = 'is-invalid';
+        }
+        return response.data;
+      } catch (error) {
+        this.checkEmail = '';
+      }
+    },
+    async isValidNickname() {
+      try {
+        console.log(this.email);
+        const response = await axios.get('api/checkNickname', {
+          params: { nickname: this.nickname },
+        });
+        if (response.data) {
+          this.checkNickname = 'is-valid';
+        } else {
+          this.checkNickname = 'is-invalid';
+        }
+        return response.data;
+      } catch (error) {
+        this.checkNickname = '';
+      }
+    },
     async doSignUp() {
-      if (this.password == this.confirmPassword) {
+      if (
+        this.password.length >= 8 &&
+        this.password == this.confirmPassword &&
+        this.isValidEmail &&
+        this.isValidNickname
+      ) {
         try {
           const response = await axios.post('/api/signup', {
             email: this.email,
@@ -97,14 +178,12 @@ export default {
           });
         }
       } else {
-        if (this.password != this.confirmPassword) {
-          this.$swal.fire({
-            text: '비밀번호가 일치하지 않습니다.',
-            icon: 'error',
-            confirmButtonText: '확인',
-            confirmButtonColor: '#429f50',
-          });
-        }
+        this.$swal.fire({
+          text: '회원정보를 다시 확인해주세요.',
+          icon: 'error',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#429f50',
+        });
       }
     },
   },
