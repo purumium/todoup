@@ -27,7 +27,7 @@
 
 | **선푸름(팀장)** | **김찬희** | **박요한** | **이연수** |  **최유환** |
 | :------: |  :------: | :------: | :------: |:------: |
-| <img src="https://github.com/user-attachments/assets/071a0e18-a8cf-4d36-9c42-9985fcf76104?v=4" height="150" width="150"> | <img src="https://github.com/user-attachments/assets/6fd98055-7e21-432f-9948-dfe88e613c3c?v=4" height="150" width="150"> | <img src="https://github.com/user-attachments/assets/ad4245c8-8e07-4841-8d9e-ef912f46fb91?v=4" height="150" width="150"> | <img src="https://github.com/user-attachments/assets/c0305ec8-9c6e-4bfb-a783-b194f0656ca1?v=4" height="150" width="150"> |  <img src="https://github.com/user-attachments/assets/0267ffd3-8039-4d0d-9be2-99f1668e14b1?v=4" height="150" width="150"> |
+| <img src="https://github.com/user-attachments/assets/071a0e18-a8cf-4d36-9c42-9985fcf76104?v=4" height="130" width="130"> | <img src="https://github.com/user-attachments/assets/6fd98055-7e21-432f-9948-dfe88e613c3c?v=4" height="130" width="130"> | <img src="https://github.com/user-attachments/assets/ad4245c8-8e07-4841-8d9e-ef912f46fb91?v=4" height="130" width="130"> | <img src="https://github.com/user-attachments/assets/c0305ec8-9c6e-4bfb-a783-b194f0656ca1?v=4" height="130" width="130"> |  <img src="https://github.com/user-attachments/assets/0267ffd3-8039-4d0d-9be2-99f1668e14b1?v=4" height="130" width="130"> |
 
 </div>
 
