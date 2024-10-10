@@ -144,17 +144,16 @@
 <img src="https://github.com/user-attachments/assets/d1870333-7952-46e3-80aa-92cc1d62b754" width="700"> <br><br>
 
 **3. 성장 일기 작성** <br>
-<img src="https://" width="700"> <br><br>
+<img src="https://github.com/user-attachments/assets/43b5d01b-2195-4ae7-b7df-ebb2df8fe3f1" width="700"> <br><br>
 
 **3-1. 성장 일기 수정 및 삭제** <br>
-<img src="https://" width="700"> <br><br>
+<img src="https://github.com/user-attachments/assets/caa1fda5-4480-4800-b52d-90d3d7c0db9f" width="700"> <br><br>
 
 **4. 팔로우, 팔로잉, 친구 추가** <br>
-<img src="https://" width="700"> <br><br>
+<img src="https://github.com/user-attachments/assets/b627840b-aceb-4c9f-88fa-7c42f869c49b" width="700"> <br><br>
 
 **5. 친구 아바타방에 방명록 남기기** <br>
-<img src="https://" width="700"> <br><br>
+<img src="https://github.com/user-attachments/assets/58cf2212-5ce8-4202-ba22-f071109cc792" width="700"> <br><br>
 
 **6. 나의 방 둘러보기(아바타방, 사용자 통계)** <br>
-<img src="https://" width="700"> <br><br>
-
+<img src="https://github.com/user-attachments/assets/7a996203-73e2-40ea-954b-81b288c0e089" width="700"> <br><br>
