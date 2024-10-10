@@ -1,7 +1,7 @@
 # 동기 부여와 성장을 돕는 할 일 관리 서비스
 ![todoup](https://github.com/user-attachments/assets/2828e037-d3fc-454b-9be6-a93a88ffd9f9)
 
-<br>
+<br><br>
 
 ## 프로젝트 소개
 ![schedules](https://github.com/user-attachments/assets/5a2b22b3-fa09-4ca1-851c-747d10b4df38)
@@ -9,7 +9,7 @@
 - 스케줄러와 게이미피케이션을 결합한 할 일 관리 서비스입니다.
 - 사용자가 '작심삼일'에 그치지 않고 꾸준히 목표를 달성할 수 있도록 다양한 동기 부여와 성찰 기능을 제공합니다.
 
-<br>
+<br><br>
 
 ## 프로젝트 핵심 기능
 - **경험치와 레벨업**
@@ -21,7 +21,7 @@
 - **성장 리포트**
   - 자신의 목표 달성 여부와 성장 과정을 차트화하여 시각적으로 확인할 수 있습니다. 이를 통해 사용자는 자신의 발전을 한눈에 파악하고 더욱 효율적으로 목표를 설정할 수 있습니다.
 
-<br>
+<br><br>
 
 ## 팀원 구성
 
@@ -31,12 +31,12 @@
 
 </div>
 
-<br>
+<br><br>
 
 ## 개발 기간
 - 2024-08-05 ~ 2024-08-16
 
-<br>
+<br><br>
 
 ## 개발 환경
 
@@ -76,7 +76,7 @@
   <img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white"/>
 </span>
 
-<br>
+<br><br>
 
 
 ## 역할 분담
@@ -123,11 +123,10 @@
   - 사용자의 활동 내역(월별 할일 달성률 등)을 차트화하여 리포트 제공
 <br>
 
-<br><br><br><br>
+<br><br>
 
 
-# 기능 소개
-## 페이지 소개<br>
+## 기능 소개
 **0. 전체 둘러보기** <br>
 <img src="https://github.com/user-attachments/assets/1e5c8fac-949b-4450-870b-2afbaaf2d31a" width="700"> <br><br>
 
