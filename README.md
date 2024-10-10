@@ -122,3 +122,39 @@
   - 나의 아바타와 친구의 아바타 이미지, 레벨, 경험치 비교
   - 사용자의 활동 내역(월별 할일 달성률 등)을 차트화하여 리포트 제공
 <br>
+
+<br><br><br><br>
+
+
+# 기능 소개
+## 페이지 소개<br>
+**0. 전체 둘러보기** <br>
+<img src="https://github.com/user-attachments/assets/1e5c8fac-949b-4450-870b-2afbaaf2d31a" width="700"> <br><br>
+
+**1. 회원 가입 후 로그인** <br>
+<img src="https://github.com/user-attachments/assets/30f5081d-e72b-490b-9ab0-6719a0fdbc93" width="700"> <br><br>
+
+**2. 할일 추가** <br>
+<img src="https://github.com/user-attachments/assets/572c6c5d-4dbc-4091-94fe-8c17e43a1a3e" width="700"> <br><br>
+
+**2-1. 할일 수정 및 삭제** <br>
+<img src="https://github.com/user-attachments/assets/749033b1-723f-43bc-8004-afeb172d7cf3" width="700"> <br><br>
+
+**2-2. 할일 완료 시, 경험치 증가** <br>
+<img src="https://github.com/user-attachments/assets/d1870333-7952-46e3-80aa-92cc1d62b754" width="700"> <br><br>
+
+**3. 성장 일기 작성** <br>
+<img src="https://" width="700"> <br><br>
+
+**3-1. 성장 일기 수정 및 삭제** <br>
+<img src="https://" width="700"> <br><br>
+
+**4. 팔로우, 팔로잉, 친구 추가** <br>
+<img src="https://" width="700"> <br><br>
+
+**5. 친구 아바타방에 방명록 남기기** <br>
+<img src="https://" width="700"> <br><br>
+
+**6. 나의 방 둘러보기(아바타방, 사용자 통계)** <br>
+<img src="https://" width="700"> <br><br>
+
